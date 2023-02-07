@@ -1,6 +1,6 @@
 from ipykernel.ipkernel import IPythonKernel
 
-# KernelManager.shutdown_wait_time
+
 class IPyCOMPSsKernel(IPythonKernel):
     def start(self):
         super().start()
