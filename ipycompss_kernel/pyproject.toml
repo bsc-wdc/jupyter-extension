@@ -22,3 +22,6 @@ dependencies = [
 test = [
   "jupyter_kernel_test",
 ]
+
+[project.entry-points."jupyter_client.kernel_provisioners"]
+ipycompss-provisioner = "ipycompss_kernel:IPyCOMPSsProvisioner"
