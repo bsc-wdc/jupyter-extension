@@ -1,0 +1,14 @@
+{
+ "argv": [
+  "python",
+  "-m",
+  "ipycompss_kernel",
+  "-f",
+  "{connection_file}"
+ ],
+ "display_name": "PyCOMPSs",
+ "language": "python",
+ "metadata": {
+  "debugger": true
+ }
+}

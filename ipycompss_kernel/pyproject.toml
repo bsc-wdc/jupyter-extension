@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ipycompss-kernel"
+dynamic = [
+    "version",
+]
+description = "PyCOMPSs kernel for Jupyter"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "ipykernel",
+    "jupyter_client",
+]
+
+[project.optional-dependencies]
+test = [
+  "jupyter_kernel_test",
+]
