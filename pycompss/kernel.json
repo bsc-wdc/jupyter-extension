@@ -9,6 +9,9 @@
  "display_name": "PyCOMPSs",
  "language": "python",
  "metadata": {
-  "debugger": true
+  "debugger": true,
+  "kernel_provisioner": {
+    "provisioner_name": "ipycompss-provisioner"
+  }
  }
 }
