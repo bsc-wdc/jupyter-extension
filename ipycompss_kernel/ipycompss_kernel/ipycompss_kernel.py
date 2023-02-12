@@ -21,11 +21,14 @@ class IPyCOMPSsKernel(IPythonKernel):
                     window.title('IPyCOMPSs configuration')
                     return window
 
-                def create_title():
+                def create_label(text: str) -> tk.Label:
                     nonlocal row
-                    label: tk.Label = tk.Label(window, text='IPyCOMPSs startup options')
+                    label: tk.Label = tk.Label(
+                        window, text=text
+                    )
                     label.grid(row=row, column=column, columnspan=2)
                     row += 1
+                    return label
 
                 def make_boolean_parameter(name: str) -> tk.BooleanVar:
                     nonlocal row
@@ -55,8 +58,10 @@ class IPyCOMPSsKernel(IPythonKernel):
 
                 def create_button():
                     def start():
-                        arguments: dict = {key: value.get()
-                                           for (key, value) in parameters.items()}
+                        arguments: dict = {
+                            key: value.get()
+                            for (key, value) in parameters.items()
+                        }
                         ipycompss.start(**arguments)
 
                         window.destroy()
@@ -72,18 +77,46 @@ class IPyCOMPSsKernel(IPythonKernel):
                     for i in range(window.grid_size()[0]):
                         tk.Grid.columnconfigure(window, i, weight=1)
 
+                def create_advanced_options():
+                    def open_close_options(e):
+                        nonlocal options_opened
+                        if options_opened:
+                            frame.grid_forget()
+                            label.configure(text=f'+ {text}')
+                        else:
+                            frame.grid(row=frow, column=fcolumn)
+                            label.configure(text=f'- {text}')
+                        options_opened = not options_opened
+
+                    nonlocal row
+                    options_opened: bool = False
+                    text = 'Advanced options'
+                    label = create_label(f'+ {text}')
+                    label.config(font='Arial 10 underline')
+                    label.bind('<Button-1>', open_close_options)
+
+                    frow = row
+                    fcolumn = column
+                    frame: tk.Frame = tk.Frame(window)
+                    checkbutton: tk.Checkbutton = tk.Checkbutton(
+                        frame, text='example'
+                    )
+                    checkbutton.pack()
+                    row += 1
+
                 row: int = 0
                 column: int = 0
                 window: tk.Tk = create_window()
-                create_title()
+                create_label('IPyCOMPSs startup options')
 
                 boolean_parameters: list = ['graph', 'debug', 'trace']
-                parameters = {
+                parameters: dict = {
                     parameter: make_boolean_parameter(parameter)
                     for parameter in boolean_parameters
                 }
                 parameters['monitor'] = make_integer_parameter('monitor')
 
+                create_advanced_options()
                 create_button()
                 make_grid_expandable()
 
