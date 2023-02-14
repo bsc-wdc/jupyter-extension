@@ -56,28 +56,7 @@ class IPyCOMPSsKernel(IPythonKernel):
                     column = 0
                     return var
 
-                def create_button():
-                    def start():
-                        arguments: dict = {
-                            key: value.get()
-                            for (key, value) in parameters.items()
-                        }
-                        ipycompss.start(**arguments)
-
-                        window.destroy()
-
-                    button: tk.Button = tk.Button(
-                        window, text='Start IPyCOMPSs', command=start
-                    )
-                    button.grid(row=row, column=column, columnspan=2)
-
-                def make_grid_expandable():
-                    for i in range(window.grid_size()[1]):
-                        tk.Grid.rowconfigure(window, i, weight=1)
-                    for i in range(window.grid_size()[0]):
-                        tk.Grid.columnconfigure(window, i, weight=1)
-
-                def create_advanced_options():
+                def create_advanced_options() -> None:
                     def open_close_options(e):
                         nonlocal options_opened
                         if options_opened:
@@ -104,6 +83,37 @@ class IPyCOMPSsKernel(IPythonKernel):
                     checkbutton.pack()
                     row += 1
 
+                def create_button(text: str, command) -> None:
+                    nonlocal column
+                    button: tk.Button = tk.Button(
+                        window, text=text, command=command
+                    )
+                    button.grid(row=row, column=column)
+                    column += 1
+
+                def make_grid_expandable() -> None:
+                    for i in range(window.grid_size()[1]):
+                        tk.Grid.rowconfigure(window, i, weight=1)
+                    for i in range(window.grid_size()[0]):
+                        tk.Grid.columnconfigure(window, i, weight=1)
+
+                def start() -> None:
+                    arguments: dict = {
+                        key: value.get()
+                        for (key, value) in parameters.items()
+                    }
+                    ipycompss.start(**arguments)
+
+                    window.destroy()
+
+                def start_monitor() -> None:
+                    import subprocess
+                    import os
+
+                    subprocess.run(['pkexec', 'env',
+                                    f'JAVA_HOME={os.environ["JAVA_HOME"]}',
+                                    'pycompss', 'monitor', 'start'])
+
                 row: int = 0
                 column: int = 0
                 window: tk.Tk = create_window()
@@ -117,7 +127,8 @@ class IPyCOMPSsKernel(IPythonKernel):
                 parameters['monitor'] = make_integer_parameter('monitor')
 
                 create_advanced_options()
-                create_button()
+                create_button('Start PyCOMPSs monitor', start_monitor)
+                create_button('Start IPyCOMPSs', start)
                 make_grid_expandable()
 
                 window.mainloop()
