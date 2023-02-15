@@ -1,10 +1,11 @@
 import sys
 import tkinter as tk
 
+
 class IntegerParameter():
     def __init__(self, name: str, default: int):
         self.name: str = name
-        self.default: bool = default
+        self.default: int = default
     
     def make(self, frame) -> tk.IntVar:
         row: int = frame.grid_size()[1]

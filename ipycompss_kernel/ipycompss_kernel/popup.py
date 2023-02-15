@@ -1,12 +1,10 @@
-from enum import Enum
 import os
-from pathlib import Path
 import subprocess
 import tkinter as tk
-from typing import Union
+
+import pycompss.interactive as ipycompss
 
 from ipycompss_kernel.parameter_factory import ParameterFactory
-import pycompss.interactive as ipycompss
 
 
 def make_grid_expandable(frame) -> None:
@@ -24,18 +22,11 @@ class Popup(tk.Tk):
         self.create_label('IPyCOMPSs startup options')
 
         self.parameters: dict = {}
-        factory = ParameterFactory()
-        parameters = factory.create_parameters()
-        for parameter in parameters:
-            name, var = parameter.make(self)
-            self.parameters[name] = var
+        self.create_parameters(self)
 
         self.options_opened: bool = False
         frame = self.create_advanced_options()
-        parameters = factory.create_parameters(advanced=True)
-        for parameter in parameters:
-            name, var = parameter.make(frame)
-            self.parameters[name] = var
+        self.create_parameters(frame, advanced=True)
         make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
@@ -48,6 +39,13 @@ class Popup(tk.Tk):
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
+    
+    def create_parameters(self, frame, advanced: bool = False) -> None:
+        factory = ParameterFactory()
+        parameters = factory.create_parameters(advanced=advanced)
+        for parameter in parameters:
+            name, var = parameter.make(frame)
+            self.parameters[name] = var
 
     def create_advanced_options(self) -> tk.Frame:
         def open_close_options(e):
