@@ -14,6 +14,11 @@ def make_grid_expandable(frame) -> None:
         frame.columnconfigure(i, weight=1)
 
 
+def start_monitor() -> None:
+    subprocess.run(['pkexec', 'env', f'JAVA_HOME={os.environ["JAVA_HOME"]}',
+                    'pycompss', 'monitor', 'start'])
+
+
 class Popup(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -30,7 +35,7 @@ class Popup(tk.Tk):
         make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self.create_button('Start PyCOMPSs monitor', self.start_monitor)
+        self.create_button('Start PyCOMPSs monitor', start_monitor)
         self.create_button('Start IPyCOMPSs', self.start)
         make_grid_expandable(self)
 
@@ -94,8 +99,3 @@ class Popup(tk.Tk):
         ipycompss.start(**arguments)
 
         self.destroy()
-
-    def start_monitor() -> None:
-        subprocess.run(['pkexec', 'env',
-                        f'JAVA_HOME={os.environ["JAVA_HOME"]}',
-                        'pycompss', 'monitor', 'start'])
