@@ -9,9 +9,12 @@ class IPyCOMPSsKernel(IPythonKernel):
         '''Start the kernel'''
         super().start()
 
-        with  open('./startup_popup.py') as startup_popup:
-            popup_code = startup_popup.read()
-            self.shell.run_cell(popup_code, silent=True)
+        self.shell.run_cell('''
+            from ipycompss_kernel.startup_popup import pycompss_start
+
+            pycompss_start()
+            del pycompss_start
+        ''', silent=True)
 
     def do_shutdown(self, restart: bool):
         '''Shutdown kernel'''
