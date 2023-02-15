@@ -6,8 +6,8 @@ class IntegerParameter():
     def __init__(self, name: str, default: int):
         self.name: str = name
         self.default: int = default
-    
-    def make(self, frame) -> tk.IntVar:
+
+    def make(self, frame) -> tuple[str, tk.IntVar]:
         row: int = frame.grid_size()[1]
         label: tk.Label = tk.Label(frame, text=self.name.capitalize())
         label.grid(row=row, column=0, sticky='NSW')

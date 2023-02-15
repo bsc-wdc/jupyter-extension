@@ -1,10 +1,11 @@
 import tkinter as tk
 
+
 class BooleanParameter():
     def __init__(self, name: str, default: bool):
         self.name: str = name
         self.default: bool = default
-    
+
     def make(self, frame) -> tk.BooleanVar:
         var: tk.BooleanVar = tk.BooleanVar()
         var.set(self.default)

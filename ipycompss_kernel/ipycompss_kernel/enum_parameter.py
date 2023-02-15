@@ -6,8 +6,8 @@ class EnumerationParameter():
     def __init__(self, name: str, default: Enum):
         self.name: str = name
         self.default: Enum = default
-    
-    def make(self, frame) -> tk.BooleanVar:
+
+    def make(self, frame) -> tuple[str, tk.BooleanVar]:
         row: int = frame.grid_size()[1]
         label: tk.Label = tk.Label(frame, text=self.name.capitalize())
         label.grid(row=row, column=0, sticky='NSW')

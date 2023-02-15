@@ -9,9 +9,9 @@ from ipycompss_kernel.parameter_factory import ParameterFactory
 
 def make_grid_expandable(frame) -> None:
     for i in range(frame.grid_size()[1]):
-        tk.Grid.rowconfigure(frame, i, weight=1)
+        frame.rowconfigure(i, weight=1)
     for i in range(frame.grid_size()[0]):
-        tk.Grid.columnconfigure(frame, i, weight=1)
+        frame.columnconfigure(i, weight=1)
 
 
 class Popup(tk.Tk):
@@ -39,7 +39,7 @@ class Popup(tk.Tk):
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
-    
+
     def create_parameters(self, frame, advanced: bool = False) -> None:
         factory = ParameterFactory()
         parameters = factory.create_parameters(advanced=advanced)
@@ -47,13 +47,14 @@ class Popup(tk.Tk):
             name, var = parameter.make(frame)
             self.parameters[name] = var
 
-    def create_advanced_options(self) -> tk.Frame:
+    def create_advanced_options(self) -> tk.Canvas:
         def open_close_options(e):
             if self.options_opened:
-                frame.grid_forget()
+                outer_frame.grid_forget()
                 label.configure(text=f'+ {text}')
             else:
-                frame.grid(row=frow, column=fcolumn)
+                outer_frame.grid(row=row, column=0, columnspan=2)
+                canvas.configure(scrollregion=frame.bbox('all'))
                 label.configure(text=f'- {text}')
             self.options_opened = not self.options_opened
 
@@ -62,8 +63,22 @@ class Popup(tk.Tk):
         label.config(font='Arial 10 underline')
         label.bind('<Button-1>', open_close_options)
 
-        fcolumn, frow = 0, self.grid_size()[1]
-        frame: tk.Frame = tk.Frame(self)
+        row = self.grid_size()[1]
+        outer_frame: tk.Frame = tk.Frame(self)
+
+        canvas: tk.Canvas = tk.Canvas(outer_frame, height=500, width=600)
+        canvas.pack(side='left')
+        frame: tk.Frame = tk.Frame(canvas)
+        frame.bind('<Configure>', lambda e: canvas.config(
+            scrollregion=canvas.bbox('all')))
+        canvas.create_window(0, 0, anchor='nw', window=frame)
+
+        scrollbar: tk.Scrollbar = tk.Scrollbar(
+            outer_frame, orient='vertical', command=canvas.yview
+        )
+        scrollbar.pack(side='right', expand=True, fill='both')
+        canvas.configure(yscrollcommand=scrollbar.set)
+
         return frame
 
     def create_button(self, text: str, command) -> None:
