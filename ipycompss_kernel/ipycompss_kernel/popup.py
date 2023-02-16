@@ -107,5 +107,6 @@ class Popup(tk.Tk):
     @classmethod
     def start_monitor(cls) -> None:
         '''Starts PyCOMPSs monitor'''
-        subprocess.run(['pkexec', 'env', f'JAVA_HOME={os.environ["JAVA_HOME"]}',
+        subprocess.run(['pkexec', 'env',
+                        f'JAVA_HOME={os.environ["JAVA_HOME"]}',
                         'pycompss', 'monitor', 'start'], check=False)
