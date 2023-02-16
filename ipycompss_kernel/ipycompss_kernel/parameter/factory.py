@@ -1,12 +1,14 @@
+'''Factory for parameters'''
 from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from ipycompss_kernel.bool_parameter import BooleanParameter
-from ipycompss_kernel.enum_parameter import EnumerationParameter
-from ipycompss_kernel.int_parameter import IntegerParameter
-from ipycompss_kernel.str_parameter import StringParameter
-from ipycompss_kernel.path_parameter import PathParameter
+from ipycompss_kernel.parameter.base import ParameterBase
+from ipycompss_kernel.parameter.bool import BooleanParameter
+from ipycompss_kernel.parameter.enum import EnumerationParameter
+from ipycompss_kernel.parameter.int import IntegerParameter
+from ipycompss_kernel.parameter.path import PathParameter
+from ipycompss_kernel.parameter.str import StringParameter
 
 LogLevel = Enum('LogLevel', ['trace', 'debug', 'info', 'api', 'off'])
 TaskExecution = Enum('TaskExecution', ['compss', 'storage'])
@@ -43,7 +45,8 @@ CheckpointPolicy = Enum('CheckpointPolicy', [
 
 
 class ParameterFactory():
-    type_dictionary: dict[type] = {
+    '''Class that creates all parameters'''
+    type_dictionary: dict[type, ParameterBase] = {
         bool: BooleanParameter, int: IntegerParameter,
         **dict.fromkeys([
             LogLevel, TaskExecution, StreamingMode, Communication, Connector,
@@ -92,15 +95,19 @@ class ParameterFactory():
         ('verbose', bool, False), ('disable_external', bool, False)
     ]
 
-    def create_parameters(self, advanced: bool = False) -> list:
+    @classmethod
+    def create_parameters(cls, advanced: bool = False) -> list[ParameterBase]:
+        '''Create all basic or advanced parameters that PyCOMPSs allows'''
         parameters_to_create: list[tuple[str, type, Any]] = (
             ParameterFactory.basic_parameters
         )
         if advanced:
             parameters_to_create = ParameterFactory.advanced_parameters
 
-        parameters: list = []
-        for name, type, default in parameters_to_create:
-            parameter = ParameterFactory.type_dictionary[type](name, default)
+        parameters: list[ParameterBase] = []
+        for name, p_type, default in parameters_to_create:
+            parameter = ParameterFactory.type_dictionary[p_type](
+                name, default
+            )
             parameters.append(parameter)
         return parameters

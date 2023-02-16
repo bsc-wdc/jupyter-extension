@@ -1,16 +1,15 @@
+'''Enumeration parameter'''
 import tkinter as tk
-from enum import Enum
+
+from ipycompss_kernel.parameter.label import LabeledParameter
 
 
-class EnumerationParameter():
-    def __init__(self, name: str, default: Enum):
-        self.name: str = name
-        self.default: Enum = default
+class EnumerationParameter(LabeledParameter):
+    '''Class for enumeration parameters'''
 
     def make(self, frame) -> tuple[str, tk.BooleanVar]:
-        row: int = frame.grid_size()[1]
-        label: tk.Label = tk.Label(frame, text=self.name.capitalize())
-        label.grid(row=row, column=0, sticky='NSW')
+        self.row = frame.grid_size()[1]
+        super().create_label(frame)
 
         var: tk.StringVar = tk.StringVar()
         var.set(self.default.name)
@@ -21,5 +20,5 @@ class EnumerationParameter():
         option_menu: tk.OptionMenu = tk.OptionMenu(
             frame, var, *options
         )
-        option_menu.grid(row=row, column=1, sticky='NSW')
+        option_menu.grid(row=self.row, column=1, sticky='NSW')
         return self.name, var

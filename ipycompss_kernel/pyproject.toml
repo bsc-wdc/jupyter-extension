@@ -25,3 +25,6 @@ test = [
 
 [project.entry-points."jupyter_client.kernel_provisioners"]
 ipycompss-provisioner = "ipycompss_kernel:IPyCOMPSsProvisioner"
+
+[tool.setuptools.dynamic]
+version = {attr = "ipycompss_kernel.__init__.__version__"}
