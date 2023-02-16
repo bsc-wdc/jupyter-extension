@@ -1,12 +1,13 @@
+'''Boolean parameter'''
 import tkinter as tk
 
+from ipycompss_kernel.parameter.base import ParameterBase
 
-class BooleanParameter():
-    def __init__(self, name: str, default: bool):
-        self.name: str = name
-        self.default: bool = default
 
-    def make(self, frame) -> tk.BooleanVar:
+class BooleanParameter(ParameterBase):
+    '''Class for boolean parameters'''
+
+    def make(self, frame) -> tuple[str, tk.BooleanVar]:
         var: tk.BooleanVar = tk.BooleanVar()
         var.set(self.default)
         checkbutton: tk.Checkbutton = tk.Checkbutton(

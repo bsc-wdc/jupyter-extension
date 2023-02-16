@@ -1,26 +1,18 @@
+'''PyCOMPSs startup popup'''
 import os
 import subprocess
 import tkinter as tk
 
 import pycompss.interactive as ipycompss
 
-from ipycompss_kernel.parameter_factory import ParameterFactory
-
-
-def make_grid_expandable(frame) -> None:
-    for i in range(frame.grid_size()[1]):
-        frame.rowconfigure(i, weight=1)
-    for i in range(frame.grid_size()[0]):
-        frame.columnconfigure(i, weight=1)
-
-
-def start_monitor() -> None:
-    subprocess.run(['pkexec', 'env', f'JAVA_HOME={os.environ["JAVA_HOME"]}',
-                    'pycompss', 'monitor', 'start'])
+from ipycompss_kernel.parameter.factory import ParameterFactory
 
 
 class Popup(tk.Tk):
+    '''PyCOMPs popup implementation'''
+
     def __init__(self, *args, **kwargs):
+        '''Popup creation'''
         super().__init__(*args, **kwargs)
 
         self.wm_title('IPyCOMPSs configuration')
@@ -32,27 +24,29 @@ class Popup(tk.Tk):
         self.options_opened: bool = False
         frame = self.create_advanced_options()
         self.create_parameters(frame, advanced=True)
-        make_grid_expandable(frame)
+        Popup.make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self.create_button('Start PyCOMPSs monitor', start_monitor)
+        self.create_button('Start PyCOMPSs monitor', Popup.start_monitor)
         self.create_button('Start IPyCOMPSs', self.start)
-        make_grid_expandable(self)
+        Popup.make_grid_expandable(self)
 
     def create_label(self, text: str) -> tk.Label:
+        '''Create a label in the popup'''
         label: tk.Label = tk.Label(self, text=text)
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
 
     def create_parameters(self, frame, advanced: bool = False) -> None:
-        factory = ParameterFactory()
-        parameters = factory.create_parameters(advanced=advanced)
+        '''Create parameter widgets'''
+        parameters = ParameterFactory.create_parameters(advanced=advanced)
         for parameter in parameters:
             name, var = parameter.make(frame)
             self.parameters[name] = var
 
-    def create_advanced_options(self) -> tk.Canvas:
+    def create_advanced_options(self) -> tk.Frame:
+        '''Create advanced options canvas'''
         def open_close_options(e):
             if self.options_opened:
                 outer_frame.grid_forget()
@@ -86,12 +80,22 @@ class Popup(tk.Tk):
 
         return frame
 
+    @classmethod
+    def make_grid_expandable(cls, frame) -> None:
+        '''Makes the grid of the frame expandable'''
+        for i in range(frame.grid_size()[1]):
+            frame.rowconfigure(i, weight=1)
+        for i in range(frame.grid_size()[0]):
+            frame.columnconfigure(i, weight=1)
+
     def create_button(self, text: str, command) -> None:
+        '''Create a button in the popup'''
         button: tk.Button = tk.Button(self, text=text, command=command)
         button.grid(row=self.row, column=self.column)
         self.column += 1
 
     def start(self) -> None:
+        '''Start PyCOMPSs'''
         arguments: dict = {
             key: value.get()
             for (key, value) in self.parameters.items()
@@ -99,3 +103,9 @@ class Popup(tk.Tk):
         ipycompss.start(**arguments)
 
         self.destroy()
+
+    @classmethod
+    def start_monitor(cls) -> None:
+        '''Starts PyCOMPSs monitor'''
+        subprocess.run(['pkexec', 'env', f'JAVA_HOME={os.environ["JAVA_HOME"]}',
+                        'pycompss', 'monitor', 'start'], check=False)
