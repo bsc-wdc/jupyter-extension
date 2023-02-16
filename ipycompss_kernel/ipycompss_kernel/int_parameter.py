@@ -15,7 +15,7 @@ class IntegerParameter():
         var: tk.IntVar = tk.IntVar()
         var.set(self.default)
         spinbox: tk.Spinbox = tk.Spinbox(
-            frame, from_=1, to=sys.maxsize, textvariable=var
+            frame, from_=0, to=sys.maxsize, textvariable=var
         )
         spinbox.grid(row=row, column=1, sticky='NSW')
         return self.name, var

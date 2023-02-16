@@ -21,7 +21,7 @@ def start_monitor() -> None:
 
 class Popup(tk.Tk):
     def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.wm_title('IPyCOMPSs configuration')
         self.create_label('IPyCOMPSs startup options')
