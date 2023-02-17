@@ -2,6 +2,7 @@
 import os
 import subprocess
 import tkinter as tk
+import webbrowser
 
 import pycompss.interactive as ipycompss
 
@@ -107,6 +108,11 @@ class Popup(tk.Tk):
     @classmethod
     def start_monitor(cls) -> None:
         '''Starts PyCOMPSs monitor'''
-        subprocess.run(['pkexec', 'env',
-                        f'JAVA_HOME={os.environ["JAVA_HOME"]}',
-                        'pycompss', 'monitor', 'start'], check=False)
+        process = subprocess.run(
+            [
+                'pkexec', 'env', f'JAVA_HOME={os.environ["JAVA_HOME"]}',
+                'pycompss', 'monitor', 'start'
+            ], check=False
+        )
+        if process.returncode == 0:
+            webbrowser.open_new_tab('http://localhost:8080/compss-monitor')
