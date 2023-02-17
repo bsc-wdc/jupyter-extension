@@ -1,8 +1,11 @@
 '''PyCOMPSs startup popup'''
 import os
 import subprocess
+import time
 import tkinter as tk
+import urllib.request as urlreq
 import webbrowser
+from urllib.error import URLError
 
 import pycompss.interactive as ipycompss
 
@@ -115,4 +118,15 @@ class Popup(tk.Tk):
             ], check=False
         )
         if process.returncode == 0:
-            webbrowser.open_new_tab('http://localhost:8080/compss-monitor')
+            url: urlreq.Request = urlreq.Request(
+                'http://localhost:8080/compss-monitor', method='HEAD'
+            )
+            code = 0
+            while code != 200:
+                time.sleep(0.25)
+                try:
+                    with urlreq.urlopen(url) as response:
+                        code = response.getcode()
+                except URLError:
+                    code = 0
+            webbrowser.open_new_tab(url.get_full_url())
