@@ -58,7 +58,6 @@ class ParameterFactory():
         ('trace', bool, False), ('monitor', int, 1000)
     ]
     advanced_parameters: list[tuple[str, type, Any]] = [
-        # BASIC
         ('log_level', LogLevel, LogLevel.off), ('o_c', bool, False),
         ('project_xml', Path, ('', True)), ('resources_xml', Path, ('', True)),
         ('summary', bool, False),
@@ -86,8 +85,7 @@ class ParameterFactory():
         ('scheduler_config', Path, ('', True)),
         ('external_adaptation', bool, False),
         ('propagate_virtual_environment', bool, True),
-        ('mpi_worker', bool, False),
-        # ('worker_cache', Union[bool, str]), #?
+        ('mpi_worker', bool, False), ('worker_cache', str, ''),
         ('shutdown_in_node_failure', bool, False), ('io_executors', int, 0),
         ('env_script', Path, ('', True)),
         ('tracing_task_dependencies', bool, False), ('trace_label', str, ''),
