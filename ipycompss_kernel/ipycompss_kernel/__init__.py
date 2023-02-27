@@ -1,4 +1,4 @@
-'''A Jupyter kernel that makes using PyCOMPSs easier'''
+"""A Jupyter kernel that makes using PyCOMPSs easier"""
 
 __version__ = 0.1
 

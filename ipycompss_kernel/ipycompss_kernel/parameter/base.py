@@ -1,10 +1,10 @@
-'''Base for all parameters'''
+"""Base for all parameters"""
 from abc import ABC, abstractmethod
 from typing import Any
 
 
 class ParameterBase(ABC):
-    '''Base class for parameters'''
+    """Base class for parameters"""
 
     def __init__(self, name: str, default: Any) -> None:
         self.name: str = name
@@ -12,4 +12,4 @@ class ParameterBase(ABC):
 
     @abstractmethod
     def make(self, frame) -> tuple[str, Any]:
-        '''Create parameter in frame'''
+        """Create parameter in frame"""

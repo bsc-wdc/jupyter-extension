@@ -1,28 +1,34 @@
-'''IPyCOMPSs kernel implementation'''
+"""IPyCOMPSs kernel implementation"""
 from ipykernel.ipkernel import IPythonKernel
 
 
 class IPyCOMPSsKernel(IPythonKernel):
-    '''IPyCOMPSs Kernel class'''
+    """IPyCOMPSs Kernel class"""
 
     def start(self):
-        '''Start the kernel'''
+        """Start the kernel"""
         super().start()
 
-        self.shell.run_cell('''
-            from ipycompss_kernel.startup_popup import pycompss_start
+        self.shell.run_cell(
+            """
+                from ipycompss_kernel.startup_popup import pycompss_start
 
-            pycompss_start()
-            del pycompss_start
-        ''', silent=True)
+                pycompss_start()
+                del pycompss_start
+            """,
+            silent=True,
+        )
 
     def do_shutdown(self, restart: bool):
-        '''Shutdown kernel'''
+        """Shutdown kernel"""
 
-        self.shell.run_cell('''
-            import pycompss.interactive as ipycompss
+        self.shell.run_cell(
+            """
+                import pycompss.interactive as ipycompss
 
-            ipycompss.stop(sync=True)
-        ''', silent=True)
+                ipycompss.stop(sync=True)
+            """,
+            silent=True,
+        )
 
         super().do_shutdown(restart)

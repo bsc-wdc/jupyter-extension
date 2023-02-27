@@ -1,12 +1,12 @@
-'''Path parameter'''
+"""Path parameter"""
 import tkinter as tk
 from tkinter import filedialog
 
-from ipycompss_kernel.parameter.str import StringParameter
+from .str import StringParameter
 
 
 class PathParameter(StringParameter):
-    '''Class for path parameters'''
+    """Class for path parameters"""
 
     def __init__(self, *args):
         super().__init__(*args)
@@ -21,8 +21,8 @@ class PathParameter(StringParameter):
                 path = filedialog.askopenfilename()
             else:
                 path = filedialog.askdirectory()
-            var.set(path or '')
+            var.set(path or "")
 
-        button: tk.Button = tk.Button(frame, text='browse', command=browse)
+        button: tk.Button = tk.Button(frame, text="browse", command=browse)
         button.grid(row=self.row, column=2)
         return self.name, var
