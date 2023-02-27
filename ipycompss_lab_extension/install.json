@@ -1,0 +1,5 @@
+{
+  "packageManager": "python",
+  "packageName": "ipycompss_lab_extension",
+  "uninstallInstructions": "Use your Python package manager (pip, conda, etc.) to uninstall the package ipycompss_lab_extension"
+}
