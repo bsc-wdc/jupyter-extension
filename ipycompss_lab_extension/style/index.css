@@ -1,1 +1,21 @@
 @import url('base.css');
+
+.ipycompss-PyCOMPSsSidebar {
+    display: flex;
+    flex-direction: column;
+    background: var(--jp-layout-color1);
+    color: var(--jp-ui-font-color1);
+    font-size: var(--jp-ui-font-size1);
+    height: 100%;
+}
+
+.ipycompss-PyCOMPSsSidebar .jp-stack-panel-header {
+    border-bottom: var(--jp-border-width) solid var(--jp-border-color2);
+    flex: 0 0 auto;
+    font-size: var(--jp-ui-font-size0);
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0px;
+    padding: 8px 12px;
+    text-transform: uppercase;
+}
