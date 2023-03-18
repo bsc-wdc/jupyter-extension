@@ -23,12 +23,12 @@ class Popup(tk.Tk):
         self.options_opened: bool = False
         frame = self.create_advanced_options()
         self.create_parameters(frame, advanced=True)
-        Popup.make_grid_expandable(frame)
+        self.make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self.create_button("Start PyCOMPSs monitor", Popup.start_monitor)
+        self.create_button("Start PyCOMPSs monitor", self.start_monitor)
         self.create_button("Start IPyCOMPSs", self.start)
-        Popup.make_grid_expandable(self)
+        self.make_grid_expandable(self)
 
     def create_label(self, text: str) -> tk.Label:
         """Create a label in the popup"""
@@ -47,7 +47,7 @@ class Popup(tk.Tk):
     def create_advanced_options(self) -> tk.Frame:
         """Create advanced options canvas"""
 
-        def open_close_options(e):
+        def open_close_options(_):
             if self.options_opened:
                 outer_frame.grid_forget()
                 label.configure(text=f"+ {text}")
@@ -81,8 +81,8 @@ class Popup(tk.Tk):
 
         return frame
 
-    @classmethod
-    def make_grid_expandable(cls, frame) -> None:
+    @staticmethod
+    def make_grid_expandable(frame) -> None:
         """Makes the grid of the frame expandable"""
         for i in range(frame.grid_size()[1]):
             frame.rowconfigure(i, weight=1)
@@ -102,7 +102,7 @@ class Popup(tk.Tk):
 
         self.destroy()
 
-    @classmethod
-    def start_monitor(cls) -> None:
+    @staticmethod
+    def start_monitor() -> None:
         """Starts PyCOMPSs monitor"""
         Monitor.start()

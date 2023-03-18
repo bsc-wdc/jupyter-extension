@@ -143,8 +143,8 @@ class ParameterFactory:
         ("disable_external", bool, False),
     ]
 
-    @classmethod
-    def create_parameters(cls, advanced: bool = False) -> list[ParameterBase]:
+    @staticmethod
+    def create_parameters(advanced: bool = False) -> list[ParameterBase]:
         """Create all basic or advanced parameters that PyCOMPSs allows"""
         parameters_to_create: list[
             tuple[str, type, Any]

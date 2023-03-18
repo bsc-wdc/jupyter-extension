@@ -15,8 +15,8 @@ class Monitor:
         "http://localhost:8080/compss-monitor", method="HEAD"
     )
 
-    @classmethod
-    def start(cls) -> None:
+    @staticmethod
+    def start() -> None:
         """Start the monitor"""
         process: CompletedProcess[bytes] = subprocess.run(
             [
@@ -32,8 +32,8 @@ class Monitor:
         if process.returncode == 0 and Monitor.wait_start():
             webbrowser.open_new_tab(Monitor.url.get_full_url())
 
-    @classmethod
-    def wait_start(cls) -> bool:
+    @staticmethod
+    def wait_start() -> bool:
         """Wait until the monitor has started"""
         code: int = 0
         init_time: float = time.time()
