@@ -32,7 +32,7 @@ class IPyCOMPSsKernel(IPythonKernel):
                 silent=True,
             )
 
-        asyncio.get_event_loop().create_task(self.init_comms())
+        asyncio.get_event_loop().create_task(self.init_comm())
 
     def do_shutdown(self, restart: bool):
         """Shutdown kernel"""
@@ -48,9 +48,9 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         super().do_shutdown(restart)
 
-    async def init_comms(self) -> None:
+    async def init_comm(self) -> None:
         """Send initial comm to the frontend"""
-        await asyncio.sleep(5)
+        await asyncio.sleep(3)
         comm.create_comm(
             target_name="ipycompss_init_target", data={"cluster": self.cluster}
         )

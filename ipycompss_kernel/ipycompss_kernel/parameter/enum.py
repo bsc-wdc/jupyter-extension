@@ -7,7 +7,7 @@ from .label import LabeledParameter
 class EnumerationParameter(LabeledParameter):
     """Class for enumeration parameters"""
 
-    def make(self, frame) -> tuple[str, tk.BooleanVar]:
+    def make(self, frame) -> tuple[str, tk.StringVar]:
         self.row = frame.grid_size()[1]
         super().create_label(frame)
 

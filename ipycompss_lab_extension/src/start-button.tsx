@@ -7,10 +7,10 @@ import {
 import React, { useState } from 'react';
 import { tracker } from './activate';
 
-export let setEnabled: React.Dispatch<React.SetStateAction<number>>;
+let enabled: number;
+let setEnabled: React.Dispatch<React.SetStateAction<number>>;
 
-export const StartButton = () => {
-  let enabled: number;
+export const StartButton = (): JSX.Element => {
   [enabled, setEnabled] = useState(0);
   return (
     <ToolbarButtonComponent
@@ -21,7 +21,12 @@ export const StartButton = () => {
   );
 };
 
-const startPycompss = async () => {
+export const addEnabled = (amount: number): void => {
+  enabled += amount;
+  setEnabled(enabled);
+};
+
+const startPycompss = async (): Promise<void> => {
   const result = await showDialog({
     title: 'IPyCOMPSs configuration',
     buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })],
