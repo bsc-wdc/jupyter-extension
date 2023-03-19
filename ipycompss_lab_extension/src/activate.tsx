@@ -8,6 +8,7 @@ import '../style/index.css';
 import compss_svg from '../resources/compss.svg';
 import { StartButton } from './start-button';
 import { watchNewNotebooks } from './watcher';
+import { TaskButton } from './task-button';
 
 const compss_icon = new LabIcon({
   name: 'ipycompss_lab_extension:compss',
@@ -27,6 +28,7 @@ export const activate = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">{title}</div>
       <StartButton />
+      <TaskButton />
     </div>
   );
 
