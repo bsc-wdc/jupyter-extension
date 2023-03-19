@@ -1,9 +1,11 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
+
 import {
   caretDownIcon,
   caretRightIcon,
   Collapse
 } from '@jupyterlab/ui-components';
+
 import React, { useState } from 'react';
 
 export namespace CollapsibleElement {

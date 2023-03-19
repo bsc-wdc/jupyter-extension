@@ -29,13 +29,13 @@ export const addEnabled = (amount: number): void => {
 const startPycompss = async (): Promise<void> => {
   const result = await showDialog({
     title: 'IPyCOMPSs configuration',
-    buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })],
-    checkbox: {
-      label: 'Example',
-      caption: 'Just that',
-      className: '',
-      checked: true
-    }
+    buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
+    // checkbox: {
+    //   label: 'Example',
+    //   caption: 'Just that',
+    //   className: '',
+    //   checked: true
+    // }
   });
   if (result.button.accept) {
     tracker.currentWidget?.sessionContext.session?.kernel?.requestExecute({
