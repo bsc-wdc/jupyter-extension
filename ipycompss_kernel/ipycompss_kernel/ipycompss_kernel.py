@@ -50,7 +50,7 @@ class IPyCOMPSsKernel(IPythonKernel):
 
     async def init_comm(self) -> None:
         """Send initial comm to the frontend"""
-        await asyncio.sleep(3)
+        await asyncio.sleep(1)
         comm.create_comm(
             target_name="ipycompss_init_target", data={"cluster": self.cluster}
         )

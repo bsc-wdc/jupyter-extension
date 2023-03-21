@@ -18,7 +18,14 @@
     "strict": true,
     "strictNullChecks": true,
     "target": "ES2018",
-    "types": ["jest"]
+    "types": [
+      "jest"
+    ]
   },
-  "include": ["src/*"]
+  "include": [
+    "src/*",
+    "src/start-button/start-button.tsx",
+    "src/start-button/watcher.ts",
+    "src/task-button.tsx"
+  ]
 }
