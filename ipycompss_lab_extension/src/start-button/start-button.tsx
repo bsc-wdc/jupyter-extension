@@ -11,6 +11,7 @@ import { watchNewNotebooks } from './watcher';
 
 let enabled: number;
 let setEnabled: React.Dispatch<React.SetStateAction<number>>;
+export let setStarted: React.Dispatch<React.SetStateAction<boolean>>;
 
 export const StartButton = ({
   tracker,
@@ -20,11 +21,13 @@ export const StartButton = ({
   manager: SessionManager;
 }): JSX.Element => {
   tracker.widgetAdded.connect(watchNewNotebooks(manager));
+  let started;
   [enabled, setEnabled] = useState(0);
+  [started, setStarted] = useState(Boolean(false));
   return (
     <ToolbarButtonComponent
       label="Start"
-      enabled={Boolean(enabled)}
+      enabled={Boolean(enabled) && !started}
       onClick={showStartDialog(tracker)}
     />
   );
@@ -46,23 +49,24 @@ const showStartDialog =
 const startPycompss =
   (tracker: INotebookTracker) =>
   (result: Dialog.IResult<unknown>): void => {
-    if (result.button.accept) {
-      const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-      if (kernel !== null && kernel !== undefined) {
-        kernel.requestExecute({
-          code: `
+    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+    if (!result.button.accept || kernel === null || kernel === undefined) {
+      return;
+    }
+    kernel.requestExecute({
+      code: `
           import pycompss.interactive as ipycompss
           
           ipycompss.start()
-                  
+          
           del ipycompss
         `,
-          silent: true
-        }).onReply = (message: KernelMessage.IExecuteReplyMsg): void => {
-          if (message.content.status === 'ok') {
-            // unregisterKernel(kernel);
-          }
-        };
-      }
-    }
+      silent: true
+    }).onReply = setStartedIfSuccessful;
   };
+
+const setStartedIfSuccessful = (
+  message: KernelMessage.IExecuteReplyMsg
+): void => {
+  setStarted(message.content.status === 'ok');
+};

@@ -1,48 +1,50 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
+
 import {
   Kernel,
   KernelMessage,
   Session,
   SessionManager
 } from '@jupyterlab/services';
-import { addEnabled } from './start-button';
+
+import { addEnabled, setStarted } from './start-button';
 
 export const watchNewNotebooks =
   (manager: SessionManager) =>
   (_: INotebookTracker, notebook: NotebookPanel): void => {
-    const watchKernelChanges = (
-      _: ISessionContext,
-      change: IChangedArgs<
-        Kernel.IKernelConnection | null,
-        Kernel.IKernelConnection | null
-      >
-    ): void => {
-      const startState = (
-        _: Kernel.IComm,
-        message: KernelMessage.ICommOpenMsg
-      ): void => {
-        if (kernel === null) {
-          return;
-        }
-
-        const amount = Number(Boolean(message.content.data.cluster));
-        addEnabled(amount);
-
-        manager.runningChanged.connect(cleanUpState(kernel, amount));
-      };
-
-      const kernel = change.newValue;
-      kernel?.registerCommTarget('ipycompss_init_target', startState);
-    };
-
-    notebook.sessionContext.kernelChanged.connect(watchKernelChanges);
+    notebook.sessionContext.kernelChanged.connect(watchKernelChanges(manager));
   };
 
-// export const unregisterKernel = (kernel: Kernel.IKernelConnection): void => {
-//   addEnabled(-1);
-// };
+const watchKernelChanges =
+  (manager: SessionManager) =>
+  (
+    _: ISessionContext,
+    change: IChangedArgs<
+      Kernel.IKernelConnection | null,
+      Kernel.IKernelConnection | null
+    >
+  ): void => {
+    const kernel = change.newValue;
+    kernel?.registerCommTarget(
+      'ipycompss_init_target',
+      startState(manager, kernel)
+    );
+  };
+
+const startState =
+  (manager: SessionManager, kernel: Kernel.IKernelConnection) =>
+  (_: Kernel.IComm, message: KernelMessage.ICommOpenMsg): void => {
+    if (kernel === null) {
+      return;
+    }
+
+    const amount = Number(Boolean(message.content.data.cluster));
+    addEnabled(amount);
+
+    manager.runningChanged.connect(cleanUpState(kernel, amount));
+  };
 
 const cleanUpState =
   (kernel: Kernel.IKernelConnection, amount: number) =>
@@ -54,5 +56,6 @@ const cleanUpState =
         .includes(kernel.id)
     ) {
       addEnabled(-amount);
+      setStarted(false);
     }
   };

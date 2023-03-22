@@ -12,7 +12,7 @@ export const getCurrentFunctionLineInfo = (
 ): ILineInfo | undefined => {
   const position = editor.getCursorPosition();
   const offset = editor.getTokenForPosition(position).offset;
-  const lines: ILineInfo[] = editor
+  const lines: (ILineInfo | undefined)[] = editor
     .getTokens()
     .filter(
       (token: CodeEditor.IToken): boolean =>
@@ -21,24 +21,28 @@ export const getCurrentFunctionLineInfo = (
     )
     .map(toLineInfo(editor))
     .filter(
-      (line: ILineInfo, index: number, array: ILineInfo[]) =>
-        index === array.length - 1 || line.block
+      (
+        line: ILineInfo | undefined,
+        index: number,
+        array: (ILineInfo | undefined)[]
+      ) => index === array.length - 1 || line?.block
     );
 
-  let line = lines.pop();
-  if (line === undefined) {
+  let currentLine = lines.pop();
+  if (currentLine === undefined) {
     return;
-  } else if (line.keyword === 'def') {
-    return line;
+  } else if (currentLine.keyword === 'def') {
+    return currentLine;
   }
 
   let i = lines.length - 1;
   while (i >= 0) {
-    if (lines[i].indentation < line.indentation) {
-      if (lines[i].keyword === 'def') {
+    const line = lines[i];
+    if (line !== undefined && line.indentation < currentLine.indentation) {
+      if (line.keyword === 'def') {
         return lines[i];
       } else {
-        line = lines[i];
+        currentLine = line;
       }
     }
     --i;
@@ -48,10 +52,16 @@ export const getCurrentFunctionLineInfo = (
 
 const toLineInfo =
   (editor: CodeEditor.IEditor) =>
-  (token: CodeEditor.IToken): ILineInfo => {
-    const position = editor.getPositionAt(token.offset)!;
-    const line = editor.getLine(position.line)!;
-    const [{}, indent, keyword] = line.match(/^(\s*)(\w+)/)!;
+  (token: CodeEditor.IToken): ILineInfo | undefined => {
+    const position = editor.getPositionAt(token.offset);
+    if (position === undefined) {
+      return undefined;
+    }
+    const line = editor.getLine(position.line);
+    if (line === undefined) {
+      return undefined;
+    }
+    const [{}, indent, keyword] = line.match(/^(\s*)(\w+)/) || [];
 
     return {
       keyword: keyword,
