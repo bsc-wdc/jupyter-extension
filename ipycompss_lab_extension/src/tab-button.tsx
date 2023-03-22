@@ -8,12 +8,13 @@ export const TabButton = ({
 }: {
   shell: JupyterFrontEnd.IShell;
 }): JSX.Element => {
-  const addNewTab = async (): Promise<void> => {
+  return <ToolbarButtonComponent label="New tab" onClick={addNewTab(shell)} />;
+};
+
+const addNewTab =
+  (shell: JupyterFrontEnd.IShell) => async (): Promise<void> => {
     const content = new Widget();
     const widget = new MainAreaWidget({ content: content });
 
     shell.add(widget, 'main', { mode: 'split-right' });
   };
-
-  return <ToolbarButtonComponent label="New tab" onClick={addNewTab} />;
-};
