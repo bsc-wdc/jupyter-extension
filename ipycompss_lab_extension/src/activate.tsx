@@ -36,7 +36,7 @@ export const activate = (
   widget.addClass('ipycompss-pycompss-sidebar');
   app.shell.add(widget, 'left', { rank: 525 });
 
-  // if (restorer !== undefined) {
-  //   restorer.add(widget, 'pycompss-left-menu');
-  // }
+  if (restorer !== undefined) {
+    restorer.add(widget, 'pycompss-left-menu');
+  }
 };
