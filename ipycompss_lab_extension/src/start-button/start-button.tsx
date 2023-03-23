@@ -3,25 +3,29 @@ import {
   showDialog,
   ToolbarButtonComponent
 } from '@jupyterlab/apputils';
-import { INotebookTracker } from '@jupyterlab/notebook';
-import { KernelMessage, SessionManager } from '@jupyterlab/services';
 
+import { INotebookTracker } from '@jupyterlab/notebook';
+import { KernelMessage } from '@jupyterlab/services';
 import React, { useState } from 'react';
+
 import { watchNewNotebooks } from './watcher';
 
-let enabled: number;
-let setEnabled: React.Dispatch<React.SetStateAction<number>>;
-export let setStarted: React.Dispatch<React.SetStateAction<boolean>>;
+export namespace StartButton {
+  export interface IProperties {
+    tracker: INotebookTracker;
+  }
+}
+
+let setEnabled: (callback: (value: number) => number) => void;
+export let setStarted: (
+  callbackValue: boolean | ((value: boolean) => boolean)
+) => void;
 
 export const StartButton = ({
-  tracker,
-  manager
-}: {
-  tracker: INotebookTracker;
-  manager: SessionManager;
-}): JSX.Element => {
-  tracker.widgetAdded.connect(watchNewNotebooks(manager));
-  let started;
+  tracker
+}: StartButton.IProperties): JSX.Element => {
+  tracker.widgetAdded.connect(watchNewNotebooks);
+  let enabled, started;
   [enabled, setEnabled] = useState(0);
   [started, setStarted] = useState(Boolean(false));
   return (
@@ -33,10 +37,11 @@ export const StartButton = ({
   );
 };
 
-export const addEnabled = (amount: number): void => {
-  enabled += amount;
-  setEnabled(enabled);
-};
+export const addEnabled = (amount: number): void =>
+  setEnabled(enabled => enabled + amount);
+
+export const andStarted = (newStarted: boolean): void =>
+  setStarted(started => started || newStarted);
 
 const showStartDialog =
   (tracker: INotebookTracker) => async (): Promise<void> => {
@@ -53,14 +58,15 @@ const startPycompss =
     if (!result.button.accept || kernel === null || kernel === undefined) {
       return;
     }
+
     kernel.requestExecute({
       code: `
-          import pycompss.interactive as ipycompss
-          
-          ipycompss.start()
-          
-          del ipycompss
-        `,
+        import pycompss.interactive as ipycompss
+        
+        ipycompss.start()
+        
+        del ipycompss
+      `,
       silent: true
     }).onReply = setStartedIfSuccessful;
   };

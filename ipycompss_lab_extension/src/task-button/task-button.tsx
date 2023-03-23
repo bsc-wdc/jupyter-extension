@@ -1,19 +1,21 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
 import { CodeEditor } from '@jupyterlab/codeeditor';
 import { INotebookTracker } from '@jupyterlab/notebook';
-
 import React from 'react';
+
 import { getCurrentFunctionLineInfo } from './line-info';
+
+export namespace TaskButton {
+  export interface IProperties {
+    tracker: INotebookTracker;
+  }
+}
 
 export const TaskButton = ({
   tracker
-}: {
-  tracker: INotebookTracker;
-}): JSX.Element => {
-  return (
-    <ToolbarButtonComponent label="Define task" onClick={createTask(tracker)} />
-  );
-};
+}: TaskButton.IProperties): JSX.Element => (
+  <ToolbarButtonComponent label="Define task" onClick={createTask(tracker)} />
+);
 
 const createTask = (tracker: INotebookTracker) => async (): Promise<void> => {
   const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;

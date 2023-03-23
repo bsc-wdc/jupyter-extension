@@ -24,7 +24,7 @@ export const activate = (
   const jsx = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">{title}</div>
-      <StartButton tracker={tracker} manager={app.serviceManager.sessions} />
+      <StartButton tracker={tracker} />
       <TaskButton tracker={tracker} />
       <TabButton shell={app.shell} />
     </div>
@@ -36,7 +36,7 @@ export const activate = (
   widget.addClass('ipycompss-pycompss-sidebar');
   app.shell.add(widget, 'left', { rank: 525 });
 
-  if (restorer) {
-    restorer.add(widget, 'pycompss-left-menu');
-  }
+  // if (restorer !== undefined) {
+  //   restorer.add(widget, 'pycompss-left-menu');
+  // }
 };

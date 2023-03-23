@@ -1,8 +1,9 @@
 """IPyCOMPSs kernel implementation"""
-import asyncio
 import os
+from typing import Any, Callable
 
 import comm
+from comm.base_comm import BaseComm
 from ipykernel.ipkernel import IPythonKernel
 
 
@@ -13,6 +14,7 @@ class IPyCOMPSsKernel(IPythonKernel):
         """Initialise kernel"""
         super().__init__(**kwargs)
 
+        self.started = False
         self.cluster = False
         if "IPYCOMPSS_CLUSTER" in os.environ:
             self.cluster = os.environ["IPYCOMPSS_CLUSTER"].lower() == "true"
@@ -32,10 +34,15 @@ class IPyCOMPSsKernel(IPythonKernel):
                 silent=True,
             )
 
-        asyncio.get_event_loop().create_task(self.init_comm())
+        comm.get_comm_manager().register_target(
+            "ipycompss_status_target", self.status_comm()
+        )
 
     def do_shutdown(self, restart: bool):
         """Shutdown kernel"""
+
+        stopComm: BaseComm = comm.create_comm("ipycompss_stop_target")
+        del stopComm
 
         self.shell.run_cell(
             """
@@ -48,9 +55,11 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         super().do_shutdown(restart)
 
-    async def init_comm(self) -> None:
-        """Send initial comm to the frontend"""
-        await asyncio.sleep(1)
-        comm.create_comm(
-            target_name="ipycompss_init_target", data={"cluster": self.cluster}
-        )
+    def status_comm(self) -> Callable[[BaseComm, Any], None]:
+        """Send status comm to the frontend"""
+
+        def send_status_comm(status_comm: BaseComm, _):
+            status_comm.send(data={"cluster": self.cluster, "started": self.started})
+            del status_comm
+
+        return send_status_comm

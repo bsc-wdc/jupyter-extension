@@ -1,61 +1,49 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
+import { Kernel, KernelMessage } from '@jupyterlab/services';
 
-import {
-  Kernel,
-  KernelMessage,
-  Session,
-  SessionManager
-} from '@jupyterlab/services';
+import { addEnabled, andStarted, setStarted } from './start-button';
 
-import { addEnabled, setStarted } from './start-button';
+export const watchNewNotebooks = (
+  _: INotebookTracker,
+  notebook: NotebookPanel
+): void => {
+  notebook.sessionContext.kernelChanged.connect(watchKernelChanges);
+};
 
-export const watchNewNotebooks =
-  (manager: SessionManager) =>
-  (_: INotebookTracker, notebook: NotebookPanel): void => {
-    notebook.sessionContext.kernelChanged.connect(watchKernelChanges(manager));
-  };
+const watchKernelChanges = (
+  _: ISessionContext,
+  change: IChangedArgs<
+    Kernel.IKernelConnection | null,
+    Kernel.IKernelConnection | null
+  >
+): void => {
+  const kernel = change.newValue;
+  if (kernel === null) {
+    return;
+  }
 
-const watchKernelChanges =
-  (manager: SessionManager) =>
-  (
-    _: ISessionContext,
-    change: IChangedArgs<
-      Kernel.IKernelConnection | null,
-      Kernel.IKernelConnection | null
-    >
-  ): void => {
-    const kernel = change.newValue;
-    kernel?.registerCommTarget(
-      'ipycompss_init_target',
-      startState(manager, kernel)
-    );
-  };
+  const statusComm = kernel.createComm('ipycompss_status_target');
+  statusComm.onMsg = startState(kernel);
+  statusComm.open();
+};
 
 const startState =
-  (manager: SessionManager, kernel: Kernel.IKernelConnection) =>
-  (_: Kernel.IComm, message: KernelMessage.ICommOpenMsg): void => {
-    if (kernel === null) {
-      return;
-    }
-
+  (kernel: Kernel.IKernelConnection) =>
+  (message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>): void => {
     const amount = Number(Boolean(message.content.data.cluster));
     addEnabled(amount);
+    const newStarted = Boolean(message.content.data.started);
+    andStarted(newStarted);
 
-    manager.runningChanged.connect(cleanUpState(kernel, amount));
+    kernel.statusChanged.connect(cleanUpState(amount));
+    kernel.registerCommTarget('ipycompss_stop_target', () => setStarted(false));
   };
 
 const cleanUpState =
-  (kernel: Kernel.IKernelConnection, amount: number) =>
-  (_: SessionManager, sessions: Session.IModel[]) => {
-    console.log(kernel.id, sessions);
-    if (
-      !sessions
-        .map((session: Session.IModel) => session.kernel?.id)
-        .includes(kernel.id)
-    ) {
+  (amount: number) => (_: Kernel.IKernelConnection, status: Kernel.Status) => {
+    if (/^(?:unknown|restarting|autorestarting|dead)$/.test(status)) {
       addEnabled(-amount);
-      setStarted(false);
     }
   };
