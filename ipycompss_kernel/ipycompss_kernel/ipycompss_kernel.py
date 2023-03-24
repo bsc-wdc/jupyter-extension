@@ -1,6 +1,6 @@
 """IPyCOMPSs kernel implementation"""
 import os
-from typing import Any, Callable
+from typing import Callable
 
 import comm
 from comm.base_comm import BaseComm
@@ -35,7 +35,7 @@ class IPyCOMPSsKernel(IPythonKernel):
             )
 
         comm.get_comm_manager().register_target(
-            "ipycompss_status_target", self.status_comm()
+            "ipycompss_status_target", self.status_comm
         )
 
     def do_shutdown(self, restart: bool):
@@ -55,11 +55,7 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         super().do_shutdown(restart)
 
-    def status_comm(self) -> Callable[[BaseComm, Any], None]:
+    def status_comm(self, status_comm: BaseComm, _) -> None:
         """Send status comm to the frontend"""
-
-        def send_status_comm(status_comm: BaseComm, _):
-            status_comm.send(data={"cluster": self.cluster, "started": self.started})
-            del status_comm
-
-        return send_status_comm
+        status_comm.send(data={"cluster": self.cluster, "started": self.started})
+        del status_comm
