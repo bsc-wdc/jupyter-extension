@@ -11,33 +11,32 @@ import React, { useState } from 'react';
 export namespace CollapsibleElement {
   export interface IProperties {
     label: string;
-    Element: () => JSX.Element;
+    children: React.ReactNode;
   }
 }
 
-let icon = caretDownIcon;
-let otherIcon = caretRightIcon;
 export const CollapsibleElement = ({
   label,
-  Element
+  children
 }: CollapsibleElement.IProperties): JSX.Element => {
-  const [open, setOpen] = useState(0);
-
+  const [open, setOpen] = useState(false);
+  const [icons, setIcons] = useState({
+    main: caretRightIcon,
+    other: caretDownIcon
+  });
   return (
     <>
       <div className="jp-stack-panel-header">
         <ToolbarButtonComponent
-          icon={icon}
+          icon={icons.main}
           onClick={() => {
-            [icon, otherIcon] = [otherIcon, icon];
-            setOpen(Number(!open));
+            setIcons({ main: icons.other, other: icons.main });
+            setOpen(!open);
           }}
         />
-        <span className="jp-extensionmanager-headerText">{label}</span>
+        <span className="jp-stack-panel-header-text">{label}</span>
       </div>
-      <Collapse isOpen={Boolean(open)}>
-        <Element />
-      </Collapse>
+      <Collapse isOpen={open}>{children}</Collapse>
     </>
   );
 };

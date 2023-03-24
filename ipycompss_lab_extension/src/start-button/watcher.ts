@@ -31,15 +31,15 @@ const watchKernelChanges = (
 
 const startState =
   (kernel: Kernel.IKernelConnection) =>
-    (message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>): void => {
-      const amount = Number(Boolean(message.content.data.cluster));
-      addEnabled(amount);
-      const newStarted = Boolean(message.content.data.started);
-      orStarted(newStarted);
+  (message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>): void => {
+    const amount = +!!message.content.data.cluster;
+    addEnabled(amount);
+    const newStarted = message.content.data.started as boolean;
+    orStarted(newStarted);
 
-      kernel.statusChanged.connect(cleanUpState(amount));
-      kernel.registerCommTarget('ipycompss_stop_target', () => setStarted(false));
-    };
+    kernel.statusChanged.connect(cleanUpState(amount));
+    kernel.registerCommTarget('ipycompss_stop_target', () => setStarted(false));
+  };
 
 const cleanUpState =
   (amount: number) => (_: Kernel.IKernelConnection, status: Kernel.Status) => {

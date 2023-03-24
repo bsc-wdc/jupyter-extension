@@ -21,7 +21,9 @@ export let setStarted: (
   callbackValue: boolean | ((value: boolean) => boolean)
 ) => void;
 
-export const StartButton = ({ tracker }: StartButton.IProperties): JSX.Element => {
+export const StartButton = ({
+  tracker
+}: StartButton.IProperties): JSX.Element => {
   tracker.widgetAdded.connect(watchNewNotebooks);
   let enabled, started;
   [enabled, setEnabled] = useState(0);
@@ -29,7 +31,7 @@ export const StartButton = ({ tracker }: StartButton.IProperties): JSX.Element =
   return (
     <ToolbarButtonComponent
       label="Start"
-      enabled={Boolean(enabled) && !started}
+      enabled={!!enabled && !started}
       onClick={showStartDialog(tracker)}
     />
   );
@@ -51,23 +53,23 @@ const showStartDialog =
 
 const startPycompss =
   (tracker: INotebookTracker) =>
-    (result: Dialog.IResult<unknown>): void => {
-      const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-      if (!result.button.accept || kernel === null || kernel === undefined) {
-        return;
-      }
+  (result: Dialog.IResult<unknown>): void => {
+    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+    if (!result.button.accept || kernel === null || kernel === undefined) {
+      return;
+    }
 
-      kernel.requestExecute({
-        code: `
+    kernel.requestExecute({
+      code: `
         import pycompss.interactive as ipycompss
         
         ipycompss.start()
         
         del ipycompss
       `,
-        silent: true
-      }).onReply = setStartedIfSuccessful;
-    };
+      silent: true
+    }).onReply = setStartedIfSuccessful;
+  };
 
 const setStartedIfSuccessful = (
   message: KernelMessage.IExecuteReplyMsg

@@ -10,7 +10,7 @@ from ipykernel.ipkernel import IPythonKernel
 class IPyCOMPSsKernel(IPythonKernel):
     """IPyCOMPSs Kernel class"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialise kernel"""
         super().__init__(**kwargs)
 
@@ -19,7 +19,7 @@ class IPyCOMPSsKernel(IPythonKernel):
         if "IPYCOMPSS_CLUSTER" in os.environ:
             self.cluster = os.environ["IPYCOMPSS_CLUSTER"].lower() == "true"
 
-    def start(self):
+    def start(self) -> None:
         """Start the kernel"""
         super().start()
 
@@ -38,7 +38,7 @@ class IPyCOMPSsKernel(IPythonKernel):
             "ipycompss_status_target", self.status_comm
         )
 
-    def do_shutdown(self, restart: bool):
+    def do_shutdown(self, restart: bool) -> None:
         """Shutdown kernel"""
 
         stopComm: BaseComm = comm.create_comm("ipycompss_stop_target")

@@ -7,7 +7,7 @@ import React from 'react';
 import '../style/index.css';
 import compss_svg from '../resources/compss.svg';
 import { StartButton } from './start-button/start-button';
-import { TaskButton } from './task-button/task-button';
+import { TaskDropdown } from './task-button/task-dropdown';
 import { TabButton } from './tab-button';
 
 const compss_icon = new LabIcon({
@@ -25,7 +25,7 @@ export const activate = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">{title}</div>
       <StartButton tracker={tracker} />
-      <TaskButton tracker={tracker} />
+      <TaskDropdown tracker={tracker} />
       <TabButton shell={app.shell} />
     </div>
   );
@@ -33,7 +33,6 @@ export const activate = (
   const widget = ReactWidget.create(jsx);
   widget.id = 'pycompss-left-menu';
   widget.title.icon = compss_icon;
-  widget.addClass('ipycompss-pycompss-sidebar');
   app.shell.add(widget, 'left', { rank: 525 });
 
   if (restorer !== undefined) {
