@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 
 import { CollapsibleElement } from '../collapsible-element';
 import { BooleanParameter } from '../parameter/bool';
+import { EnumerationParameter } from '../parameter/enum';
 import { IntegerParameter } from '../parameter/int';
 import { StringParameter } from '../parameter/str';
 import { getCurrentFunctionLineInfo } from './line-info';
@@ -49,6 +50,15 @@ export const TaskDropdown = ({
       common={{ name: 'time_out' }}
       state={state}
       defaultValue={0}
+    />,
+    <EnumerationParameter
+      key={5}
+      properties={{
+        common: { name: 'on_failure' },
+        state,
+        defaultValue: '"RETRY"'
+      }}
+      options={['"RETRY"', '"CANCEL_SUCCESSORS"', '"FAIL"', '"IGNORE"']}
     />
   ];
   return (

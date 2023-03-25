@@ -1,5 +1,5 @@
 import { ILayoutRestorer, JupyterFrontEnd } from '@jupyterlab/application';
-import { ReactWidget } from '@jupyterlab/apputils';
+import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { LabIcon } from '@jupyterlab/ui-components';
 import React from 'react';
@@ -7,7 +7,7 @@ import React from 'react';
 import '../style/index.css';
 import compss_svg from '../resources/compss.svg';
 import { StartButton } from './start-button/start-button';
-import { TaskDropdown } from './task-button/task-dropdown';
+import { TaskDropdown } from './task-dropdown/task-dropdown';
 import { TabButton } from './tab-button';
 
 const compss_icon = new LabIcon({
@@ -24,13 +24,16 @@ export const activate = (
   const jsx = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">{title}</div>
-      <StartButton tracker={tracker} />
-      <TaskDropdown tracker={tracker} />
-      <TabButton shell={app.shell} />
+      <div className="ipycompss-stack-panel">
+        <StartButton tracker={tracker} />
+        <TaskDropdown tracker={tracker} />
+        <TabButton shell={app.shell} />
+      </div>
     </div>
   );
 
-  const widget = ReactWidget.create(jsx);
+  const content = ReactWidget.create(jsx);
+  const widget = new MainAreaWidget({ content });
   widget.id = 'pycompss-left-menu';
   widget.title.icon = compss_icon;
   app.shell.add(widget, 'left', { rank: 525 });

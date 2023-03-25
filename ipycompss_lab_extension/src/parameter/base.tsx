@@ -40,4 +40,5 @@ export const onChange =
       values.set(name, value);
     }
     setValues(values);
+    console.log(value, values);
   };

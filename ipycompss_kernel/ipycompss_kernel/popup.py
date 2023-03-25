@@ -1,5 +1,4 @@
 """PyCOMPSs startup popup"""
-
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
 from typing import Callable
 

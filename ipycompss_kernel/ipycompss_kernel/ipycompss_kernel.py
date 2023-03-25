@@ -1,6 +1,5 @@
 """IPyCOMPSs kernel implementation"""
 import os
-from typing import Callable
 
 import comm
 from comm.base_comm import BaseComm

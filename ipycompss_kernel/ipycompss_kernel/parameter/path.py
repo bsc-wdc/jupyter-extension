@@ -5,7 +5,7 @@ from typing import Any
 
 from .str import StringParameter
 
-PathType = Enum("", ["file", "folder"])
+PathType = Enum("", ["FILE", "FOLDER"])
 
 
 class PathParameter(StringParameter):
@@ -19,7 +19,7 @@ class PathParameter(StringParameter):
         var: StringVar = super().make(frame)[1]
 
         def browse():
-            if self.file == PathType.file:
+            if self.file == PathType.FILE:
                 path = filedialog.askopenfilename()
             else:
                 path = filedialog.askdirectory()
