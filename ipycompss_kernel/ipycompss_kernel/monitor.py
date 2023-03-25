@@ -1,19 +1,18 @@
 """Module to manage the PyCOMPSs monitor"""
 import os
 import subprocess
-from subprocess import CompletedProcess
 import time
 import urllib.request as urlreq
-from urllib.error import URLError
 import webbrowser
+from subprocess import CompletedProcess
+from urllib.error import URLError
+from urllib.request import Request
 
 
 class Monitor:
     """Class that represents the PyCOMPSs monitor"""
 
-    url: urlreq.Request = urlreq.Request(
-        "http://localhost:8080/compss-monitor", method="HEAD"
-    )
+    url: Request = Request("http://localhost:8080/compss-monitor", method="HEAD")
 
     @staticmethod
     def start() -> None:

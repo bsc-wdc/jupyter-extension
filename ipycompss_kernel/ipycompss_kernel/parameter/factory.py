@@ -1,13 +1,11 @@
 """Factory for parameters"""
 from enum import Enum
-from pathlib import Path
-from typing import Any
 
 from .base import ParameterBase
 from .bool import BooleanParameter
 from .enum import EnumerationParameter
 from .int import IntegerParameter
-from .path import PathParameter
+from .path import PathParameter, PathType
 from .str import StringParameter
 
 LogLevel = Enum("LogLevel", ["trace", "debug", "info", "api", "off"])
@@ -59,101 +57,78 @@ CheckpointPolicy = Enum(
 class ParameterFactory:
     """Class that creates all parameters"""
 
-    type_dictionary: dict[type, ParameterBase] = {
-        bool: BooleanParameter,
-        int: IntegerParameter,
-        **dict.fromkeys(
-            [
-                LogLevel,
-                TaskExecution,
-                StreamingMode,
-                Communication,
-                Connector,
-                Scheduler,
-                CheckpointPolicy,
-            ],
-            EnumerationParameter,
-        ),
-        Path: PathParameter,
-        str: StringParameter,
-    }
-    basic_parameters: list[tuple[str, type, Any]] = [
-        ("graph", bool, False),
-        ("debug", bool, False),
-        ("trace", bool, False),
-        ("monitor", int, 1000),
+    basic_parameters: list[ParameterBase] = [
+        BooleanParameter("graph", False),
+        BooleanParameter("debug", False),
+        BooleanParameter("trace", False),
+        IntegerParameter("monitor", 1000),
     ]
-    advanced_parameters: list[tuple[str, type, Any]] = [
-        ("log_level", LogLevel, LogLevel.off),
-        ("o_c", bool, False),
-        ("project_xml", Path, ("", True)),
-        ("resources_xml", Path, ("", True)),
-        ("summary", bool, False),
-        ("task_execution", TaskExecution, TaskExecution.compss),
-        ("storage_impl", Path, ("", True)),
-        ("storage_conf", Path, ("", True)),
-        ("streaming_backend", StreamingMode, StreamingMode.NONE),
-        ("streaming_master_name", str, ""),
-        ("streaming_master_port", str, ""),
-        ("task_count", int, 50),
-        ("app_name", str, "InteractiveMode"),
-        ("uuid", str, ""),
-        ("log_dir", Path, ("", False)),
-        ("master_working_dir", Path, ("", False)),
-        ("extrae_cfg", Path, ("", True)),
-        ("extrae_final_directory", Path, ("", False)),
-        ("comm", Communication, Communication.NIO),
-        ("conn", Connector, Connector["es.bsc.compss.connectors.DefaultSSHConnector"]),
-        ("master_name", str, ""),
-        ("master_port", str, ""),
-        (
+    advanced_parameters: list[ParameterBase] = [
+        EnumerationParameter("log_level", LogLevel.off),
+        BooleanParameter("o_c", False),
+        PathParameter("project_xml", "", path_type=PathType.file),
+        PathParameter("resources_xml", "", path_type=PathType.file),
+        BooleanParameter("summary", False),
+        EnumerationParameter("task_execution", TaskExecution.compss),
+        PathParameter("storage_impl", "", path_type=PathType.file),
+        PathParameter("storage_conf", "", path_type=PathType.file),
+        EnumerationParameter("streaming_backend", StreamingMode.NONE),
+        StringParameter("streaming_master_name", ""),
+        StringParameter("streaming_master_port", ""),
+        IntegerParameter("task_count", 50),
+        StringParameter("app_name", "InteractiveMode"),
+        StringParameter("uuid", ""),
+        PathParameter("log_dir", "", path_type=PathType.folder),
+        PathParameter("master_working_dir", "", path_type=PathType.folder),
+        PathParameter("extrae_cfg", "", path_type=PathType.file),
+        PathParameter("extrae_final_directory", "", path_type=PathType.folder),
+        EnumerationParameter("comm", Communication.NIO),
+        EnumerationParameter(
+            "conn", Connector["es.bsc.compss.connectors.DefaultSSHConnector"]
+        ),
+        StringParameter("master_name", ""),
+        StringParameter("master_port", ""),
+        EnumerationParameter(
             "scheduler",
-            Scheduler,
             Scheduler["es.bsc.compss.scheduler.lookahead.locality.LocalityTS"],
         ),
-        ("jvm_workers", str, "-Xms1024m,-Xmx1024m,-Xmn400m"),
-        ("cpu_affinity", str, "automatic"),
-        ("gpu_affinity", str, "automatic"),
-        ("fpga_affinity", str, "automatic"),
-        ("fpga_reprogram", str, ""),
-        ("profile_input", Path, ("", True)),
-        ("profile_output", Path, ("", True)),
-        ("scheduler_config", Path, ("", True)),
-        ("external_adaptation", bool, False),
-        ("propagate_virtual_environment", bool, True),
-        ("mpi_worker", bool, False),
-        ("worker_cache", str, ""),
-        ("shutdown_in_node_failure", bool, False),
-        ("io_executors", int, 0),
-        ("env_script", Path, ("", True)),
-        ("tracing_task_dependencies", bool, False),
-        ("trace_label", str, ""),
-        ("extrae_cfg_python", Path, ("", True)),
-        ("wcl", int, 0),
-        ("cache_profiler", bool, False),
-        ("data_provenance", bool, False),
-        (
+        StringParameter("jvm_workers", "-Xms1024m,-Xmx1024m,-Xmn400m"),
+        StringParameter("cpu_affinity", "automatic"),
+        StringParameter("gpu_affinity", "automatic"),
+        StringParameter("fpga_affinity", "automatic"),
+        StringParameter("fpga_reprogram", ""),
+        PathParameter("profile_input", "", path_type=PathType.file),
+        PathParameter("profile_output", "", path_type=PathType.file),
+        PathParameter("scheduler_config", "", path_type=PathType.file),
+        BooleanParameter("external_adaptation", False),
+        BooleanParameter("propagate_virtual_environment", True),
+        BooleanParameter("mpi_worker", False),
+        StringParameter("worker_cache", ""),
+        BooleanParameter("shutdown_in_node_failure", False),
+        IntegerParameter("io_executors", 0),
+        PathParameter("env_script", "", path_type=PathType.file),
+        BooleanParameter("tracing_task_dependencies", False),
+        StringParameter("trace_label", ""),
+        PathParameter("extrae_cfg_python", "", path_type=PathType.file),
+        IntegerParameter("wcl", 0),
+        BooleanParameter("cache_profiler", False),
+        BooleanParameter("data_provenance", False),
+        EnumerationParameter(
             "checkpoint_policy",
             CheckpointPolicy,
             CheckpointPolicy["es.bsc.compss.checkpoint.policies.NoCheckpoint"],
         ),
-        ("checkpoint_params", str, ""),
-        ("checkpoint_folder", Path, ("", False)),
-        ("verbose", bool, False),
-        ("disable_external", bool, False),
+        StringParameter("checkpoint_params", ""),
+        PathParameter("checkpoint_folder", "", path_type=PathType.folder),
+        BooleanParameter("verbose", False),
+        BooleanParameter("disable_external", False),
     ]
 
     @staticmethod
     def create_parameters(advanced: bool = False) -> list[ParameterBase]:
         """Create all basic or advanced parameters that PyCOMPSs allows"""
-        parameters_to_create: list[
-            tuple[str, type, Any]
-        ] = ParameterFactory.basic_parameters
+        parameters: list[ParameterBase] = ParameterFactory.basic_parameters
         if advanced:
-            parameters_to_create = ParameterFactory.advanced_parameters
+            parameters = ParameterFactory.advanced_parameters
 
-        parameters: list[ParameterBase] = []
-        for name, p_type, default in parameters_to_create:
-            parameter = ParameterFactory.type_dictionary[p_type](name, default)
-            parameters.append(parameter)
         return parameters

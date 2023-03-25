@@ -27,4 +27,4 @@ test = [
 ipycompss-provisioner = "ipycompss_kernel:IPyCOMPSsProvisioner"
 
 [tool.setuptools.dynamic]
-version = {attr = "ipycompss_kernel.__init__.__version__"}
+version = {attr = "ipycompss_kernel._version.__version__"}

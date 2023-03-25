@@ -1,5 +1,5 @@
 """Boolean parameter"""
-import tkinter as tk
+from tkinter import BooleanVar, Checkbutton, Frame, Tk
 
 from .base import ParameterBase
 
@@ -7,10 +7,10 @@ from .base import ParameterBase
 class BooleanParameter(ParameterBase):
     """Class for boolean parameters"""
 
-    def make(self, frame) -> tuple[str, tk.BooleanVar]:
-        var: tk.BooleanVar = tk.BooleanVar()
+    def make(self, frame: Tk | Frame) -> tuple[str, BooleanVar]:
+        var: BooleanVar = BooleanVar()
         var.set(self.default)
-        checkbutton: tk.Checkbutton = tk.Checkbutton(
+        checkbutton: Checkbutton = Checkbutton(
             frame, text=self.name.capitalize(), variable=var
         )
         row: int = frame.grid_size()[1]

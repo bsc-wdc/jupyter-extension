@@ -1,5 +1,6 @@
 """Base for all parameters"""
 from abc import ABC, abstractmethod
+from tkinter import Frame, Tk
 from typing import Any
 
 
@@ -11,5 +12,5 @@ class ParameterBase(ABC):
         self.default: Any = default
 
     @abstractmethod
-    def make(self, frame) -> tuple[str, Any]:
+    def make(self, frame: Tk | Frame) -> tuple[str, Any]:
         """Create parameter in frame"""

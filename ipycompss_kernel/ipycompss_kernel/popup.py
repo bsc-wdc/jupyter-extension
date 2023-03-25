@@ -1,5 +1,7 @@
 """PyCOMPSs startup popup"""
-import tkinter as tk
+
+from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
+from typing import Callable
 
 import pycompss.interactive as ipycompss
 
@@ -7,7 +9,7 @@ from .monitor import Monitor
 from .parameter.factory import ParameterFactory
 
 
-class Popup(tk.Tk):
+class Popup(Tk):
     """PyCOMPs popup implementation"""
 
     def __init__(self, *args, **kwargs):
@@ -21,7 +23,7 @@ class Popup(tk.Tk):
         self.create_parameters(self)
 
         self.options_opened: bool = False
-        frame = self.create_advanced_options()
+        frame: Frame = self.create_advanced_options()
         self.create_parameters(frame, advanced=True)
         self.make_grid_expandable(frame)
 
@@ -30,21 +32,21 @@ class Popup(tk.Tk):
         self.create_button("Start IPyCOMPSs", self.start)
         self.make_grid_expandable(self)
 
-    def create_label(self, text: str) -> tk.Label:
+    def create_label(self, text: str) -> Label:
         """Create a label in the popup"""
-        label: tk.Label = tk.Label(self, text=text)
+        label: Label = Label(self, text=text)
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
 
-    def create_parameters(self, frame, advanced: bool = False) -> None:
+    def create_parameters(self, frame: Tk | Frame, advanced: bool = False) -> None:
         """Create parameter widgets"""
         parameters = ParameterFactory.create_parameters(advanced=advanced)
         for parameter in parameters:
             name, var = parameter.make(frame)
             self.parameters[name] = var
 
-    def create_advanced_options(self) -> tk.Frame:
+    def create_advanced_options(self) -> Frame:
         """Create advanced options canvas"""
 
         def open_close_options(_):
@@ -58,22 +60,22 @@ class Popup(tk.Tk):
             self.options_opened = not self.options_opened
 
         text: str = "Advanced options"
-        label: tk.Label = self.create_label(f"+ {text}")
+        label: Label = self.create_label(f"+ {text}")
         label.config(font="Arial 10 underline")
         label.bind("<Button-1>", open_close_options)
 
         row = self.grid_size()[1]
-        outer_frame: tk.Frame = tk.Frame(self)
+        outer_frame: Frame = Frame(self)
 
-        canvas: tk.Canvas = tk.Canvas(outer_frame, height=500, width=600)
+        canvas: Canvas = Canvas(outer_frame, height=500, width=600)
         canvas.pack(side="left")
-        frame: tk.Frame = tk.Frame(canvas)
+        frame: Frame = Frame(canvas)
         frame.bind(
             "<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all"))
         )
         canvas.create_window(0, 0, anchor="nw", window=frame)
 
-        scrollbar: tk.Scrollbar = tk.Scrollbar(
+        scrollbar: Scrollbar = Scrollbar(
             outer_frame, orient="vertical", command=canvas.yview
         )
         scrollbar.pack(side="right", expand=True, fill="both")
@@ -82,16 +84,16 @@ class Popup(tk.Tk):
         return frame
 
     @staticmethod
-    def make_grid_expandable(frame) -> None:
+    def make_grid_expandable(frame: Tk | Frame) -> None:
         """Makes the grid of the frame expandable"""
         for i in range(frame.grid_size()[1]):
             frame.rowconfigure(i, weight=1)
         for i in range(frame.grid_size()[0]):
             frame.columnconfigure(i, weight=1)
 
-    def create_button(self, text: str, command) -> None:
+    def create_button(self, text: str, command: Callable[[], None]) -> None:
         """Create a button in the popup"""
-        button: tk.Button = tk.Button(self, text=text, command=command)
+        button: Button = Button(self, text=text, command=command)
         button.grid(row=self.row, column=self.column)
         self.column += 1
 
