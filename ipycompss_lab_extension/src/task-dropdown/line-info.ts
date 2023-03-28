@@ -32,6 +32,8 @@ export const getCurrentFunctionLineInfo = (
     return currentLine;
   }
 
+  console.log(editor.getTokens().map(token => token.type));
+
   let i = lines.length - 1;
   while (i >= 0) {
     const line = lines[i];

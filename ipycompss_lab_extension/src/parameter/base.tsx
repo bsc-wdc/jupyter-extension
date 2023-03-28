@@ -22,7 +22,6 @@ export const Parameter = ({
 }: Parameter.ICommonProperties): JSX.Element => {
   useEffect(() => {
     values.current.set(name, null);
-    console.log(name, 'reset');
   }, []);
   return (
     <div className="ipycompss-parameter">
@@ -42,5 +41,4 @@ export const onChange =
   (event: any): void => {
     const value = getValue(event);
     values.current.set(name, value === defaultValue ? null : value);
-    console.log(value, values);
   };

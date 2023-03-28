@@ -59,20 +59,10 @@ const startPycompss =
       return;
     }
 
-    kernel.requestExecute({
-      code: `
-        import pycompss.interactive as ipycompss
-        
-        ipycompss.start()
-        
-        del ipycompss
-      `,
-      silent: true
-    }).onReply = setStartedIfSuccessful;
+    const startComm = kernel.createComm('ipycompss_start_target');
+    startComm.onMsg = setStartedIfSuccessful;
+    startComm.open({ arguments: {} });
   };
 
-const setStartedIfSuccessful = (
-  message: KernelMessage.IExecuteReplyMsg
-): void => {
-  setStarted(message.content.status === 'ok');
-};
+const setStartedIfSuccessful = (message: KernelMessage.ICommMsgMsg): void =>
+  setStarted((message.content.data.success as boolean) === true);

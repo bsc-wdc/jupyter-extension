@@ -1,11 +1,10 @@
 """PyCOMPSs startup popup"""
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
-from typing import Callable
-
-import pycompss.interactive as ipycompss
+from typing import Any, Callable
 
 from .monitor import Monitor
 from .parameter.factory import ParameterFactory
+from .start_pycompss import start_pycompss
 
 
 class Popup(Tk):
@@ -18,7 +17,7 @@ class Popup(Tk):
         self.wm_title("IPyCOMPSs configuration")
         self.create_label("IPyCOMPSs startup options")
 
-        self.parameters: dict = {}
+        self.parameters: dict[str, Any] = {}
         self.create_parameters(self)
 
         self.options_opened: bool = False
@@ -97,9 +96,10 @@ class Popup(Tk):
         self.column += 1
 
     def start(self) -> None:
-        """Start PyCOMPSs"""
-        arguments: dict = {key: value.get() for (key, value) in self.parameters.items()}
-        ipycompss.start(**arguments)
+        arguments: dict[str, Any] = {
+            key: value.get() for (key, value) in self.parameters.items()
+        }
+        start_pycompss(arguments)
 
         self.destroy()
 
