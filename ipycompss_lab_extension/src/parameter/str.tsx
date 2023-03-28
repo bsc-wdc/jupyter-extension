@@ -4,16 +4,15 @@ import React from 'react';
 import { onChange, Parameter } from './base';
 
 export const StringParameter = ({
-  common: { name },
-  state,
+  common: { name, values },
   defaultValue
 }: Parameter.IProperties<string>): JSX.Element => (
-  <Parameter name={name}>
+  <Parameter name={name} values={values}>
     <InputGroup
       defaultValue={defaultValue}
       onChange={onChange<string, React.FormEvent<HTMLInputElement>>(
         name,
-        state,
+        values,
         defaultValue,
         getValue
       )}

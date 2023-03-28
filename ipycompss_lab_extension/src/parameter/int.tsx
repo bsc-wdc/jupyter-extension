@@ -4,16 +4,15 @@ import React from 'react';
 import { onChange, Parameter } from './base';
 
 export const IntegerParameter = ({
-  common: { name },
-  state,
+  common: { name, values },
   defaultValue
 }: Parameter.IProperties<number>): JSX.Element => (
-  <Parameter name={name}>
+  <Parameter name={name} values={values}>
     <NumericInput
       defaultValue={defaultValue}
       onValueChange={onChange<number, number>(
         name,
-        state,
+        values,
         defaultValue,
         getValue
       )}
@@ -21,4 +20,4 @@ export const IntegerParameter = ({
   </Parameter>
 );
 
-const getValue = (value: number) => value;
+const getValue = (value: number): string => value.toString();

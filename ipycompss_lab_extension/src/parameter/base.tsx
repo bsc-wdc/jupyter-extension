@@ -1,44 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { capitalise } from '../utils';
 
 export namespace Parameter {
   export interface ICommonProperties {
     name: string;
+    values: React.MutableRefObject<Map<string, string | null>>;
     children?: React.ReactNode;
   }
 
   export interface IProperties<Type> {
     common: ICommonProperties;
-    state: [Map<string, any>, (value: Map<string, any>) => void];
     defaultValue: Type;
   }
 }
 
 export const Parameter = ({
   name,
+  values,
   children
-}: Parameter.ICommonProperties): JSX.Element => (
-  <div className="ipycompss-parameter">
-    {capitalise(name)}
-    {children}
-  </div>
-);
+}: Parameter.ICommonProperties): JSX.Element => {
+  useEffect(() => {
+    values.current.set(name, null);
+    console.log(name, 'reset');
+  }, []);
+  return (
+    <div className="ipycompss-parameter">
+      {capitalise(name)}
+      {children}
+    </div>
+  );
+};
 
 export const onChange =
   <Type extends any, EventType extends any>(
     name: string,
-    [values, setValues]: [Map<string, any>, (values: Map<string, any>) => void],
+    values: React.MutableRefObject<Map<string, string | null>>,
     defaultValue: Type,
-    getValue: (event: EventType) => Type
+    getValue: (event: EventType) => string
   ) =>
   (event: any): void => {
     const value = getValue(event);
-    if (value === defaultValue) {
-      values.delete(name);
-    } else {
-      values.set(name, value);
-    }
-    setValues(values);
+    values.current.set(name, value === defaultValue ? null : value);
     console.log(value, values);
   };

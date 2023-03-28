@@ -5,16 +5,15 @@ import { capitalise } from '../utils';
 import { onChange, Parameter } from './base';
 
 export const BooleanParameter = ({
-  common: { name },
-  state,
+  common: { name, values },
   defaultValue
 }: Parameter.IProperties<boolean>): JSX.Element => (
-  <Parameter name={name}>
+  <Parameter name={name} values={values}>
     <Checkbox
       defaultChecked={defaultValue}
       onChange={onChange<string, React.FormEvent<HTMLInputElement>>(
         name,
-        state,
+        values,
         capitalise(defaultValue.toString()),
         getValue
       )}

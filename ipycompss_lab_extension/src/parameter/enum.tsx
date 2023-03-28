@@ -13,15 +13,14 @@ export namespace EnumerationParameter {
 
 export const EnumerationParameter = ({
   properties: {
-    common: { name },
-    state: [values, setValues],
+    common: { name, values },
     defaultValue
   },
   options
 }: EnumerationParameter.IProperties): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState(defaultValue);
   return (
-    <Parameter name={name}>
+    <Parameter name={name} values={values}>
       <Select
         items={options}
         itemRenderer={(item: string, { handleClick }): JSX.Element => (
@@ -29,12 +28,7 @@ export const EnumerationParameter = ({
         )}
         onItemSelect={item => {
           setSelectedItem(item);
-          onChange<string, string>(
-            name,
-            [values, setValues],
-            defaultValue,
-            getValue
-          )(item);
+          onChange<string, string>(name, values, defaultValue, getValue)(item);
         }}
         filterable={false}
       >

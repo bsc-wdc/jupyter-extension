@@ -1,7 +1,7 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
 import { CodeEditor } from '@jupyterlab/codeeditor';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 
 import { CollapsibleElement } from '../collapsible-element';
 import { BooleanParameter } from '../parameter/bool';
@@ -19,43 +19,37 @@ export namespace TaskDropdown {
 export const TaskDropdown = ({
   tracker
 }: TaskDropdown.IProperties): JSX.Element => {
-  const state = useState(new Map<string, any>());
+  const values = useRef(new Map<string, string | null>());
   const parameters: any[] = [
     <StringParameter
       key={0}
-      common={{ name: 'returns' }}
-      state={state}
+      common={{ name: 'returns', values }}
       defaultValue=""
     />,
     <BooleanParameter
       key={1}
-      common={{ name: 'priority' }}
-      state={state}
+      common={{ name: 'priority', values }}
       defaultValue={false}
     />,
     <BooleanParameter
       key={2}
-      common={{ name: 'is_reduce' }}
-      state={state}
+      common={{ name: 'is_reduce', values }}
       defaultValue={true}
     />,
     <IntegerParameter
       key={3}
-      common={{ name: 'chunk_size' }}
-      state={state}
+      common={{ name: 'chunk_size', values }}
       defaultValue={0}
     />,
     <IntegerParameter
       key={4}
-      common={{ name: 'time_out' }}
-      state={state}
+      common={{ name: 'time_out', values }}
       defaultValue={0}
     />,
     <EnumerationParameter
       key={5}
       properties={{
-        common: { name: 'on_failure' },
-        state,
+        common: { name: 'on_failure', values },
         defaultValue: '"RETRY"'
       }}
       options={['"RETRY"', '"CANCEL_SUCCESSORS"', '"FAIL"', '"IGNORE"']}
@@ -67,7 +61,7 @@ export const TaskDropdown = ({
         {parameters}
         <ToolbarButtonComponent
           label="Define task"
-          onClick={createTask(tracker, state[0])}
+          onClick={createTask(tracker, values)}
         />
       </CollapsibleElement>
     </>
@@ -75,7 +69,10 @@ export const TaskDropdown = ({
 };
 
 const createTask =
-  (tracker: INotebookTracker, values: Map<string, any>) =>
+  (
+    tracker: INotebookTracker,
+    values: React.MutableRefObject<Map<string, string | null>>
+  ) =>
   async (): Promise<void> => {
     const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
     if (editor === undefined) {
@@ -88,14 +85,15 @@ const createTask =
     }
 
     const linePosition: CodeEditor.IPosition = {
-      column: lineInfo.indentation,
-      line: lineInfo.lineNumber
+      column: lineInfo?.indentation,
+      line: lineInfo?.lineNumber
     };
     editor.setCursorPosition(linePosition);
     editor.newIndentedLine();
-    editor.setSelection({ end: linePosition, start: linePosition });
-    editor.replaceSelection?.(
-      `@task(${Array.from(values)
+    editor.model.value.insert(
+      editor.getOffsetAt(linePosition),
+      `@task(${Array.from(values.current)
+        .filter(([_, value]: [string, any]) => value !== null)
         .map(([key, value]: [string, any]) => `${key}=${value}`)
         .join(', ')})`
     );

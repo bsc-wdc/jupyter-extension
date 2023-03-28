@@ -38,7 +38,5 @@ export const activate = (
   widget.title.icon = compss_icon;
   app.shell.add(widget, 'left', { rank: 525 });
 
-  if (restorer !== undefined) {
-    restorer.add(widget, 'pycompss-left-menu');
-  }
+  restorer?.add(widget, 'pycompss-left-menu');
 };
