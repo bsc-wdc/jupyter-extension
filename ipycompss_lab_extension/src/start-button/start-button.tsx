@@ -56,9 +56,6 @@ const startPycompss =
       return;
     }
 
-    kernel.anyMessage.connect((_, args) =>
-      console.log(args.direction, args.msg)
-    );
     const startComm = kernel.createComm('ipycompss_start_target');
     startComm.onMsg = setStartedIfSuccessful;
     startComm.open({ arguments: {} });

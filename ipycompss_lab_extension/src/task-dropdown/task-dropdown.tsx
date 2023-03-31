@@ -73,28 +73,28 @@ const createTask =
     tracker: INotebookTracker,
     values: React.MutableRefObject<Map<string, string | null>>
   ) =>
-    async (): Promise<void> => {
-      const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
-      if (editor === undefined) {
-        return;
-      }
+  async (): Promise<void> => {
+    const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
+    if (editor === undefined) {
+      return;
+    }
 
-      const lineInfo = getCurrentFunctionLineInfo(editor);
-      if (lineInfo === undefined) {
-        return;
-      }
+    const lineInfo = getCurrentFunctionLineInfo(editor);
+    if (lineInfo === undefined) {
+      return;
+    }
 
-      const linePosition: CodeEditor.IPosition = {
-        column: lineInfo?.indentation,
-        line: lineInfo?.lineNumber
-      };
-      editor.setCursorPosition(linePosition);
-      editor.newIndentedLine();
-      editor.model.value.insert(
-        editor.getOffsetAt(linePosition),
-        `@task(${Array.from(values.current)
-          .filter(([_, value]: [string, any]) => value !== null)
-          .map(([key, value]: [string, any]) => `${key}=${value}`)
-          .join(', ')})`
-      );
+    const linePosition: CodeEditor.IPosition = {
+      column: lineInfo?.indentation,
+      line: lineInfo?.lineNumber
     };
+    editor.setCursorPosition(linePosition);
+    editor.newIndentedLine();
+    editor.model.value.insert(
+      editor.getOffsetAt(linePosition),
+      `@task(${Array.from(values.current)
+        .filter(([_, value]: [string, any]) => value !== null)
+        .map(([key, value]: [string, any]) => `${key}=${value}`)
+        .join(', ')})`
+    );
+  };

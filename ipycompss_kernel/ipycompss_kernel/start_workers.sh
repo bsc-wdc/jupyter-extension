@@ -15,6 +15,8 @@ ${COMPSS_HOME}/Runtime/scripts/user/launch_compss --master_node="${COMPSS_MASTER
 # Now we filter the environments (updated - original) to find the variables that launch_compss defined
 REQUIRED_ENV_PATH=${WORK_DIRECTORY}/TO_BE_SOURCED.vars
 sort ${UPDATED_ENV_PATH} | diff -u ${ORIGINAL_ENV_PATH} - | sed -n '/^+[^+]/ s/^+//p' | sed '/SHLVL\|UPDATED_ENV_PATH/d' > ${REQUIRED_ENV_PATH}
+echo "COMPSS_MASTER_NODE=$COMPSS_MASTER_NODE
+COMPSS_WORKER_NODES=$COMPSS_WORKER_NODES" >> ${REQUIRED_ENV_PATH}
 
 cat ${REQUIRED_ENV_PATH}
 rm ${ORIGINAL_ENV_PATH} ${UPDATED_ENV_PATH} ${REQUIRED_ENV_PATH}
