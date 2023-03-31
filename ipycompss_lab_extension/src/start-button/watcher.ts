@@ -3,7 +3,7 @@ import { IChangedArgs } from '@jupyterlab/coreutils';
 import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
 import { Kernel, KernelMessage } from '@jupyterlab/services';
 
-import { addEnabled, orStarted, setStarted } from './start-button';
+import { addEnabled, setStarted } from './start-button';
 
 export const watchNewNotebooks = (
   _: INotebookTracker,
@@ -34,8 +34,8 @@ const startState =
   (message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>): void => {
     const amount = +!!message.content.data.cluster;
     addEnabled(amount);
-    const newStarted = message.content.data.started as boolean;
-    orStarted(newStarted);
+    const started = message.content.data.started as boolean;
+    setStarted(started);
 
     kernel.statusChanged.connect(cleanUpState(amount));
     kernel.registerCommTarget('ipycompss_stop_target', () => setStarted(false));

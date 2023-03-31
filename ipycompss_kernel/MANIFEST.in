@@ -1,0 +1,1 @@
+include ipycompss_kernel/start_workers.sh

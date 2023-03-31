@@ -40,9 +40,6 @@ export const StartButton = ({
 export const addEnabled = (amount: number): void =>
   setEnabled(enabled => enabled + amount);
 
-export const orStarted = (newStarted: boolean): void =>
-  setStarted(started => started || newStarted);
-
 const showStartDialog =
   (tracker: INotebookTracker) => async (): Promise<void> => {
     void showDialog({
@@ -59,10 +56,13 @@ const startPycompss =
       return;
     }
 
+    kernel.anyMessage.connect((_, args) =>
+      console.log(args.direction, args.msg)
+    );
     const startComm = kernel.createComm('ipycompss_start_target');
     startComm.onMsg = setStartedIfSuccessful;
     startComm.open({ arguments: {} });
   };
 
 const setStartedIfSuccessful = (message: KernelMessage.ICommMsgMsg): void =>
-  setStarted((message.content.data.success as boolean) === true);
+  setStarted(message.content.data.success as boolean);
