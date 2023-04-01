@@ -20,6 +20,7 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
@@ -132,3 +133,27 @@ cython_debug/
 
 # Visual Studio Code settings
 .vscode/
+
+*.bundle.*
+node_modules/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+ipycompss_lab_extension/labextension
+# Version file is handled by hatchling
+ipycompss_lab_extension/_version.py
+
+# Integration tests
+ui-tests/test-results/
+ui-tests/playwright-report/
+
+# pyenv
+.python-version
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# OSX files
+.DS_Store
