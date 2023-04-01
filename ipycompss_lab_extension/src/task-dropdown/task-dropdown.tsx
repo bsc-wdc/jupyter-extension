@@ -4,10 +4,12 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React, { useRef } from 'react';
 
 import { CollapsibleElement } from '../collapsible-element';
-import { BooleanParameter } from '../parameter/bool';
-import { EnumerationParameter } from '../parameter/enum';
-import { IntegerParameter } from '../parameter/int';
-import { StringParameter } from '../parameter/str';
+import {
+  BooleanParameter,
+  EnumerationParameter,
+  IntegerParameter,
+  StringParameter
+} from '../parameter';
 import { getCurrentFunctionLineInfo } from './line-info';
 
 export namespace TaskDropdown {

@@ -1,0 +1,9 @@
+.ipycompss-pycompss-sidebar .jp-stack-panel-header-text {
+  flex: 1 0 auto;
+  margin: 0 4px;
+}
+
+.ipycompss-pycompss-sidebar .bp3-collapse-body {
+  display: flex;
+  flex-direction: column;
+}

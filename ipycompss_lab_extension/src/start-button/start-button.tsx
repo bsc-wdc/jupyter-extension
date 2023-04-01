@@ -3,7 +3,6 @@ import {
   showDialog,
   ToolbarButtonComponent
 } from '@jupyterlab/apputils';
-
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { KernelMessage } from '@jupyterlab/services';
 import React, { useState } from 'react';
