@@ -1,9 +1,10 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
 import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
-import { Kernel, KernelMessage } from '@jupyterlab/services';
+import { Kernel } from '@jupyterlab/services';
 
 import { addEnabled, setStarted } from './start-button';
+import { Messaging } from './messaging';
 
 export const watchNewNotebooks = (
   _: INotebookTracker,
@@ -24,21 +25,19 @@ const watchKernelChanges = (
     return;
   }
 
-  const statusComm = kernel.createComm('ipycompss_status_target');
-  statusComm.onMsg = startState(kernel);
-  statusComm.open();
+  Messaging.sendStatusRequest(kernel).onReply(startState(kernel));
 };
 
 const startState =
   (kernel: Kernel.IKernelConnection) =>
-  (message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>): void => {
-    const amount = +!!message.content.data.cluster;
+  (data: Messaging.IStatusResponseDto): void => {
+    const amount = +!!data.cluster;
     addEnabled(amount);
-    const started = message.content.data.started as boolean;
+    const started = data.started;
     setStarted(started);
 
     kernel.statusChanged.connect(cleanUpState(amount));
-    kernel.registerCommTarget('ipycompss_stop_target', () => setStarted(false));
+    Messaging.onStop(kernel, () => setStarted(false));
   };
 
 const cleanUpState =

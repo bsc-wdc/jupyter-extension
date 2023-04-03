@@ -4,10 +4,10 @@ import {
   ToolbarButtonComponent
 } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { KernelMessage } from '@jupyterlab/services';
 import React, { useState } from 'react';
 
 import { watchNewNotebooks } from './watcher';
+import { Messaging } from './messaging';
 
 export namespace StartButton {
   export interface IProperties {
@@ -16,9 +16,7 @@ export namespace StartButton {
 }
 
 let setEnabled: (callback: (value: number) => number) => void;
-export let setStarted: (
-  callbackValue: boolean | ((value: boolean) => boolean)
-) => void;
+export let setStarted: (callbackValue: boolean) => void;
 
 export const StartButton = ({
   tracker
@@ -55,10 +53,8 @@ const startPycompss =
       return;
     }
 
-    const startComm = kernel.createComm('ipycompss_start_target');
-    startComm.onMsg = setStartedIfSuccessful;
-    startComm.open({ arguments: {} });
+    Messaging.sendStartRequest(kernel, { arguments: {} }).onReply(
+      (data: Messaging.IStartResponseDto): void =>
+        setStarted(data.success as boolean)
+    );
   };
-
-const setStartedIfSuccessful = (message: KernelMessage.ICommMsgMsg): void =>
-  setStarted(message.content.data.success as boolean);

@@ -5,7 +5,8 @@ import {
   ToolbarButtonComponent
 } from '@jupyterlab/apputils';
 import React from 'react';
-import { compss_icon } from './compss_icon';
+
+import { compss_icon } from './compss-icon';
 
 export namespace DocumentationButton {
   export interface IProperties {

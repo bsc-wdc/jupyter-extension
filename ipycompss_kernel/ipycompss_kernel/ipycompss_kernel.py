@@ -8,6 +8,8 @@ import comm
 from comm.base_comm import BaseComm
 from ipykernel.ipkernel import IPythonKernel
 
+from .messaging import Messaging, StartRequestDto, StartResponseDto, StatusDto
+
 SC_VAR = "COMPSS_RUNNING_IN_SC"
 
 
@@ -18,9 +20,9 @@ class IPyCOMPSsKernel(IPythonKernel):
         """Initialise kernel"""
         super().__init__(**kwargs)
 
-        self.cluster = False
-        if SC_VAR in os.environ:
-            self.cluster = os.environ[SC_VAR].lower() == "true"
+        self.cluster = (
+            os.environ[SC_VAR].lower() == "true" if SC_VAR in os.environ else False
+        )
 
     def start(self) -> None:
         """Start the kernel"""
@@ -37,12 +39,8 @@ class IPyCOMPSsKernel(IPythonKernel):
                 silent=True,
             )
 
-        comm.get_comm_manager().register_target(
-            "ipycompss_status_target", self.status_comm
-        )
-        comm.get_comm_manager().register_target(
-            "ipycompss_start_target", self.start_comm
-        )
+        Messaging.on_status(self.get_status)
+        Messaging.on_start(self.handle_start_request)
 
     def do_shutdown(self, restart: bool) -> None:
         """Shutdown kernel"""
@@ -61,16 +59,15 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         super().do_shutdown(restart)
 
-    def status_comm(self, status_comm: BaseComm, _) -> None:
+    def get_status(self) -> StatusDto:
         """Send status comm to the frontend"""
         processes = subprocess.run(["ps", "aux", "ww"], capture_output=True)
         started = re.search(
             r"java.*compss-engine\.jar", processes.stdout.decode("utf-8")
         )
-        status_comm.send(data={"cluster": self.cluster, "started": started is not None})
-        del status_comm
+        return {"cluster": self.cluster, "started": started is not None}
 
-    def start_comm(self, start_comm: BaseComm, open_start_comm) -> None:
+    def handle_start_request(self, request: StartRequestDto) -> StartResponseDto:
         """Execute code to start PyCOMPSs runtime"""
 
         def run_and_get_env(script_path):
@@ -91,11 +88,10 @@ class IPyCOMPSsKernel(IPythonKernel):
 
                 start_pycompss(
                     {env},
-                    {open_start_comm["content"]["data"]["arguments"]}
+                    {request["arguments"]}
                 )
                 del start_pycompss
             """,
             silent=True,
         )
-        start_comm.send(data={"success": result.success})
-        del start_comm
+        return {"success": result.success}

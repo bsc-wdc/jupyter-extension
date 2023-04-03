@@ -8,7 +8,7 @@ import { StartButton } from './start-button';
 import { TaskDropdown } from './task-dropdown';
 import { TabButton } from './tab-button';
 import { DocumentationButton } from './documentation-button';
-import { compss_icon } from './compss_icon';
+import { compss_icon } from './compss-icon';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
