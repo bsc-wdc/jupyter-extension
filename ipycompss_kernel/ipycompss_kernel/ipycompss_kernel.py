@@ -4,8 +4,6 @@ import re
 import subprocess
 from importlib import resources
 
-import comm
-from comm.base_comm import BaseComm
 from ipykernel.ipkernel import IPythonKernel
 
 from .messaging import Messaging, StartRequestDto, StartResponseDto, StatusDto
@@ -54,8 +52,7 @@ class IPyCOMPSsKernel(IPythonKernel):
             silent=True,
         )
 
-        stopComm: BaseComm = comm.create_comm("ipycompss_stop_target")
-        del stopComm
+        Messaging.send_stop()
 
         super().do_shutdown(restart)
 
@@ -86,10 +83,7 @@ class IPyCOMPSsKernel(IPythonKernel):
             f"""
                 from ipycompss_kernel.start_pycompss import start_pycompss
 
-                start_pycompss(
-                    {env},
-                    {request["arguments"]}
-                )
+                start_pycompss({env}, {request["arguments"]})
                 del start_pycompss
             """,
             silent=True,

@@ -6,7 +6,7 @@ import {
 } from '@jupyterlab/apputils';
 import React from 'react';
 
-import { compss_icon } from './compss-icon';
+import { compss_icon } from './icon';
 
 export namespace DocumentationButton {
   export interface IProperties {

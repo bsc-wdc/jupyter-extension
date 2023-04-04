@@ -99,7 +99,7 @@ class Popup(Tk):
         arguments: dict[str, Any] = {
             key: value.get() for (key, value) in self.parameters.items()
         }
-        start_pycompss(False, arguments)
+        start_pycompss([], arguments)
 
         self.destroy()
 

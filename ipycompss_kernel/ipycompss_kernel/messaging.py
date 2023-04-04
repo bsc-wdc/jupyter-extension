@@ -41,3 +41,8 @@ class Messaging:
             del start_comm
 
         comm.get_comm_manager().register_target("ipycompss_start_target", on_start_comm)
+
+    @staticmethod
+    def send_stop():
+        stopComm: BaseComm = comm.create_comm("ipycompss_stop_target")
+        del stopComm
