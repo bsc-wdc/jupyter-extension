@@ -13,8 +13,7 @@
   },
   "license": "BSD-3-Clause",
   "author": {
-    "name": "My Name",
-    "email": "me@test.com"
+    "name": "Workflows and Distributed Computing Group (WDC)"
   },
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
