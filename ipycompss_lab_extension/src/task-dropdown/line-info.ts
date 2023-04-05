@@ -49,14 +49,14 @@ export const getCurrentFunctionLineInfo = (
 
 const toLineInfo =
   (editor: CodeEditor.IEditor) =>
-    ([line, lineNumber]: [string, number]): ILineInfo | undefined => {
-      const { indent, keyword } =
-        line?.match(/^(?<indent>\s*)(?<keyword>\w+)/)?.groups || {};
+  ([line, lineNumber]: [string, number]): ILineInfo | undefined => {
+    const { indent, keyword } =
+      line?.match(/^(?<indent>\s*)(?<keyword>\w+)/)?.groups || {};
 
-      return {
-        keyword,
-        indentation: indent.length,
-        lineNumber,
-        block: /:$/.test(line || '')
-      };
+    return {
+      keyword,
+      indentation: indent.length,
+      lineNumber,
+      block: /:$/.test(line || '')
     };
+  };

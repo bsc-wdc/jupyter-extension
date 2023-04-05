@@ -1,30 +1,33 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.4.0"]
+build-backend = "hatchling.build"
 
 [project]
 name = "ipycompss-kernel"
-dynamic = [
-    "version",
-]
-description = "PyCOMPSs kernel for Jupyter"
+readme = "../README.md"
+license = { file = "../LICENSE" }
+requires-python = ">=3.8"
 classifiers = [
+    "Framework :: Jupyter",
     "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
-requires-python = ">=3.8"
 dependencies = [
     "ipykernel",
     "jupyter_client",
+    "pycompss"
 ]
-
-[project.optional-dependencies]
-test = [
-  "jupyter_kernel_test",
-]
+dynamic = ["version", "description", "authors", "urls", "keywords"]
 
 [project.entry-points."jupyter_client.kernel_provisioners"]
 ipycompss-provisioner = "ipycompss_kernel:IPyCOMPSsProvisioner"
 
-[tool.setuptools.dynamic]
-version = {attr = "ipycompss_kernel._version.__version__"}
+[tool.hatch.version]
+path = "ipycompss_kernel/_version.py"
+
+[tool.check-wheel-contents]
+ignore = ["W002"]

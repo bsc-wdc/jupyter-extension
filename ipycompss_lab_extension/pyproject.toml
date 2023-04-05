@@ -4,25 +4,24 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ipycompss_lab_extension"
-readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.7"
+readme = "../README.md"
+license = { file = "../LICENSE" }
+requires-python = ">=3.8"
 classifiers = [
     "Framework :: Jupyter",
     "Framework :: Jupyter :: JupyterLab",
     "Framework :: Jupyter :: JupyterLab :: 3",
     "Framework :: Jupyter :: JupyterLab :: Extensions",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
-    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
+    ipycompss_kernel
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
