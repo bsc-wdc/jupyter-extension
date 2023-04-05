@@ -1,20 +1,24 @@
 """IPyCOMPSs kernel implementation"""
-import os
 import re
 import subprocess
 from importlib import resources
+from typing import Any
 
 from ipykernel.ipkernel import IPythonKernel
 
-from .messaging import Messaging, StartRequestDto, StartResponseDto, StatusDto
+from .messaging import Messaging, StartRequestDto, SuccessResponseDto, StatusDto
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
+STOP_CODE = """
+                import pycompss.interactive as ipycompss
+                ipycompss.stop(sync=True)
+            """
 
 
 class IPyCOMPSsKernel(IPythonKernel):
     """IPyCOMPSs Kernel class"""
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: dict[str, Any]) -> None:
         """Initialise kernel"""
         super().__init__(**kwargs)
 
@@ -39,22 +43,15 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         Messaging.on_status(self.get_status)
         Messaging.on_start(self.handle_start_request)
+        Messaging.on_stop(self.handle_stop_request)
 
-    def do_shutdown(self, restart: bool) -> None:
+    def do_shutdown(self, restart: bool) -> dict[str, str]:
         """Shutdown kernel"""
 
-        self.shell.run_cell(
-            """
-                import pycompss.interactive as ipycompss
-
-                ipycompss.stop(sync=True)
-            """,
-            silent=True,
-        )
-
+        self.shell.run_cell(STOP_CODE, silent=True)
         Messaging.send_stop()
 
-        super().do_shutdown(restart)
+        return super().do_shutdown(restart)
 
     def get_status(self) -> StatusDto:
         """Send status comm to the frontend"""
@@ -64,10 +61,10 @@ class IPyCOMPSsKernel(IPythonKernel):
         )
         return {"cluster": self.cluster, "started": started is not None}
 
-    def handle_start_request(self, request: StartRequestDto) -> StartResponseDto:
+    def handle_start_request(self, request: StartRequestDto) -> SuccessResponseDto:
         """Execute code to start PyCOMPSs runtime"""
 
-        def run_and_get_env(script_path):
+        def run_and_get_env(script_path: str) -> list[list[str]]:
             result = subprocess.run(["sh", script_path], stdout=subprocess.PIPE)
             output = result.stdout.decode("utf-8")
             return [line.split("=", 1) for line in output.split("\n")[:-1]]
@@ -88,4 +85,9 @@ class IPyCOMPSsKernel(IPythonKernel):
             """,
             silent=True,
         )
+        return {"success": result.success}
+
+    def handle_stop_request(self) -> SuccessResponseDto:
+        """Execute code to stop PyCOMPSs runtime"""
+        result = self.shell.run_cell(STOP_CODE, silent=True)
         return {"success": result.success}

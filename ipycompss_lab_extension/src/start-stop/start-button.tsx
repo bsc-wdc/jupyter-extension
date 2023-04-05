@@ -4,46 +4,35 @@ import {
   ToolbarButtonComponent
 } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { watchNewNotebooks } from './watcher';
 import { Messaging } from './messaging';
+import { setState } from './start-stop';
 
 export namespace StartButton {
   export interface IProperties {
     tracker: INotebookTracker;
+    state: { enabled: boolean; started: boolean };
   }
 }
 
-let setEnabled: (callback: (value: number) => number) => void;
-export let setStarted: (callbackValue: boolean) => void;
-
 export const StartButton = ({
-  tracker
-}: StartButton.IProperties): JSX.Element => {
-  tracker.widgetAdded.connect(watchNewNotebooks);
-  let enabled, started;
-  [enabled, setEnabled] = useState(0);
-  [started, setStarted] = useState(Boolean(false));
-  return (
-    <ToolbarButtonComponent
-      label="Start"
-      enabled={!!enabled && !started}
-      onClick={showStartDialog(tracker)}
-    />
-  );
-};
-
-export const addEnabled = (amount: number): void =>
-  setEnabled(enabled => enabled + amount);
+  tracker,
+  state: { enabled, started }
+}: StartButton.IProperties): JSX.Element => (
+  <ToolbarButtonComponent
+    label="Start"
+    enabled={enabled && !started}
+    onClick={showStartDialog(tracker)}
+  />
+);
 
 const showStartDialog =
-  (tracker: INotebookTracker) => async (): Promise<void> => {
+  (tracker: INotebookTracker) => async (): Promise<void> =>
     void showDialog({
       title: 'IPyCOMPSs configuration',
       buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
     }).then(startPycompss(tracker));
-  };
 
 const startPycompss =
   (tracker: INotebookTracker) =>
@@ -54,7 +43,7 @@ const startPycompss =
     }
 
     Messaging.sendStartRequest(kernel, { arguments: {} }).onReply(
-      (data: Messaging.IStartResponseDto): void =>
-        setStarted(data.success as boolean)
+      ({ success }: Messaging.ISuccessResponseDto): void =>
+        setState(({ enabled, started }) => ({ enabled, started: success }))
     );
   };

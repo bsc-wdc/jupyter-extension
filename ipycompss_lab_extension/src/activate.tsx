@@ -4,11 +4,11 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import '../style/index.css';
-import { StartButton } from './start-button';
 import { TaskDropdown } from './task-dropdown';
 import { TabButton } from './tab-button';
 import { DocumentationButton } from './documentation-button';
 import { compss_icon } from './icon';
+import { StartStop } from './start-stop';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
@@ -21,7 +21,7 @@ export const activate = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">IPyCOMPSs</div>
       <div className="ipycompss-stack-panel">
-        <StartButton tracker={tracker} />
+        <StartStop tracker={tracker} />
         <TaskDropdown tracker={tracker} />
         <DocumentationButton shell={app.shell} />
         <TabButton shell={app.shell} />

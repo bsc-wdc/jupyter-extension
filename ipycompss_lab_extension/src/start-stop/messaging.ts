@@ -6,7 +6,7 @@ export namespace Messaging {
     arguments: JSONObject;
   }
 
-  export interface IStartResponseDto extends JSONObject {
+  export interface ISuccessResponseDto extends JSONObject {
     success: boolean;
   }
 
@@ -19,21 +19,6 @@ export namespace Messaging {
     onReply: (callback: (response: T) => void) => void;
   }
 
-  export const sendStartRequest = (
-    kernel: Kernel.IKernelConnection,
-    data: IStartRequestDto
-  ): IOnReply<IStartResponseDto> => {
-    const startComm = kernel.createComm('ipycompss_start_target');
-    startComm.open(data);
-    return {
-      onReply: (callback: (response: IStartResponseDto) => void) => {
-        startComm.onMsg = (
-          message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
-        ): void => callback(message.content.data as IStartResponseDto);
-      }
-    };
-  };
-
   export const sendStatusRequest = (
     kernel: Kernel.IKernelConnection
   ): IOnReply<IStatusResponseDto> => {
@@ -44,6 +29,35 @@ export namespace Messaging {
         statusComm.onMsg = (
           message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
         ): void => callback(message.content.data as IStatusResponseDto);
+      }
+    };
+  };
+
+  export const sendStartRequest = (
+    kernel: Kernel.IKernelConnection,
+    data: IStartRequestDto
+  ): IOnReply<ISuccessResponseDto> => {
+    const startComm = kernel.createComm('ipycompss_start_target');
+    startComm.open(data);
+    return {
+      onReply: (callback: (response: ISuccessResponseDto) => void) => {
+        startComm.onMsg = (
+          message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
+        ): void => callback(message.content.data as ISuccessResponseDto);
+      }
+    };
+  };
+
+  export const sendStopRequest = (
+    kernel: Kernel.IKernelConnection
+  ): IOnReply<ISuccessResponseDto> => {
+    const stopComm = kernel.createComm('ipycompss_stop_target');
+    stopComm.open();
+    return {
+      onReply: (callback: (response: ISuccessResponseDto) => void) => {
+        stopComm.onMsg = (
+          message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
+        ): void => callback(message.content.data as ISuccessResponseDto);
       }
     };
   };
