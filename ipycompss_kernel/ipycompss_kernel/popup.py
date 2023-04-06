@@ -10,41 +10,54 @@ from .start_pycompss import start_pycompss
 class Popup(Tk):
     """PyCOMPs popup implementation"""
 
-    def __init__(self, *args, **kwargs):
+    @staticmethod
+    def _make_grid_expandable(frame: Tk | Frame) -> None:
+        """Makes the grid of the frame expandable"""
+        for i in range(frame.grid_size()[1]):
+            frame.rowconfigure(i, weight=1)
+        for i in range(frame.grid_size()[0]):
+            frame.columnconfigure(i, weight=1)
+
+    @staticmethod
+    def _start_monitor() -> None:
+        """Starts PyCOMPSs monitor"""
+        Monitor.start()
+
+    def __init__(self, *args: Any, **kwargs: Any):
         """Popup creation"""
         super().__init__(*args, **kwargs)
 
         self.wm_title("IPyCOMPSs configuration")
-        self.create_label("IPyCOMPSs startup options")
+        self._create_label("IPyCOMPSs startup options")
 
         self.parameters: dict[str, Any] = {}
-        self.create_parameters(self)
+        self._create_parameters(self)
 
         self.options_opened: bool = False
-        frame: Frame = self.create_advanced_options()
-        self.create_parameters(frame, advanced=True)
-        self.make_grid_expandable(frame)
+        frame: Frame = self._create_advanced_options()
+        self._create_parameters(frame, advanced=True)
+        self._make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self.create_button("Start PyCOMPSs monitor", self.start_monitor)
-        self.create_button("Start IPyCOMPSs", self.start)
-        self.make_grid_expandable(self)
+        self._create_button("Start PyCOMPSs monitor", self._start_monitor)
+        self._create_button("Start IPyCOMPSs", self._start)
+        self._make_grid_expandable(self)
 
-    def create_label(self, text: str) -> Label:
+    def _create_label(self, text: str) -> Label:
         """Create a label in the popup"""
         label: Label = Label(self, text=text)
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
 
-    def create_parameters(self, frame: Tk | Frame, advanced: bool = False) -> None:
+    def _create_parameters(self, frame: Tk | Frame, advanced: bool = False) -> None:
         """Create parameter widgets"""
         parameters = ParameterFactory.create_parameters(advanced=advanced)
         for parameter in parameters:
             name, var = parameter.make(frame)
             self.parameters[name] = var
 
-    def create_advanced_options(self) -> Frame:
+    def _create_advanced_options(self) -> Frame:
         """Create advanced options canvas"""
 
         def open_close_options(_):
@@ -58,7 +71,7 @@ class Popup(Tk):
             self.options_opened = not self.options_opened
 
         text: str = "Advanced options"
-        label: Label = self.create_label(f"+ {text}")
+        label: Label = self._create_label(f"+ {text}")
         label.config(font="Arial 10 underline")
         label.bind("<Button-1>", open_close_options)
 
@@ -81,29 +94,17 @@ class Popup(Tk):
 
         return frame
 
-    @staticmethod
-    def make_grid_expandable(frame: Tk | Frame) -> None:
-        """Makes the grid of the frame expandable"""
-        for i in range(frame.grid_size()[1]):
-            frame.rowconfigure(i, weight=1)
-        for i in range(frame.grid_size()[0]):
-            frame.columnconfigure(i, weight=1)
-
-    def create_button(self, text: str, command: Callable[[], None]) -> None:
+    def _create_button(self, text: str, command: Callable[[], None]) -> None:
         """Create a button in the popup"""
         button: Button = Button(self, text=text, command=command)
         button.grid(row=self.row, column=self.column)
         self.column += 1
 
-    def start(self) -> None:
+    def _start(self) -> None:
+        """Start PyCOMPSs"""
         arguments: dict[str, Any] = {
             key: value.get() for (key, value) in self.parameters.items()
         }
         start_pycompss([], arguments)
 
         self.destroy()
-
-    @staticmethod
-    def start_monitor() -> None:
-        """Starts PyCOMPSs monitor"""
-        Monitor.start()

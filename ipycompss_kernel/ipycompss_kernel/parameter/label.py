@@ -8,7 +8,7 @@ from .base import ParameterBase
 class LabeledParameter(ParameterBase):
     """Class for parameters that need a label"""
 
-    def __init__(self, *args: str | Any):
+    def __init__(self, *args: Any):
         super().__init__(*args)
         self.row: int
 

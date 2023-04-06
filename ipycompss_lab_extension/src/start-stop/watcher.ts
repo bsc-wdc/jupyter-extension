@@ -18,6 +18,8 @@ export const watchNotebookChanges = (
     return;
   }
 
+  kernel.anyMessage.connect((_, args) => console.log(args.direction, args.msg));
+
   Messaging.sendStatusRequest(kernel).onReply(startState(kernel));
 };
 
@@ -38,16 +40,16 @@ const watchKernelChanges = (
 
 const startState =
   (kernel: Kernel.IKernelConnection) =>
-    (data: Messaging.IStatusResponseDto): void => {
-      const enabled = data.cluster;
-      const started = data.started;
-      setState({ enabled, started });
+  (data: Messaging.IStatusResponseDto): void => {
+    const enabled = data.cluster;
+    const started = data.started;
+    setState({ enabled, started });
 
-      kernel.statusChanged.connect(cleanUpState);
-      Messaging.onStop(kernel, () =>
-        setState(({ enabled, started }) => ({ enabled, started: false }))
-      );
-    };
+    kernel.statusChanged.connect(cleanUpState);
+    Messaging.onStop(kernel, () =>
+      setState(({ enabled, started }) => ({ enabled, started: false }))
+    );
+  };
 
 const cleanUpState = (_: Kernel.IKernelConnection, status: Kernel.Status) => {
   if (/^(?:unknown|restarting|autorestarting|dead)$/.test(status)) {

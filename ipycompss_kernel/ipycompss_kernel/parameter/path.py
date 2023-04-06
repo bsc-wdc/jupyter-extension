@@ -11,7 +11,7 @@ PathType = Enum("", ["FILE", "FOLDER"])
 class PathParameter(StringParameter):
     """Class for path parameters"""
 
-    def __init__(self, *args: str | Any, **kwargs: Any):
+    def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args)
         self.file = kwargs["path_type"]
 
