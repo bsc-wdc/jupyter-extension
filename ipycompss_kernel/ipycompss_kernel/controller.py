@@ -1,3 +1,4 @@
+"""Helper code that the kernel executes"""
 import os
 import subprocess
 import time
@@ -60,9 +61,12 @@ class Controller:
                 current_time = time.time()
         return current_time - init_time < 60
 
+    def __init__(self) -> None:
+        self.view: Popup
+
     def start(self) -> None:
         """Start Popup"""
-        self.view: Popup = Popup()
+        self.view = Popup()
         self.view.create_button("Start PyCOMPSs monitor", self._start_monitor)
         self.view.create_button("Start IPyCOMPSs", self._start_pycompss)
         self.view.mainloop()

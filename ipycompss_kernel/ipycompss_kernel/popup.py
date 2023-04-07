@@ -1,5 +1,5 @@
 """PyCOMPSs startup popup"""
-from tkinter import Button, Canvas, Event, Frame, Label, Scrollbar, Tk
+from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
 from typing import Any, Callable
 
 from .parameter.factory import ParameterFactory
@@ -41,6 +41,7 @@ class Popup(Tk):
         self.column += 1
 
     def get_arguments(self) -> dict[str, Any]:
+        """Get arguments from parameters"""
         return {key: value.get() for (key, value) in self.parameters.items()}
 
     def _create_label(self, text: str) -> Label:
