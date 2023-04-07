@@ -34,9 +34,9 @@ class IPyCOMPSsKernel(IPythonKernel):
         if not self.cluster:
             self._execute(
                 """
-                    from ipycompss_kernel.startup_popup import create_popup
-                    create_popup()
-                    del create_popup
+                    from ipycompss_kernel.controller import Controller
+                    Controller().start()
+                    del Controller
                 """
             )
 
@@ -81,10 +81,9 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         result = self._execute(
             f"""
-                from ipycompss_kernel.start_pycompss import start_pycompss
-
-                start_pycompss({env}, {request["arguments"]})
-                del start_pycompss
+                from ipycompss_kernel.controller import Controller
+                Controller.start_pycompss({env}, {request["arguments"]})
+                del Controller
             """
         )
         return {"success": result["status"] == "ok"}

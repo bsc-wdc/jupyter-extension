@@ -8,50 +8,85 @@ from .int import IntegerParameter
 from .path import PathParameter, PathType
 from .str import StringParameter
 
-LogLevel = Enum("LogLevel", ["trace", "debug", "info", "api", "off"])
-TaskExecution = Enum("TaskExecution", ["compss", "storage"])
-StreamingMode = Enum("StreamingMode", ["FILES", "OBJECTS", "PSCOS", "ALL", "NONE"])
-Communication = Enum("Communication", ["NIO", "GAT"])
-Connector = Enum(
-    "Connector",
-    [
-        "es.bsc.compss.connectors.DefaultSSHConnector",
-        "es.bsc.compss.connectors.DefaultNoSSHConnector",
-    ],
-)
-Scheduler = Enum(
-    "Scheduler",
-    [
-        "es.bsc.compss.components.impl.TaskScheduler",
-        "es.bsc.compss.scheduler.orderstrict.fifo.FifoTS",
-        "es.bsc.compss.scheduler.lookahead.fifo.FifoTS",
-        "es.bsc.compss.scheduler.lookahead.lifo.LifoTS",
-        "es.bsc.compss.scheduler.lookahead.locality.LocalityTS",
-        (
-            "es.bsc.compss.scheduler.lookahead."
-            "successors.constraintsfifo.ConstraintsFifoTS"
-        ),
-        (
-            "es.bsc.compss.scheduler.lookahead."
-            "mt.successors.constraintsfifo.ConstraintsFifoTS"
-        ),
-        "es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS",
-        "es.bsc.compss.scheduler.lookahead.mt.successors.fifo.FifoTS",
-        "es.bsc.compss.scheduler.lookahead.successors.lifo.LifoTS",
-        "es.bsc.compss.scheduler.lookahead.mt.successors.lifo.LifoTS",
-        "es.bsc.compss.scheduler.lookahead.successors.locality.LocalityTS",
-        "es.bsc.compss.scheduler.lookahead.mt.successors.locality.LocalityTS",
-    ],
-)
-CheckpointPolicy = Enum(
-    "CheckpointPolicy",
-    [
-        "es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup",
-        "es.bsc.compss.checkpoint.policies.CheckpointPolicyPeriodicTime",
-        "es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks",
-        "es.bsc.compss.checkpoint.policies.NoCheckpoint",
-    ],
-)
+
+class LogLevel(Enum):
+    """Log level type"""
+
+    TRACE = "trace"
+    DEBUG = "debug"
+    INFO = "info"
+    API = "api"
+    OFF = "off"
+
+
+class TaskExecution(Enum):
+    """Task execution type"""
+
+    COMPSS = "compss"
+    STORAGE = "storage"
+
+
+class StreamingMode(Enum):
+    """Streaming mode type"""
+
+    FILES = "FILES"
+    OBJECTS = "OBJECTS"
+    PSCOS = "PSCOS"
+    ALL = "ALL"
+    NONE = "NONE"
+
+
+class Communication(Enum):
+    """Communication type"""
+
+    NIO = "NIO"
+    GAT = "GAT"
+
+
+class Connector(Enum):
+    """Connector class type"""
+
+    SSH = "es.bsc.compss.connectors.DefaultSSHConnector"
+    NO_SSH = "es.bsc.compss.connectors.DefaultNoSSHConnector"
+
+
+class Scheduler(Enum):
+    """Scheduler class type"""
+
+    TASK = "es.bsc.compss.components.impl.TaskScheduler"
+    ORDER_STRICT_FIFO_TS = "es.bsc.compss.scheduler.orderstrict.fifo.FifoTS"
+    FIFO_TS = "es.bsc.compss.scheduler.lookahead.fifo.FifoTS"
+    LIFO_TS = "es.bsc.compss.scheduler.lookahead.lifo.LifoTS"
+    LOCALITY_TS = "es.bsc.compss.scheduler.lookahead.locality.LocalityTS"
+    CONSTRAINTS_FIFO_TS = (
+        "es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS"
+    )
+    MT_CONSTRAINTS_FIFO_TS = "es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS"
+    SUCCESSORS_FIFO_TS = "es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS"
+    MT_SUCCESSORS_FIFO_TS = (
+        "es.bsc.compss.scheduler.lookahead.mt.successors.fifo.FifoTS"
+    )
+    SUCCESSORS_LIFO_TS = "es.bsc.compss.scheduler.lookahead.successors.lifo.LifoTS"
+    MT_SUCCESSORS_LIFO_TS = (
+        "es.bsc.compss.scheduler.lookahead.mt.successors.lifo.LifoTS"
+    )
+    SUCCESSORS_LOCALITY_TS = (
+        "es.bsc.compss.scheduler.lookahead.successors.locality.LocalityTS"
+    )
+    MT_SUCCESSORS_LOCALITY_TS = (
+        "es.bsc.compss.scheduler.lookahead.mt.successors.locality.LocalityTS"
+    )
+
+
+class CheckpointPolicy(Enum):
+    """Checkpoint policy class type"""
+
+    INSTANCIATED_GROUP = (
+        "es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup"
+    )
+    PERIODIC_TIME = "es.bsc.compss.checkpoint.policies.CheckpointPolicyPeriodicTime"
+    FINISHED_TASKS = "es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks"
+    NO = "es.bsc.compss.checkpoint.policies.NoCheckpoint"
 
 
 class ParameterFactory:
@@ -64,12 +99,12 @@ class ParameterFactory:
         IntegerParameter("monitor", 1000),
     ]
     advanced_parameters: list[ParameterBase] = [
-        EnumerationParameter("log_level", LogLevel.off),
+        EnumerationParameter("log_level", LogLevel.OFF),
         BooleanParameter("o_c", False),
         PathParameter("project_xml", "", path_type=PathType.FILE),
         PathParameter("resources_xml", "", path_type=PathType.FILE),
         BooleanParameter("summary", False),
-        EnumerationParameter("task_execution", TaskExecution.compss),
+        EnumerationParameter("task_execution", TaskExecution.COMPSS),
         PathParameter("storage_impl", "", path_type=PathType.FILE),
         PathParameter("storage_conf", "", path_type=PathType.FILE),
         EnumerationParameter("streaming_backend", StreamingMode.NONE),
@@ -83,15 +118,10 @@ class ParameterFactory:
         PathParameter("extrae_cfg", "", path_type=PathType.FILE),
         PathParameter("extrae_final_directory", "", path_type=PathType.FOLDER),
         EnumerationParameter("comm", Communication.NIO),
-        EnumerationParameter(
-            "conn", Connector["es.bsc.compss.connectors.DefaultSSHConnector"]
-        ),
+        EnumerationParameter("conn", Connector.SSH),
         StringParameter("master_name", ""),
         StringParameter("master_port", ""),
-        EnumerationParameter(
-            "scheduler",
-            Scheduler["es.bsc.compss.scheduler.lookahead.locality.LocalityTS"],
-        ),
+        EnumerationParameter("scheduler", Scheduler.LOCALITY_TS),
         StringParameter("jvm_workers", "-Xms1024m,-Xmx1024m,-Xmn400m"),
         StringParameter("cpu_affinity", "automatic"),
         StringParameter("gpu_affinity", "automatic"),
@@ -113,10 +143,7 @@ class ParameterFactory:
         IntegerParameter("wcl", 0),
         BooleanParameter("cache_profiler", False),
         BooleanParameter("data_provenance", False),
-        EnumerationParameter(
-            "checkpoint_policy",
-            CheckpointPolicy["es.bsc.compss.checkpoint.policies.NoCheckpoint"],
-        ),
+        EnumerationParameter("checkpoint_policy", CheckpointPolicy.NO),
         StringParameter("checkpoint_params", ""),
         PathParameter("checkpoint_folder", "", path_type=PathType.FOLDER),
         BooleanParameter("verbose", False),

@@ -12,10 +12,8 @@ class EnumerationParameter(LabeledParameter):
         super().create_label(frame)
 
         var: StringVar = StringVar()
-        var.set(self.default.name)
-        options: list[str] = list(
-            map(lambda value: value.name, list(type(self.default)))
-        )
+        var.set(self.default.value)
+        options: list[str] = [x.value for x in list(type(self.default))]
         option_menu: OptionMenu = OptionMenu(frame, var, *options)
         option_menu.grid(row=self.row, column=1, sticky="NSW")
         return self.name, var

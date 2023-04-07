@@ -1,10 +1,8 @@
 """PyCOMPSs startup popup"""
-from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
+from tkinter import Button, Canvas, Event, Frame, Label, Scrollbar, Tk
 from typing import Any, Callable
 
-from .monitor import Monitor
 from .parameter.factory import ParameterFactory
-from .start_pycompss import start_pycompss
 
 
 class Popup(Tk):
@@ -17,11 +15,6 @@ class Popup(Tk):
             frame.rowconfigure(i, weight=1)
         for i in range(frame.grid_size()[0]):
             frame.columnconfigure(i, weight=1)
-
-    @staticmethod
-    def _start_monitor() -> None:
-        """Starts PyCOMPSs monitor"""
-        Monitor.start()
 
     def __init__(self, *args: Any, **kwargs: Any):
         """Popup creation"""
@@ -39,9 +32,16 @@ class Popup(Tk):
         self._make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self._create_button("Start PyCOMPSs monitor", self._start_monitor)
-        self._create_button("Start IPyCOMPSs", self._start)
         self._make_grid_expandable(self)
+
+    def create_button(self, text: str, command: Callable[[], None]) -> None:
+        """Create a button in the popup"""
+        button: Button = Button(self, text=text, command=command)
+        button.grid(row=self.row, column=self.column)
+        self.column += 1
+
+    def get_arguments(self) -> dict[str, Any]:
+        return {key: value.get() for (key, value) in self.parameters.items()}
 
     def _create_label(self, text: str) -> Label:
         """Create a label in the popup"""
@@ -60,7 +60,7 @@ class Popup(Tk):
     def _create_advanced_options(self) -> Frame:
         """Create advanced options canvas"""
 
-        def open_close_options(_):
+        def open_close_options(_) -> None:
             if self.options_opened:
                 outer_frame.grid_forget()
                 label.configure(text=f"+ {text}")
@@ -78,7 +78,7 @@ class Popup(Tk):
         row = self.grid_size()[1]
         outer_frame: Frame = Frame(self)
 
-        canvas: Canvas = Canvas(outer_frame, height=500, width=600)
+        canvas: Canvas = Canvas(outer_frame, height=500, width=700)
         canvas.pack(side="left")
         frame: Frame = Frame(canvas)
         frame.bind(
@@ -93,18 +93,3 @@ class Popup(Tk):
         canvas.configure(yscrollcommand=scrollbar.set)
 
         return frame
-
-    def _create_button(self, text: str, command: Callable[[], None]) -> None:
-        """Create a button in the popup"""
-        button: Button = Button(self, text=text, command=command)
-        button.grid(row=self.row, column=self.column)
-        self.column += 1
-
-    def _start(self) -> None:
-        """Start PyCOMPSs"""
-        arguments: dict[str, Any] = {
-            key: value.get() for (key, value) in self.parameters.items()
-        }
-        start_pycompss([], arguments)
-
-        self.destroy()

@@ -1,11 +1,16 @@
 """Path parameter"""
-from enum import Enum
+from enum import Enum, auto
 from tkinter import Button, Frame, StringVar, Tk, filedialog
 from typing import Any
 
 from .str import StringParameter
 
-PathType = Enum("", ["FILE", "FOLDER"])
+
+class PathType(Enum):
+    """Type of path (file/folder path)"""
+
+    FILE = auto()
+    FOLDER = auto()
 
 
 class PathParameter(StringParameter):
@@ -13,16 +18,16 @@ class PathParameter(StringParameter):
 
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args)
-        self.file = kwargs["path_type"]
+        self.file: PathType = kwargs["path_type"]
 
     def make(self, frame: Tk | Frame) -> tuple[str, StringVar]:
         var: StringVar = super().make(frame)[1]
 
         def browse():
             if self.file == PathType.FILE:
-                path = filedialog.askopenfilename()
+                path: str = filedialog.askopenfilename()
             else:
-                path = filedialog.askdirectory()
+                path: str = filedialog.askdirectory()
             var.set(path or "")
 
         button: Button = Button(frame, text="browse", command=browse)
