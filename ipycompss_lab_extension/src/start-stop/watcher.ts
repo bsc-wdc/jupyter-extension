@@ -1,10 +1,11 @@
 import { ISessionContext } from '@jupyterlab/apputils';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { NotebookPanel, INotebookTracker } from '@jupyterlab/notebook';
+import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { Kernel } from '@jupyterlab/services';
 
-import { setState } from './start-stop';
+import { withNullable } from '../utils';
 import { Messaging } from './messaging';
+import { setState } from './start-stop';
 
 export const watchNotebookChanges = (
   _: INotebookTracker,
@@ -14,13 +15,10 @@ export const watchNotebookChanges = (
   notebook?.sessionContext.kernelChanged.connect(watchKernelChanges);
 
   const kernel = notebook?.sessionContext.session?.kernel;
-  if (kernel === null || kernel === undefined) {
-    return;
-  }
-
-  kernel.anyMessage.connect((_, args) => console.log(args.direction, args.msg));
-
-  Messaging.sendStatusRequest(kernel).onReply(startState(kernel));
+  // kernel?.anyMessage.connect((_, args) => console.log(args.direction, args.msg));
+  withNullable(Messaging.sendStatusRequest)(kernel)?.onReply(
+    startState(kernel!)
+  );
 };
 
 const watchKernelChanges = (
@@ -31,11 +29,9 @@ const watchKernelChanges = (
   >
 ): void => {
   const kernel = change.newValue;
-  if (kernel === null) {
-    return;
-  }
-
-  Messaging.sendStatusRequest(kernel).onReply(startState(kernel));
+  withNullable(Messaging.sendStatusRequest)(kernel)?.onReply(
+    startState(kernel!)
+  );
 };
 
 const startState =

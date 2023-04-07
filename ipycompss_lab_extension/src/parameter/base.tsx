@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 
-import { capitalise } from '../utils';
-
 export namespace Parameter {
   export interface ICommonProperties {
     name: string;
@@ -25,7 +23,7 @@ export const Parameter = ({
   }, []);
   return (
     <div className="ipycompss-parameter">
-      {capitalise(name)}
+      {name.capitalise()}
       {children}
     </div>
   );
@@ -38,7 +36,7 @@ export const onChange =
     defaultValue: Type,
     getValue: (event: EventType) => string
   ) =>
-  (event: any): void => {
+  (event: EventType): void => {
     const value = getValue(event);
     values.current.set(name, value === defaultValue ? null : value);
   };

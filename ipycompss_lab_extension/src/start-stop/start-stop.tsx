@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
+import React, { useState } from 'react';
 
-import { StartButton } from './start-button';
-import { StopButton } from './stop-button';
+import { withNullable } from '../utils';
+import { Messaging } from './messaging';
+import { StartStopView } from './start-stop-view';
 import { watchNotebookChanges } from './watcher';
 
 export namespace StartStop {
@@ -24,15 +26,47 @@ export let setState: (
 
 export const StartStop = ({ tracker }: StartStop.IProperties): JSX.Element => {
   tracker.currentChanged.connect(watchNotebookChanges);
-  let state;
-  [state, setState] = useState({
+  let enabled, started;
+  [{ enabled, started }, setState] = useState({
     enabled: false,
     started: false
   } as StartStop.IState);
   return (
-    <>
-      <StartButton tracker={tracker} state={state} />
-      <StopButton tracker={tracker} state={state} />
-    </>
+    <StartStopView
+      start={{
+        enabled: enabled && !started,
+        onClick: showStartDialog(tracker)
+      }}
+      stop={{ enabled: enabled && started, onClick: shutdown(tracker) }}
+    />
+  );
+};
+
+const showStartDialog =
+  (tracker: INotebookTracker) => async (): Promise<void> =>
+    void showDialog({
+      title: 'IPyCOMPSs configuration',
+      buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
+    }).then(startPycompss(tracker));
+
+const startPycompss =
+  (tracker: INotebookTracker) =>
+  (result: Dialog.IResult<unknown>): void => {
+    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+    if (!result.button.accept) {
+      return;
+    }
+
+    withNullable(Messaging.sendStartRequest)(kernel, { arguments: {} }).onReply(
+      ({ success }: Messaging.ISuccessResponseDto): void =>
+        setState(({ enabled, started }) => ({ enabled, started: success }))
+    );
+  };
+
+const shutdown = (tracker: INotebookTracker) => async (): Promise<void> => {
+  const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+  withNullable(Messaging.sendStopRequest)(kernel).onReply(
+    ({ success }: Messaging.ISuccessResponseDto) =>
+      setState(({ enabled, started }) => ({ enabled, started: !success }))
   );
 };

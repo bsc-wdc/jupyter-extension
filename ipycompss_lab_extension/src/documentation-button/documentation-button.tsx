@@ -1,12 +1,12 @@
 import { JupyterFrontEnd } from '@jupyterlab/application';
-import {
-  MainAreaWidget,
-  ReactWidget,
-  ToolbarButtonComponent
-} from '@jupyterlab/apputils';
+import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
 import React from 'react';
 
-import { compss_icon } from './icon';
+import { compss_icon } from '../icon';
+import {
+  DocumentationButtonView,
+  DocumentationIFrame
+} from './documentation-button-view';
 
 export namespace DocumentationButton {
   export interface IProperties {
@@ -17,14 +17,9 @@ export namespace DocumentationButton {
 export const DocumentationButton = ({
   shell
 }: DocumentationButton.IProperties): JSX.Element => (
-  <ToolbarButtonComponent
-    label="Open documentation"
-    onClick={openDocumentation(shell)}
-  />
+  <DocumentationButtonView onClick={openDocumentation(shell)} />
 );
 
-const PYCOMPSS_REFERENCE_URL =
-  'https://compss-doc.readthedocs.io/en/stable/Sections/02_App_Development/02_Python/01_Programming_model.html';
 const REFERENCE_ID = 'pycompss-reference';
 const REFERENCE_TITLE = 'PyCOMPSs reference';
 
@@ -41,11 +36,7 @@ const openDocumentation =
       return;
     }
     const content = ReactWidget.create(
-      <iframe
-        className="ipycompss-pycompss-reference"
-        src={PYCOMPSS_REFERENCE_URL}
-        title={REFERENCE_TITLE}
-      ></iframe>
+      <DocumentationIFrame title={REFERENCE_TITLE} />
     );
     const widget = new MainAreaWidget({ content: content });
     widget.title.label = REFERENCE_TITLE;

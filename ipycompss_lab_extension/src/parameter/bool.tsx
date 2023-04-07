@@ -1,6 +1,5 @@
 import { Checkbox } from '@jupyterlab/ui-components';
 import React from 'react';
-import { capitalise } from '../utils';
 
 import { onChange, Parameter } from './base';
 
@@ -14,7 +13,7 @@ export const BooleanParameter = ({
       onChange={onChange<string, React.FormEvent<HTMLInputElement>>(
         name,
         values,
-        capitalise(defaultValue.toString()),
+        defaultValue.toString().capitalise(),
         getValue
       )}
     />
@@ -22,4 +21,4 @@ export const BooleanParameter = ({
 );
 
 const getValue = (event: React.FormEvent<HTMLInputElement>): string =>
-  capitalise((event.target as HTMLInputElement)['checked'].toString());
+  (event.target as HTMLInputElement)['checked'].toString().capitalise();

@@ -1,1 +1,1 @@
-export * from './start-stop';
+export { StartStop } from './start-stop';

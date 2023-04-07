@@ -1,4 +1,4 @@
-export * from './bool';
-export * from './int';
-export * from './str';
-export * from './enum';
+export { BooleanParameter } from './bool';
+export { IntegerParameter } from './int';
+export { StringParameter } from './str';
+export { EnumerationParameter } from './enum';

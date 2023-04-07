@@ -1,1 +1,1 @@
-export * from './task-dropdown';
+export { TaskDropdown } from './task-dropdown';
