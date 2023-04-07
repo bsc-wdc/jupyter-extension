@@ -28,6 +28,11 @@ class Controller:
         ipycompss.start(**arguments)
 
     @staticmethod
+    def stop_pycompss() -> None:
+        """Stop PyCOMPSs"""
+        ipycompss.stop(sync=True)
+
+    @staticmethod
     def _start_monitor() -> None:
         """Start the PyCOMPSs monitor"""
         process: CompletedProcess[bytes] = subprocess.run(

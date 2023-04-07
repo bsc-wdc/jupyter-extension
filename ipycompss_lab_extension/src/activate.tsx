@@ -4,11 +4,11 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import '../style/index.css';
-import { TaskDropdown } from './task-dropdown';
-import { TabButton } from './tab-button';
 import { DocumentationButton } from './documentation-button';
 import { compss_icon } from './icon';
 import { StartStop } from './start-stop';
+import { TabButton } from './tab-button';
+import { TaskDropdown } from './task-dropdown';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 

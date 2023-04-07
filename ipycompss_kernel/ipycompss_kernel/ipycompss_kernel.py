@@ -10,10 +10,7 @@ from ipykernel.ipkernel import IPythonKernel
 from .messaging import Messaging, StartRequestDto, SuccessResponseDto, StatusDto
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
-STOP_CODE = """
-                import pycompss.interactive as ipycompss
-                ipycompss.stop(sync=True)
-            """
+STOP_EXPRESSION = "Controller.stop_pycompss()"
 
 
 class IPyCOMPSsKernel(IPythonKernel):
@@ -32,13 +29,7 @@ class IPyCOMPSsKernel(IPythonKernel):
         super().start()
 
         if not self.cluster:
-            self._execute(
-                """
-                    from ipycompss_kernel.controller import Controller
-                    Controller().start()
-                    del Controller
-                """
-            )
+            self._execute("Controller().start()")
 
         Messaging.on_status(self._get_status)
         Messaging.on_start(self._handle_start_request)
@@ -47,7 +38,7 @@ class IPyCOMPSsKernel(IPythonKernel):
     def do_shutdown(self, restart: bool) -> dict[str, str]:
         """Shutdown kernel"""
 
-        self._execute(STOP_CODE)
+        self._execute(STOP_EXPRESSION)
         Messaging.send_stop()
 
         return super().do_shutdown(restart)
@@ -80,22 +71,25 @@ class IPyCOMPSsKernel(IPythonKernel):
                 env = run_and_get_env(str(script_path))
 
         result = self._execute(
-            f"""
-                from ipycompss_kernel.controller import Controller
-                Controller.start_pycompss({env}, {request["arguments"]})
-                del Controller
-            """
+            f"Controller.start_pycompss({env}, {request['arguments']})"
         )
         return {"success": result["status"] == "ok"}
 
     def _handle_stop_request(self) -> SuccessResponseDto:
         """Execute code to stop PyCOMPSs runtime"""
-        result = self._execute(STOP_CODE)
+        result = self._execute(STOP_EXPRESSION)
         return {"success": result["status"] == "ok"}
 
-    def _execute(self, code: str) -> dict[str, Any]:
+    def _execute(self, expression: str) -> dict[str, Any]:
         try:
-            self.do_execute(code, silent=True).send(None)
+            self.do_execute(
+                f"""
+                    from ipycompss_kernel.controller import Controller
+                    {expression}
+                    del Controller
+                """,
+                silent=True,
+            ).send(None)
         except StopIteration as end:
             return end.value
         return {}
