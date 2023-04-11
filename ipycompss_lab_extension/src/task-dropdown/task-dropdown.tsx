@@ -2,9 +2,8 @@ import { CodeEditor } from '@jupyterlab/codeeditor';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import React, { useRef } from 'react';
 
-import { withNullable } from '../utils';
 import { getCurrentFunctionLineInfo } from './line-info';
-import { TaskDropdownView } from './task-dropdown-view';
+import { TaskDropdownView } from './view';
 
 export namespace TaskDropdown {
   export interface IProperties {
@@ -28,22 +27,20 @@ const createTask =
   ) =>
   async (): Promise<void> => {
     const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
-    const lineInfo = withNullable(getCurrentFunctionLineInfo)(editor);
-    if (lineInfo === undefined) {
-      return;
-    }
+    const lineInfo = editor && getCurrentFunctionLineInfo(editor);
 
-    const linePosition: CodeEditor.IPosition = {
+    const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
       column: lineInfo.indentation,
       line: lineInfo.lineNumber
     };
-    editor?.setCursorPosition(linePosition);
+    linePosition && editor?.setCursorPosition(linePosition);
     editor?.newIndentedLine();
-    editor?.model.value.insert(
-      editor.getOffsetAt(linePosition),
-      `@task(${Array.from(values.current)
-        .filter(([_, value]: [string, any]) => value !== null)
-        .map(([key, value]: [string, any]) => `${key}=${value}`)
-        .join(', ')})`
-    );
+    linePosition &&
+      editor?.model.value.insert(
+        editor.getOffsetAt(linePosition),
+        `@task(${Array.from(values.current)
+          .filter(([_, value]: [string, any]) => value !== null)
+          .map(([key, value]: [string, any]) => `${key}=${value}`)
+          .join(', ')})`
+      );
   };

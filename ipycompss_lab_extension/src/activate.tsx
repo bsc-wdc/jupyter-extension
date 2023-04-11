@@ -1,13 +1,15 @@
+import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { ILayoutRestorer, JupyterFrontEnd } from '@jupyterlab/application';
 import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
+import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import React from 'react';
 
 import '../style/index.css';
 import { DocumentationButton } from './documentation-button';
 import { compss_icon } from './icon';
+import { InfoButton } from './info-button';
 import { StartStop } from './start-stop';
-import { TabButton } from './tab-button';
 import { TaskDropdown } from './task-dropdown';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
@@ -15,6 +17,8 @@ const LEFT_PANEL_ID = 'pycompss-left-menu';
 export const activate = (
   app: JupyterFrontEnd,
   tracker: INotebookTracker,
+  registry: IRenderMimeRegistry,
+  widgetRegistry: IJupyterWidgetRegistry,
   restorer?: ILayoutRestorer
 ): void => {
   const content = ReactWidget.create(
@@ -24,7 +28,12 @@ export const activate = (
         <StartStop tracker={tracker} />
         <TaskDropdown tracker={tracker} />
         <DocumentationButton shell={app.shell} />
-        <TabButton shell={app.shell} />
+        <InfoButton
+          shell={app.shell}
+          tracker={tracker}
+          registry={registry}
+          widgetRegistry={widgetRegistry}
+        />
       </div>
     </div>
   );

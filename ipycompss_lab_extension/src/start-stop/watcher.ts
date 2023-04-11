@@ -3,8 +3,7 @@ import { IChangedArgs } from '@jupyterlab/coreutils';
 import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
 import { Kernel } from '@jupyterlab/services';
 
-import { withNullable } from '../utils';
-import { Messaging } from './messaging';
+import { StartStopMessaging } from './messaging';
 import { setState } from './start-stop';
 
 export const watchNotebookChanges = (
@@ -15,10 +14,7 @@ export const watchNotebookChanges = (
   notebook?.sessionContext.kernelChanged.connect(watchKernelChanges);
 
   const kernel = notebook?.sessionContext.session?.kernel;
-  // kernel?.anyMessage.connect((_, args) => console.log(args.direction, args.msg));
-  withNullable(Messaging.sendStatusRequest)(kernel)?.onReply(
-    startState(kernel!)
-  );
+  StartStopMessaging.sendStatusRequest(kernel).onReply(startState(kernel));
 };
 
 const watchKernelChanges = (
@@ -29,22 +25,21 @@ const watchKernelChanges = (
   >
 ): void => {
   const kernel = change.newValue;
-  withNullable(Messaging.sendStatusRequest)(kernel)?.onReply(
-    startState(kernel!)
-  );
+  StartStopMessaging.sendStatusRequest(kernel).onReply(startState(kernel));
 };
 
 const startState =
-  (kernel: Kernel.IKernelConnection) =>
-  (data: Messaging.IStatusResponseDto): void => {
+  (kernel: Kernel.IKernelConnection | null | undefined) =>
+  (data: StartStopMessaging.IStatusResponseDto): void => {
     const enabled = data.cluster;
     const started = data.started;
     setState({ enabled, started });
 
-    kernel.statusChanged.connect(cleanUpState);
-    Messaging.onStop(kernel, () =>
-      setState(({ enabled, started }) => ({ enabled, started: false }))
-    );
+    kernel?.statusChanged.connect(cleanUpState);
+    kernel &&
+      StartStopMessaging.onStop(kernel, () =>
+        setState(({ enabled, started }) => ({ enabled, started: false }))
+      );
   };
 
 const cleanUpState = (_: Kernel.IKernelConnection, status: Kernel.Status) => {

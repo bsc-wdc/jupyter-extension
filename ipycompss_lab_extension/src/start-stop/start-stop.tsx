@@ -2,9 +2,8 @@ import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import React, { useState } from 'react';
 
-import { withNullable } from '../utils';
-import { Messaging } from './messaging';
-import { StartStopView } from './start-stop-view';
+import { StartStopMessaging } from './messaging';
+import { StartStopView } from './view';
 import { watchNotebookChanges } from './watcher';
 
 export namespace StartStop {
@@ -26,18 +25,17 @@ export let setState: (
 
 export const StartStop = ({ tracker }: StartStop.IProperties): JSX.Element => {
   tracker.currentChanged.connect(watchNotebookChanges);
-  let enabled, started;
-  [{ enabled, started }, setState] = useState({
-    enabled: false,
+  let started;
+  [{ started }, setState] = useState({
     started: false
   } as StartStop.IState);
   return (
     <StartStopView
       start={{
-        enabled: enabled && !started,
+        enabled: !started,
         onClick: showStartDialog(tracker)
       }}
-      stop={{ enabled: enabled && started, onClick: shutdown(tracker) }}
+      stop={{ enabled: started, onClick: shutdown(tracker) }}
     />
   );
 };
@@ -53,20 +51,18 @@ const startPycompss =
   (tracker: INotebookTracker) =>
   (result: Dialog.IResult<unknown>): void => {
     const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-    if (!result.button.accept) {
-      return;
-    }
-
-    withNullable(Messaging.sendStartRequest)(kernel, { arguments: {} }).onReply(
-      ({ success }: Messaging.ISuccessResponseDto): void =>
+    result.button.accept &&
+      StartStopMessaging.sendStartRequest(kernel, {
+        arguments: {}
+      }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
         setState(({ enabled, started }) => ({ enabled, started: success }))
-    );
+      );
   };
 
 const shutdown = (tracker: INotebookTracker) => async (): Promise<void> => {
   const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-  withNullable(Messaging.sendStopRequest)(kernel).onReply(
-    ({ success }: Messaging.ISuccessResponseDto) =>
+  StartStopMessaging.sendStopRequest(kernel).onReply(
+    ({ success }: StartStopMessaging.ISuccessResponseDto) =>
       setState(({ enabled, started }) => ({ enabled, started: !success }))
   );
 };

@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/github_username/ipycompss_lab_extension/issues"
   },
-  "license": "BSD-3-Clause",
+  "license": "Apache-2.0",
   "author": {
     "name": "Workflows and Distributed Computing Group (WDC)"
   },
@@ -55,16 +55,26 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.36.0",
-    "@jupyterlab/application": "^3.4.6",
-    "@jupyterlab/apputils": "^3.4.6",
-    "@jupyterlab/codeeditor": "3.4.6",
+    "@jupyter-widgets/base": "^6.0.4",
+    "@jupyter-widgets/jupyterlab-manager": "^5.0.7",
+    "@jupyterlab/application": "^3.4.8",
+    "@jupyterlab/apputils": "^3.4.8",
+    "@jupyterlab/cells": "^3.4.8",
+    "@jupyterlab/codeeditor": "^3.4.8",
     "@jupyterlab/coreutils": "^5.4.8",
-    "@jupyterlab/mainmenu": "^3.4.6",
-    "@jupyterlab/notebook": "^3.4.6",
+    "@jupyterlab/mainmenu": "^3.4.8",
+    "@jupyterlab/nbformat": "^3.4.8",
+    "@jupyterlab/notebook": "^3.4.8",
+    "@jupyterlab/outputarea": "^3.4.8",
+    "@jupyterlab/rendermime": "^3.4.8",
     "@jupyterlab/services": "^6.4.8",
-    "@jupyterlab/ui-components": "^3.4.6",
+    "@jupyterlab/ui-components": "^3.4.8",
+    "@lumino/algorithm": "^1.9.0",
     "@lumino/coreutils": "^1.11.0",
-    "@lumino/widgets": "^1.33.0"
+    "@lumino/widgets": "^1.33.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "yjs": "^13.5.17"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

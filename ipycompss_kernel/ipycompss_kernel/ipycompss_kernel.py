@@ -6,8 +6,15 @@ from importlib import resources
 from typing import Any
 
 from ipykernel.ipkernel import IPythonKernel
+from IPython.utils.capture import capture_output
 
-from .messaging import Messaging, StartRequestDto, SuccessResponseDto, StatusDto
+from .messaging import (
+    InfoResponseDto,
+    Messaging,
+    StartRequestDto,
+    SuccessResponseDto,
+    StatusDto,
+)
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
 STOP_EXPRESSION = "Controller.stop_pycompss()"
@@ -34,6 +41,7 @@ class IPyCOMPSsKernel(IPythonKernel):
         Messaging.on_status(self._get_status)
         Messaging.on_start(self._handle_start_request)
         Messaging.on_stop(self._handle_stop_request)
+        Messaging.on_info(self._handle_info_request)
 
     def do_shutdown(self, restart: bool) -> dict[str, str]:
         """Shutdown kernel"""
@@ -80,16 +88,41 @@ class IPyCOMPSsKernel(IPythonKernel):
         result = self._execute(STOP_EXPRESSION)
         return {"success": result["status"] == "ok"}
 
+    def _handle_info_request(self) -> InfoResponseDto:
+        return {
+            "code": """
+                from ipywidgets import Output
+                from traitlets import Unicode
+                import pycompss.interactive as ipycompss
+
+                class Out(Output):
+                    _model_name = Unicode('Model').tag(sync=True)
+                    _model_module = Unicode('ipycompss_lab_extension').tag(sync=True)
+                    _model_module_version = Unicode('0.1.0').tag(sync=True)
+                    _view_name = Unicode('View').tag(sync=True)
+                    _view_module = Unicode('ipycompss_lab_extension').tag(sync=True)
+                    _view_module_version = Unicode('0.1.0').tag(sync=True)
+                with Out():
+                    print('Task status')
+                    ipycompss.tasks_status()
+                    print('Task info')
+                    ipycompss.tasks_info()
+            """
+        }
+
     def _execute(self, expression: str) -> dict[str, Any]:
-        try:
-            self.do_execute(
-                f"""
-                    from ipycompss_kernel.controller import Controller
-                    {expression}
-                    del Controller
-                """,
-                silent=True,
-            ).send(None)
-        except StopIteration as end:
-            return end.value
-        return {}
+        with capture_output() as capture:
+            result = {}
+            try:
+                self.do_execute(
+                    f"""
+                        from ipycompss_kernel.controller import Controller
+                        {expression}
+                        del Controller
+                    """,
+                    silent=True,
+                ).send(None)
+            except StopIteration as execution:
+                result = execution.value
+            self.log.warn(capture.stdout)
+        return result

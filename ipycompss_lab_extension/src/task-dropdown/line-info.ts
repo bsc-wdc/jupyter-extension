@@ -25,17 +25,14 @@ export const getCurrentFunctionLineInfo = (
     );
 
   let currentLine = lines.pop();
-  if (currentLine === undefined) {
-    return;
-  }
-  if (currentLine.keyword === 'def') {
+  if (currentLine?.keyword === 'def') {
     return currentLine;
   }
 
   let i = lines.length - 1;
   while (i >= 0) {
     const line = lines[i];
-    if (line !== undefined && line.indentation < currentLine.indentation) {
+    if (line && currentLine && line.indentation < currentLine.indentation) {
       if (line.keyword === 'def') {
         return lines[i];
       } else {

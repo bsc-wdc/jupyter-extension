@@ -61,7 +61,9 @@ class Scheduler(Enum):
     CONSTRAINTS_FIFO_TS = (
         "es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS"
     )
-    MT_CONSTRAINTS_FIFO_TS = "es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS"
+    MT_CONSTRAINTS_FIFO_TS = (
+        "es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS"
+    )
     SUCCESSORS_FIFO_TS = "es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS"
     MT_SUCCESSORS_FIFO_TS = (
         "es.bsc.compss.scheduler.lookahead.mt.successors.fifo.FifoTS"
@@ -89,7 +91,7 @@ class CheckpointPolicy(Enum):
     NO = "es.bsc.compss.checkpoint.policies.NoCheckpoint"
 
 
-class ParameterFactory:
+class ParameterFactory:  # pylint: disable=too-few-public-methods
     """Class that creates all parameters"""
 
     basic_parameters: list[ParameterBase] = [
