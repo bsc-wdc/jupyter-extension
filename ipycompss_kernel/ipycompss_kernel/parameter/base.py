@@ -4,7 +4,7 @@ from tkinter import Frame, Tk
 from typing import Any
 
 
-class ParameterBase(ABC):
+class ParameterBase(ABC):  # pylint: disable=too-few-public-methods
     """Base class for parameters"""
 
     def __init__(self, name: str, default: Any) -> None:

@@ -2,7 +2,6 @@ import { DOMWidgetModel, IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { output } from '@jupyter-widgets/jupyterlab-manager';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React from 'react';
@@ -15,7 +14,6 @@ export namespace InfoButton {
   export interface IProperties {
     shell: JupyterFrontEnd.IShell;
     tracker: INotebookTracker;
-    registry: IRenderMimeRegistry;
     widgetRegistry: IJupyterWidgetRegistry;
   }
 }
@@ -72,12 +70,12 @@ export const InfoButton = ({
 
 const openExecutionInfo =
   (shell: JupyterFrontEnd.IShell, tracker: INotebookTracker) =>
-    async (): Promise<void> => {
-      if (
-        toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID)
-      ) {
-        return;
-      }
+  async (): Promise<void> => {
+    if (
+      toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID)
+    ) {
+      return;
+    }
 
-      getExecutionInfo(tracker);
-    };
+    getExecutionInfo(tracker);
+  };

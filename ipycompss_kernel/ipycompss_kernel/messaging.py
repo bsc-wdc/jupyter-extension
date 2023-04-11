@@ -48,16 +48,22 @@ class Messaging:
         )
 
     @staticmethod
-    def on_start(callback: Callable[[StartRequestDto], SuccessResponseDto]) -> None:
+    def on_start(
+        callback: Callable[[StartRequestDto], SuccessResponseDto]
+    ) -> None:
         """Register start message callback"""
 
-        def on_start_comm(start_comm: Comm, open_start_comm: dict[str, Any]) -> None:
+        def on_start_comm(
+            start_comm: Comm, open_start_comm: dict[str, Any]
+        ) -> None:
             """Process and reply start comm"""
             response = callback(open_start_comm["content"]["data"])
             start_comm.send(data=response)
             del start_comm
 
-        comm.get_comm_manager().register_target("ipycompss_start_target", on_start_comm)
+        comm.get_comm_manager().register_target(
+            "ipycompss_start_target", on_start_comm
+        )
 
     @staticmethod
     def on_stop(callback: Callable[[], SuccessResponseDto]) -> None:
@@ -69,7 +75,9 @@ class Messaging:
             stop_comm.send(data=response)
             del stop_comm
 
-        comm.get_comm_manager().register_target("ipycompss_stop_target", on_stop_comm)
+        comm.get_comm_manager().register_target(
+            "ipycompss_stop_target", on_stop_comm
+        )
 
     @staticmethod
     def on_info(callback: Callable[[], InfoResponseDto]) -> None:

@@ -31,7 +31,6 @@ export const activate = (
         <InfoButton
           shell={app.shell}
           tracker={tracker}
-          registry={registry}
           widgetRegistry={widgetRegistry}
         />
       </div>

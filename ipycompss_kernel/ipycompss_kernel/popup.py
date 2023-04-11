@@ -51,7 +51,9 @@ class Popup(Tk):
         label.grid(row=row, column=0, columnspan=2)
         return label
 
-    def _create_parameters(self, frame: Tk | Frame, advanced: bool = False) -> None:
+    def _create_parameters(
+        self, frame: Tk | Frame, advanced: bool = False
+    ) -> None:
         """Create parameter widgets"""
         parameters = ParameterFactory.create_parameters(advanced=advanced)
         for parameter in parameters:
@@ -83,7 +85,8 @@ class Popup(Tk):
         canvas.pack(side="left")
         frame: Frame = Frame(canvas)
         frame.bind(
-            "<Configure>", lambda e: canvas.config(scrollregion=canvas.bbox("all"))
+            "<Configure>",
+            lambda e: canvas.config(scrollregion=canvas.bbox("all")),
         )
         canvas.create_window(0, 0, anchor="nw", window=frame)
 

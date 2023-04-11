@@ -17,7 +17,9 @@ from .popup import Popup
 class Controller:
     """Controller for kernel related code executed by the kernel itself"""
 
-    URL: Request = Request("http://localhost:8080/compss-monitor", method="HEAD")
+    URL: Request = Request(
+        "http://localhost:8080/compss-monitor", method="HEAD"
+    )
 
     @staticmethod
     def start_pycompss(env: list[list[str]], arguments: dict[str, Any]) -> None:
