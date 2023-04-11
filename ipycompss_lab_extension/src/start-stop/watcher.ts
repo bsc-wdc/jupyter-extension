@@ -10,7 +10,7 @@ export const watchNotebookChanges = (
   _: INotebookTracker,
   notebook: NotebookPanel | null
 ): void => {
-  setState(({ enabled, started }) => ({ enabled: false, started }));
+  setState(({ started }) => ({ enabled: false, started }));
   notebook?.sessionContext.kernelChanged.connect(watchKernelChanges);
 
   const kernel = notebook?.sessionContext.session?.kernel;
@@ -31,19 +31,17 @@ const watchKernelChanges = (
 const startState =
   (kernel: Kernel.IKernelConnection | null | undefined) =>
   (data: StartStopMessaging.IStatusResponseDto): void => {
-    const enabled = data.cluster;
-    const started = data.started;
-    setState({ enabled, started });
+    setState({ enabled: true, started: data.started });
 
     kernel?.statusChanged.connect(cleanUpState);
     kernel &&
       StartStopMessaging.onStop(kernel, () =>
-        setState(({ enabled, started }) => ({ enabled, started: false }))
+        setState(({ enabled }) => ({ enabled, started: false }))
       );
   };
 
 const cleanUpState = (_: Kernel.IKernelConnection, status: Kernel.Status) => {
   if (/^(?:unknown|restarting|autorestarting|dead)$/.test(status)) {
-    setState(({ enabled, started }) => ({ enabled: false, started }));
+    setState(({ started }) => ({ enabled: false, started }));
   }
 };

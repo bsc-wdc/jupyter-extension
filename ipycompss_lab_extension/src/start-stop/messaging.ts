@@ -13,7 +13,6 @@ export namespace StartStopMessaging {
   }
 
   export interface IStatusResponseDto extends JSONObject {
-    cluster: boolean;
     started: boolean;
   }
 

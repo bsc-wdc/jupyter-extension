@@ -17,7 +17,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
+    "comm",
     "ipykernel",
+    "IPython",
     "jupyter_client",
     "pycompss"
 ]
