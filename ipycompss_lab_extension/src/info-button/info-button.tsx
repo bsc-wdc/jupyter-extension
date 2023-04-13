@@ -55,8 +55,8 @@ export const InfoButton = ({
       outputArea.title.icon = compss_icon;
       outputArea.id = INFO_ID;
 
+      outputArea.parent?.disposed.connect(() => this.model.destroy());
       shell.add(outputArea, 'main', { mode: 'split-right' });
-      shell.activateById(outputArea.id);
     }
   };
 

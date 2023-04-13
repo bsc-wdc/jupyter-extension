@@ -3,7 +3,7 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React, { useState } from 'react';
 
 import { StartStopMessaging } from './messaging';
-import { StartStopView } from './view';
+import { StartStopView, dialogBody } from './view';
 import { watchNotebookChanges } from './watcher';
 
 export namespace StartStop {
@@ -45,16 +45,27 @@ const showStartDialog =
   (tracker: INotebookTracker) => async (): Promise<void> =>
     void showDialog({
       title: 'IPyCOMPSs configuration',
+      body: dialogBody(),
       buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
     }).then(startPycompss(tracker));
 
 const startPycompss =
   (tracker: INotebookTracker) =>
-  (result: Dialog.IResult<unknown>): void => {
+  (result: Dialog.IResult<Map<string, string | null> | undefined>): void => {
     const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
     result.button.accept &&
+      result.value &&
       StartStopMessaging.sendStartRequest(kernel, {
-        arguments: {}
+        arguments: Array.from(result.value).reduce(
+          (
+            object: { [key: string]: string | null },
+            [key, value]: [string, string | null]
+          ) => {
+            object[key] = value;
+            return object;
+          },
+          {} as { [key: string]: string | null }
+        )
       }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
         setState(({ enabled }) => ({ enabled, started: success }))
       );

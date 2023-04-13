@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -U black pylint
-        pythom -m pip install -U comm ipykernel jupyter_client pycompss
+        python -m pip install -U comm ipykernel jupyter_client pycompss
         # jupyterlab~=3.1
 
     - name: Lint the kernel

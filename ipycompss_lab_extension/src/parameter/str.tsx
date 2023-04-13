@@ -4,7 +4,8 @@ import React from 'react';
 import { onChange, Parameter } from './base';
 
 export const StringParameter = ({
-  common: { name, values },
+  name,
+  values,
   defaultValue
 }: Parameter.IProperties<string>): JSX.Element => (
   <Parameter name={name} values={values}>

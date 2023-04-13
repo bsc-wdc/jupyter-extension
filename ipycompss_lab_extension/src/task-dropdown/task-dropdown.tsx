@@ -1,9 +1,10 @@
 import { CodeEditor } from '@jupyterlab/codeeditor';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import React, { useRef } from 'react';
+import React from 'react';
 
 import { getCurrentFunctionLineInfo } from './line-info';
 import { TaskDropdownView } from './view';
+import { ParameterGroupWidget } from '../parameter/group';
 
 export namespace TaskDropdown {
   export interface IProperties {
@@ -14,18 +15,19 @@ export namespace TaskDropdown {
 export const TaskDropdown = ({
   tracker
 }: TaskDropdown.IProperties): JSX.Element => {
-  const values = useRef(new Map<string, string | null>());
+  const widget: ParameterGroupWidget = new ParameterGroupWidget();
   return (
-    <TaskDropdownView values={values} onClick={createTask(tracker, values)} />
+    <TaskDropdownView
+      parameters={widget}
+      onClick={createTask(tracker, widget)}
+    />
   );
 };
 
 const createTask =
-  (
-    tracker: INotebookTracker,
-    values: React.MutableRefObject<Map<string, string | null>>
-  ) =>
+  (tracker: INotebookTracker, parameters: ParameterGroupWidget) =>
   async (): Promise<void> => {
+    const values = parameters.getValue();
     const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
     const lineInfo = editor && getCurrentFunctionLineInfo(editor);
 
@@ -38,9 +40,12 @@ const createTask =
     linePosition &&
       editor?.model.value.insert(
         editor.getOffsetAt(linePosition),
-        `@task(${Array.from(values.current)
-          .filter(([_, value]: [string, any]) => value !== null)
-          .map(([key, value]: [string, any]) => `${key}=${value}`)
-          .join(', ')})`
+        `@task(${
+          values &&
+          Array.from(values)
+            .filter(([_, value]: [string, any]) => value !== null)
+            .map(([key, value]: [string, any]) => `${key}=${value}`)
+            .join(', ')
+        })`
       );
   };

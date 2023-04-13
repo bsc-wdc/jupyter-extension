@@ -8,59 +8,38 @@ import {
   IntegerParameter,
   StringParameter
 } from '../parameter';
+import { ParameterGroup, ParameterGroupWidget } from '../parameter/group';
 
 export namespace TaskDropdownView {
   export interface IProperties {
-    values: React.MutableRefObject<Map<string, string | null>>;
+    parameters: ParameterGroupWidget;
     onClick: () => Promise<void>;
   }
 }
 
 export const TaskDropdownView = ({
-  values,
+  parameters,
   onClick
 }: TaskDropdownView.IProperties): JSX.Element => {
-  const parameters: any[] = [
-    <StringParameter
-      key={0}
-      common={{ name: 'returns', values }}
-      defaultValue=""
-    />,
-    <BooleanParameter
-      key={1}
-      common={{ name: 'priority', values }}
-      defaultValue={false}
-    />,
-    <BooleanParameter
-      key={2}
-      common={{ name: 'is_reduce', values }}
-      defaultValue={true}
-    />,
-    <IntegerParameter
-      key={3}
-      common={{ name: 'chunk_size', values }}
-      defaultValue={0}
-    />,
-    <IntegerParameter
-      key={4}
-      common={{ name: 'time_out', values }}
-      defaultValue={0}
-    />,
-    <EnumerationParameter
-      key={5}
-      properties={{
-        common: { name: 'on_failure', values },
-        defaultValue: '"RETRY"'
-      }}
-      options={['"RETRY"', '"CANCEL_SUCCESSORS"', '"FAIL"', '"IGNORE"']}
-    />
+  const parametersData: ParameterGroup.IParameter[] = [
+    { name: 'returns', defaultValue: '', Parameter: StringParameter },
+    { name: 'priority', defaultValue: false, Parameter: BooleanParameter },
+    { name: 'is_reduce', defaultValue: true, Parameter: BooleanParameter },
+    { name: 'chunk_size', defaultValue: 0, Parameter: IntegerParameter },
+    { name: 'time_out', defaultValue: 0, Parameter: IntegerParameter },
+    {
+      name: 'on_failure',
+      defaultValue: '"RETRY"',
+      Parameter: EnumerationParameter,
+      options: ['RETRY', 'CANCEL_SUCCESSORS', 'FAIL', 'IGNORE']
+    }
   ];
+  parameters.data = parametersData;
+  parameters.toSend = false;
   return (
-    <>
-      <CollapsibleElement label="Task">
-        {parameters}
-        <ToolbarButtonComponent label="Define task" onClick={onClick} />
-      </CollapsibleElement>
-    </>
+    <CollapsibleElement label="Task">
+      {parameters.render()}
+      <ToolbarButtonComponent label="Define task" onClick={onClick} />
+    </CollapsibleElement>
   );
 };

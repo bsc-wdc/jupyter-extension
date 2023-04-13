@@ -1,7 +1,7 @@
 import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
 
-import { IOnReply } from '../utils';
+import { Utils } from '../utils';
 
 export namespace StartStopMessaging {
   export interface IStartRequestDto extends JSONObject {
@@ -18,7 +18,7 @@ export namespace StartStopMessaging {
 
   export const sendStatusRequest = (
     kernel: Kernel.IKernelConnection | null | undefined
-  ): IOnReply<IStatusResponseDto> => {
+  ): Utils.IOnReply<IStatusResponseDto> => {
     const statusComm = kernel?.createComm('ipycompss_status_target');
     statusComm?.open();
     return {
@@ -34,7 +34,7 @@ export namespace StartStopMessaging {
   export const sendStartRequest = (
     kernel: Kernel.IKernelConnection | null | undefined,
     data: IStartRequestDto
-  ): IOnReply<ISuccessResponseDto> => {
+  ): Utils.IOnReply<ISuccessResponseDto> => {
     const startComm = kernel?.createComm('ipycompss_start_target');
     startComm?.open(data);
     return {
@@ -49,7 +49,7 @@ export namespace StartStopMessaging {
 
   export const sendStopRequest = (
     kernel: Kernel.IKernelConnection | null | undefined
-  ): IOnReply<ISuccessResponseDto> => {
+  ): Utils.IOnReply<ISuccessResponseDto> => {
     const stopComm = kernel?.createComm('ipycompss_stop_target');
     stopComm?.open();
     return {

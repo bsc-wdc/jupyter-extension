@@ -1,15 +1,15 @@
-.ipycompss-pycompss-sidebar .bp3-input-group {
+.bp3-input-group {
   flex-shrink: 1;
 }
 
-.ipycompss-pycompss-sidebar .ipycompss-parameter {
+.ipycompss-parameter {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 /* stylelint-disable selector-class-pattern */
-.ipycompss-pycompss-sidebar .ipycompss-parameter .jp-Checkbox {
+.ipycompss-parameter .jp-Checkbox {
   margin: 8px 0;
 }
 

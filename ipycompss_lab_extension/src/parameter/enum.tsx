@@ -5,17 +5,16 @@ import React, { useState } from 'react';
 import { onChange, Parameter } from './base';
 
 export namespace EnumerationParameter {
-  export interface IProperties {
-    properties: Parameter.IProperties<string>;
+  export interface IProperties extends Parameter.IProperties<string> {
     options: string[];
   }
 }
 
 export const EnumerationParameter = ({
-  properties: {
-    common: { name, values },
-    defaultValue
-  },
+  name,
+  values,
+  defaultValue,
+  toSend,
   options
 }: EnumerationParameter.IProperties): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState(defaultValue);
@@ -28,7 +27,16 @@ export const EnumerationParameter = ({
         )}
         onItemSelect={item => {
           setSelectedItem(item);
-          onChange<string, string>(name, values, defaultValue, getValue)(item);
+          onChange<string, string>(
+            name,
+            values,
+            ...((toSend
+              ? [defaultValue, getValueToSend]
+              : [`"${defaultValue}"`, getValue]) as [
+              string,
+              (item: string) => string
+            ])
+          )(item);
         }}
         filterable={false}
       >
@@ -38,4 +46,6 @@ export const EnumerationParameter = ({
   );
 };
 
-const getValue = (item: string): string => item;
+const getValue = (item: string): string => `"${item}"`;
+
+const getValueToSend = (item: string): string => item;

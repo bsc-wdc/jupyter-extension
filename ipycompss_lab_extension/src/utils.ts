@@ -1,15 +1,9 @@
-declare global {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  interface String {
-    capitalise(): string;
+export namespace Utils {
+  export const capitalise = (name: string): string => {
+    return name[0].toUpperCase() + name.slice(1);
+  };
+
+  export interface IOnReply<T> {
+    onReply: (callback: (response: T) => void) => void;
   }
-  /* eslint-enable @typescript-eslint/naming-convention */
-}
-
-String.prototype.capitalise = function (this: string): string {
-  return this[0].toUpperCase() + this.slice(1);
-};
-
-export interface IOnReply<T> {
-  onReply: (callback: (response: T) => void) => void;
 }

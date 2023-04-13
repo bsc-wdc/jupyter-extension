@@ -4,8 +4,10 @@ import React from 'react';
 import { onChange, Parameter } from './base';
 
 export const IntegerParameter = ({
-  common: { name, values },
-  defaultValue
+  name,
+  values,
+  defaultValue,
+  toSend
 }: Parameter.IProperties<number>): JSX.Element => (
   <Parameter name={name} values={values}>
     <NumericInput
@@ -13,11 +15,17 @@ export const IntegerParameter = ({
       onValueChange={onChange<number, number>(
         name,
         values,
-        defaultValue,
-        getValue
+        ...((toSend
+          ? [defaultValue, getValueToSend]
+          : [defaultValue.toString(), getValue]) as [
+          number | string,
+          (value: number) => number | string
+        ])
       )}
     />
   </Parameter>
 );
 
 const getValue = (value: number): string => value.toString();
+
+const getValueToSend = (value: number): number => value;
