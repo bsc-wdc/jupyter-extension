@@ -6,9 +6,9 @@ import {
   BooleanParameter,
   EnumerationParameter,
   IntegerParameter,
+  ParameterGroup, ParameterGroupWidget,
   StringParameter
 } from '../parameter';
-import { ParameterGroup, ParameterGroupWidget } from '../parameter/group';
 
 export namespace TaskDropdownView {
   export interface IProperties {
@@ -29,7 +29,7 @@ export const TaskDropdownView = ({
     { name: 'time_out', defaultValue: 0, Parameter: IntegerParameter },
     {
       name: 'on_failure',
-      defaultValue: '"RETRY"',
+      defaultValue: 'RETRY',
       Parameter: EnumerationParameter,
       options: ['RETRY', 'CANCEL_SUCCESSORS', 'FAIL', 'IGNORE']
     }

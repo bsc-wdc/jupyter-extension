@@ -91,19 +91,23 @@ class IPyCOMPSsKernel(IPythonKernel):
     ) -> SuccessResponseDto:
         """Execute code to start PyCOMPSs runtime"""
 
-        def run_and_get_env(script_path: str) -> list[list[str]]:
+        def to_worker_arguments(request_arguments: dict[str, Any]) -> list[str]:
+            return [f"--{key}={value}" for [key, value] in request_arguments.items()]
+
+        def run_and_get_env(script_path: str, arguments: list[str]) -> list[list[str]]:
             result = subprocess.run(
-                ["sh", script_path], stdout=subprocess.PIPE, check=True
+                ["sh", script_path, *arguments], stdout=subprocess.PIPE, check=True
             )
             output = result.stdout.decode("utf-8")
             return [line.split("=", 1) for line in output.split("\n")[:-1]]
 
         env = []
         if self.cluster:
+            worker_arguments = to_worker_arguments(request['arguments'])
             with resources.as_file(
                 resources.files("ipycompss_kernel").joinpath("start_workers.sh")
             ) as script_path:
-                env = run_and_get_env(str(script_path))
+                env = run_and_get_env(str(script_path), worker_arguments)
 
         result = self._execute(
             f"Controller.start_pycompss({env}, {request['arguments']})"

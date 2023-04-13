@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { StartStopMessaging } from './messaging';
 import { StartStopView, dialogBody } from './view';
 import { watchNotebookChanges } from './watcher';
+import { toObject } from '@lumino/algorithm';
 
 export namespace StartStop {
   export interface IState {
@@ -51,25 +52,16 @@ const showStartDialog =
 
 const startPycompss =
   (tracker: INotebookTracker) =>
-  (result: Dialog.IResult<Map<string, string | null> | undefined>): void => {
-    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-    result.button.accept &&
-      result.value &&
-      StartStopMessaging.sendStartRequest(kernel, {
-        arguments: Array.from(result.value).reduce(
-          (
-            object: { [key: string]: string | null },
-            [key, value]: [string, string | null]
-          ) => {
-            object[key] = value;
-            return object;
-          },
-          {} as { [key: string]: string | null }
-        )
-      }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
-        setState(({ enabled }) => ({ enabled, started: success }))
-      );
-  };
+    (result: Dialog.IResult<Map<string, any> | undefined>): void => {
+      const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+      result.button.accept &&
+        result.value &&
+        StartStopMessaging.sendStartRequest(kernel, {
+          arguments: toObject(Array.from(result.value))
+        }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
+          setState(({ enabled }) => ({ enabled, started: success }))
+        );
+    };
 
 const shutdown = (tracker: INotebookTracker) => async (): Promise<void> => {
   const kernel = tracker.currentWidget?.sessionContext.session?.kernel;

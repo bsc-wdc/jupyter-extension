@@ -10,7 +10,7 @@ env|sort > ${ORIGINAL_ENV_PATH}
 
 # launch_compss will store the updated environment in $UPDATED_ENV_PATH
 export UPDATED_ENV_PATH=${WORK_DIRECTORY}/updated.env
-${COMPSS_HOME}/Runtime/scripts/user/launch_compss --master_node="${COMPSS_MASTER_NODE}" --worker_nodes="${COMPSS_WORKER_NODES}" --node_memory=disabled --node_storage_bandwidth=450 --wall_clock_limit=540 --sc_cfg=default.cfg -d --jupyter_notebook=jupyterhub --lang=python --master_working_dir=${WORK_DIRECTORY} --worker_working_dir=${WORK_DIRECTORY} --pythonpath=${PYTHONPATH}:${HOME} --keep_workingdir > /dev/null
+${COMPSS_HOME}/Runtime/scripts/user/launch_compss --master_node="${COMPSS_MASTER_NODE}" --worker_nodes="${COMPSS_WORKER_NODES}" --node_memory=disabled --node_storage_bandwidth=450 --wall_clock_limit=540 --sc_cfg=default.cfg -d --jupyter_notebook=jupyterhub --lang=python --master_working_dir=${WORK_DIRECTORY} --worker_working_dir=${WORK_DIRECTORY} --pythonpath=${PYTHONPATH}:${HOME} --keep_workingdir $@ > /dev/null
 
 # Now we filter the environments (updated - original) to find the variables that launch_compss defined
 REQUIRED_ENV_PATH=${WORK_DIRECTORY}/TO_BE_SOURCED.vars

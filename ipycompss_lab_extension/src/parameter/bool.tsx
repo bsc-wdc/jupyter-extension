@@ -19,16 +19,16 @@ export const BooleanParameter = ({
         ...((toSend
           ? [defaultValue, getValueToSend]
           : [Utils.capitalise(defaultValue.toString()), getValue]) as [
-          boolean | string,
-          (event: React.FormEvent<HTMLInputElement>) => boolean | string
-        ])
+            boolean | string,
+            (event: React.FormEvent<HTMLInputElement>) => boolean | string
+          ])
       )}
     />
   </Parameter>
 );
 
 const getValue = (event: React.FormEvent<HTMLInputElement>): string =>
-  Utils.capitalise((event.target as HTMLInputElement)['checked'].toString());
+  Utils.capitalise(getValueToSend(event).toString());
 
 const getValueToSend = (event: React.FormEvent<HTMLInputElement>): boolean =>
   (event.target as HTMLInputElement)['checked'];

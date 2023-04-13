@@ -18,14 +18,14 @@ export const IntegerParameter = ({
         ...((toSend
           ? [defaultValue, getValueToSend]
           : [defaultValue.toString(), getValue]) as [
-          number | string,
-          (value: number) => number | string
-        ])
+            number | string,
+            (value: number) => number | string
+          ])
       )}
     />
   </Parameter>
 );
 
-const getValue = (value: number): string => value.toString();
+const getValue = (value: number): string => getValueToSend(value).toString();
 
 const getValueToSend = (value: number): number => value;

@@ -1,3 +1,4 @@
+export { ParameterGroup, ParameterGroupWidget } from './group';
 export { BooleanParameter } from './bool';
 export { IntegerParameter } from './int';
 export { StringParameter } from './str';

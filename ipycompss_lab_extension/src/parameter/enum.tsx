@@ -33,9 +33,9 @@ export const EnumerationParameter = ({
             ...((toSend
               ? [defaultValue, getValueToSend]
               : [`"${defaultValue}"`, getValue]) as [
-              string,
-              (item: string) => string
-            ])
+                string,
+                (item: string) => string
+              ])
           )(item);
         }}
         filterable={false}
@@ -46,6 +46,6 @@ export const EnumerationParameter = ({
   );
 };
 
-const getValue = (item: string): string => `"${item}"`;
+const getValue = (item: string): string => `"${getValueToSend(item)}"`;
 
 const getValueToSend = (item: string): string => item;
