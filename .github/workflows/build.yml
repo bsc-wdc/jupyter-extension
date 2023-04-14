@@ -21,7 +21,7 @@ jobs:
       run: |
         python -m pip install -U black pylint
         python -m pip install -U comm ipykernel jupyter_client # jupyterlab~=3.1
-        sudo apt install libboost-all-dev
+        sudo apt install libboost-all-dev libopenmpi-dev
         python -m pip install pycompss
 
     - name: Lint the kernel

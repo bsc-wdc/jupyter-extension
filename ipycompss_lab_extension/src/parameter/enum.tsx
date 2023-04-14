@@ -21,6 +21,7 @@ export const EnumerationParameter = ({
   return (
     <Parameter name={name} values={values}>
       <Select
+        filterable={false}
         items={options}
         itemRenderer={(item: string, { handleClick }): JSX.Element => (
           <MenuItem key={item} text={item} onClick={handleClick} />
@@ -33,12 +34,12 @@ export const EnumerationParameter = ({
             ...((toSend
               ? [defaultValue, getValueToSend]
               : [`"${defaultValue}"`, getValue]) as [
-                string,
-                (item: string) => string
-              ])
+              string,
+              (item: string) => string
+            ])
           )(item);
         }}
-        filterable={false}
+        popoverProps={{ usePortal: false }}
       >
         <Button text={selectedItem} rightIcon="double-caret-vertical" />
       </Select>

@@ -6,22 +6,23 @@ import {
   BooleanParameter,
   EnumerationParameter,
   IntegerParameter,
-  ParameterGroup, ParameterGroupWidget,
+  ParameterGroup,
+  ParameterGroupWidget,
   StringParameter
 } from '../parameter';
 
 export namespace TaskDropdownView {
   export interface IProperties {
-    parameters: ParameterGroupWidget;
+    parameterWidget: ParameterGroupWidget;
     onClick: () => Promise<void>;
   }
 }
 
 export const TaskDropdownView = ({
-  parameters,
+  parameterWidget,
   onClick
 }: TaskDropdownView.IProperties): JSX.Element => {
-  const parametersData: ParameterGroup.IParameter[] = [
+  const parameters: ParameterGroup.IParameter[] = [
     { name: 'returns', defaultValue: '', Parameter: StringParameter },
     { name: 'priority', defaultValue: false, Parameter: BooleanParameter },
     { name: 'is_reduce', defaultValue: true, Parameter: BooleanParameter },
@@ -34,11 +35,10 @@ export const TaskDropdownView = ({
       options: ['RETRY', 'CANCEL_SUCCESSORS', 'FAIL', 'IGNORE']
     }
   ];
-  parameters.data = parametersData;
-  parameters.toSend = false;
+  parameterWidget.data = { parameters, toSend: false };
   return (
     <CollapsibleElement label="Task">
-      {parameters.render()}
+      {parameterWidget.render()}
       <ToolbarButtonComponent label="Define task" onClick={onClick} />
     </CollapsibleElement>
   );

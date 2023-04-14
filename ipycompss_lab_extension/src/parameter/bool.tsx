@@ -19,9 +19,9 @@ export const BooleanParameter = ({
         ...((toSend
           ? [defaultValue, getValueToSend]
           : [Utils.capitalise(defaultValue.toString()), getValue]) as [
-            boolean | string,
-            (event: React.FormEvent<HTMLInputElement>) => boolean | string
-          ])
+          boolean | string,
+          (event: React.FormEvent<HTMLInputElement>) => boolean | string
+        ])
       )}
     />
   </Parameter>

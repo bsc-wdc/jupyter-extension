@@ -18,9 +18,9 @@ export const IntegerParameter = ({
         ...((toSend
           ? [defaultValue, getValueToSend]
           : [defaultValue.toString(), getValue]) as [
-            number | string,
-            (value: number) => number | string
-          ])
+          number | string,
+          (value: number) => number | string
+        ])
       )}
     />
   </Parameter>

@@ -1,37 +1,48 @@
 import React from 'react';
 
-import { ParameterGroup } from './group';
+import { ParameterGroupWidget } from './group';
+import { CollapsibleElement } from '../collapsible-element';
 
 export namespace ParameterGroupView {
   export interface IProperties {
-    parameters: ParameterGroup.IParameter[];
+    parameters: ParameterGroupWidget.IParameter[];
     values: React.MutableRefObject<Map<string, any>>;
     toSend: boolean;
+    advancedParameters?: ParameterGroupWidget.IParameter[];
   }
 }
 
 export const ParameterGroupView = ({
   parameters,
   values,
-  toSend
+  toSend,
+  advancedParameters
 }: ParameterGroupView.IProperties): JSX.Element => {
   return (
     <>
-      {parameters.map(
-        (
-          { name, defaultValue, options, Parameter }: ParameterGroup.IParameter,
-          i: number
-        ): JSX.Element => (
-          <Parameter
-            key={i}
-            name={name}
-            values={values}
-            defaultValue={defaultValue}
-            toSend={toSend}
-            options={options}
-          />
-        )
+      {parameters.map(toParameter(values, toSend))}
+      {advancedParameters && (
+        <CollapsibleElement label="Advanced">
+          {advancedParameters.map(toParameter(values, toSend))}
+        </CollapsibleElement>
       )}
     </>
   );
 };
+
+const toParameter =
+  (values: React.MutableRefObject<Map<string, any>>, toSend: boolean) =>
+  (
+    { name, defaultValue, options, Parameter }: ParameterGroupWidget.IParameter,
+    i: number
+  ): JSX.Element =>
+    (
+      <Parameter
+        key={i}
+        name={name}
+        values={values}
+        defaultValue={defaultValue}
+        toSend={toSend}
+        options={options}
+      />
+    );

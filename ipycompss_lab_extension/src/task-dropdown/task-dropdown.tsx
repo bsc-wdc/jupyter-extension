@@ -18,7 +18,7 @@ export const TaskDropdown = ({
   const widget: ParameterGroupWidget = new ParameterGroupWidget();
   return (
     <TaskDropdownView
-      parameters={widget}
+      parameterWidget={widget}
       onClick={createTask(tracker, widget)}
     />
   );
@@ -26,25 +26,26 @@ export const TaskDropdown = ({
 
 const createTask =
   (tracker: INotebookTracker, parameters: ParameterGroupWidget) =>
-    async (): Promise<void> => {
-      const values = parameters.getValue();
-      const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
-      const lineInfo = editor && getCurrentFunctionLineInfo(editor);
+  async (): Promise<void> => {
+    const values = parameters.getValue();
+    const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
+    const lineInfo = editor && getCurrentFunctionLineInfo(editor);
 
-      const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
-        column: lineInfo.indentation,
-        line: lineInfo.lineNumber
-      };
-      linePosition && editor?.setCursorPosition(linePosition);
-      editor?.newIndentedLine();
-      linePosition &&
-        editor?.model.value.insert(
-          editor.getOffsetAt(linePosition),
-          `@task(${values &&
+    const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
+      column: lineInfo.indentation,
+      line: lineInfo.lineNumber
+    };
+    linePosition && editor?.setCursorPosition(linePosition);
+    editor?.newIndentedLine();
+    linePosition &&
+      editor?.model.value.insert(
+        editor.getOffsetAt(linePosition),
+        `@task(${
+          values &&
           Array.from(values)
             .filter(([_, value]: [string, any]) => value !== null)
             .map(([key, value]: [string, any]) => `${key}=${value}`)
             .join(', ')
-          })`
-        );
-    };
+        })`
+      );
+  };

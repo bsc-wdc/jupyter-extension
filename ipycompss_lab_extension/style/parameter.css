@@ -1,11 +1,11 @@
-.bp3-input-group {
-  flex-shrink: 1;
-}
-
 .ipycompss-parameter {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.ipycompss-parameter .bp3-input-group {
+  flex-shrink: 1;
 }
 
 /* stylelint-disable selector-class-pattern */

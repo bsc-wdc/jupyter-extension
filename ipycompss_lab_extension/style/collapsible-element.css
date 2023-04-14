@@ -7,3 +7,13 @@
   display: flex;
   flex-direction: column;
 }
+
+.ipycompss-popup .jp-stack-panel-header-text {
+  flex: 1 0 auto;
+  margin: 0 4px;
+}
+
+.ipycompss-popup .bp3-collapse-body {
+  display: flex;
+  flex-direction: column;
+}

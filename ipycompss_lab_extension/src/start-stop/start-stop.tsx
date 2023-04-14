@@ -52,16 +52,16 @@ const showStartDialog =
 
 const startPycompss =
   (tracker: INotebookTracker) =>
-    (result: Dialog.IResult<Map<string, any> | undefined>): void => {
-      const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-      result.button.accept &&
-        result.value &&
-        StartStopMessaging.sendStartRequest(kernel, {
-          arguments: toObject(Array.from(result.value))
-        }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
-          setState(({ enabled }) => ({ enabled, started: success }))
-        );
-    };
+  (result: Dialog.IResult<Map<string, any> | undefined>): void => {
+    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+    result.button.accept &&
+      result.value &&
+      StartStopMessaging.sendStartRequest(kernel, {
+        arguments: toObject(Array.from(result.value))
+      }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
+        setState(({ enabled }) => ({ enabled, started: success }))
+      );
+  };
 
 const shutdown = (tracker: INotebookTracker) => async (): Promise<void> => {
   const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
