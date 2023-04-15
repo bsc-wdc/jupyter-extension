@@ -9,7 +9,7 @@ export const IntegerParameter = ({
   defaultValue,
   toSend
 }: Parameter.IProperties<number>): JSX.Element => (
-  <Parameter name={name} values={values}>
+  <Parameter name={name} values={values} defaultValue={defaultValue}>
     <NumericInput
       defaultValue={defaultValue}
       onValueChange={onChange<number, number>(

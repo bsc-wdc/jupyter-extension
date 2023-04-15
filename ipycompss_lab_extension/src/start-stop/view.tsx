@@ -41,7 +41,7 @@ export const StartStopView = ({
 );
 
 export const dialogBody = (): Dialog.IBodyWidget<
-  Map<string, string | null> | undefined
+  Map<string, any> | undefined
 > => {
   const parameters: ParameterGroup.IParameter[] = [
     { name: 'graph', defaultValue: false, Parameter: BooleanParameter },

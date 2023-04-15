@@ -19,7 +19,7 @@ export const EnumerationParameter = ({
 }: EnumerationParameter.IProperties): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState(defaultValue);
   return (
-    <Parameter name={name} values={values}>
+    <Parameter name={name} values={values} defaultValue={defaultValue}>
       <Select
         filterable={false}
         items={options}

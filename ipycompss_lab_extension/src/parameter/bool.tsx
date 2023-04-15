@@ -10,7 +10,7 @@ export const BooleanParameter = ({
   defaultValue,
   toSend
 }: Parameter.IProperties<boolean>): JSX.Element => (
-  <Parameter name={name} values={values}>
+  <Parameter name={name} values={values} defaultValue={defaultValue}>
     <Checkbox
       defaultChecked={defaultValue}
       onChange={onChange<boolean, React.FormEvent<HTMLInputElement>>(

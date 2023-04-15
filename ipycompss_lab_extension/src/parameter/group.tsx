@@ -20,13 +20,11 @@ export namespace ParameterGroupWidget {
 
 export class ParameterGroupWidget
   extends ReactWidget
-  implements Dialog.IBodyWidget<Map<string, string | null> | undefined>
+  implements Dialog.IBodyWidget<Map<string, any> | undefined>
 {
   private _parameters: ParameterGroupWidget.IParameter[] | undefined;
   private _advancedParameters: ParameterGroupWidget.IParameter[] | undefined;
-  private _values:
-    | React.MutableRefObject<Map<string, string | null>>
-    | undefined;
+  private _values: React.MutableRefObject<Map<string, any>> | undefined;
   private _toSend: boolean | undefined;
 
   private readonly ParameterGroup = ({
@@ -34,7 +32,7 @@ export class ParameterGroupWidget
     toSend,
     advancedParameters
   }: ParameterGroupWidget.IProperties) => {
-    this._values = useRef(new Map<string, string | null>());
+    this._values = useRef(new Map<string, any>());
     return (
       <ParameterGroupView
         parameters={parameters}
@@ -69,7 +67,7 @@ export class ParameterGroupWidget
     );
   }
 
-  getValue(): Map<string, string | null> | undefined {
+  getValue(): Map<string, any> | undefined {
     return this._values?.current;
   }
 }

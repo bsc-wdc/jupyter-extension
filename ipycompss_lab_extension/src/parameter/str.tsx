@@ -8,7 +8,7 @@ export const StringParameter = ({
   values,
   defaultValue
 }: Parameter.IProperties<string>): JSX.Element => (
-  <Parameter name={name} values={values}>
+  <Parameter name={name} values={values} defaultValue={defaultValue}>
     <InputGroup
       defaultValue={defaultValue}
       onChange={onChange<string, React.FormEvent<HTMLInputElement>>(

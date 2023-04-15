@@ -43,7 +43,7 @@ const createTask =
         `@task(${
           values &&
           Array.from(values)
-            .filter(([_, value]: [string, any]) => value !== null)
+            .filter(([_, value]: [string, any]) => value.default === undefined)
             .map(([key, value]: [string, any]) => `${key}=${value}`)
             .join(', ')
         })`

@@ -103,7 +103,7 @@ class IPyCOMPSsKernel(IPythonKernel):
 
         env = []
         if self.cluster:
-            worker_arguments = to_worker_arguments(request['arguments'])
+            worker_arguments = to_worker_arguments(request["arguments"])
             with resources.as_file(
                 resources.files("ipycompss_kernel").joinpath("start_workers.sh")
             ) as script_path:

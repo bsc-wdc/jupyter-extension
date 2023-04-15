@@ -57,7 +57,12 @@ const startPycompss =
     result.button.accept &&
       result.value &&
       StartStopMessaging.sendStartRequest(kernel, {
-        arguments: toObject(Array.from(result.value))
+        arguments: toObject(
+          Array.from(result.value).map(([key, value]: [string, any]) => [
+            key,
+            value.default ?? value
+          ])
+        )
       }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
         setState(({ enabled }) => ({ enabled, started: success }))
       );
