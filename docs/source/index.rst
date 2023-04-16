@@ -3,13 +3,23 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyCOMPSs Jupyter extensions' documentation!
-=======================================================
+#########################################
+PyCOMPSs Jupyter extensions documentation
+#########################################
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: IPyCOMPSs kernel
+   
+   pycompss_jupyter_kernel/overview
+   pycompss_jupyter_kernel/start_stop
 
+
+.. toctree::
+   :maxdepth: 1
+   :caption: IPyCOMPSs JupyterLab extension
+
+   pycompss_jupyterlab_extension/overview
 
 
 Indices and tables

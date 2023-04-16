@@ -57,8 +57,8 @@ export const dialogBody = (): Dialog.IBodyWidget<
       options: ['trace', 'debug', 'info', 'api', 'off']
     },
     { name: 'o_c', defaultValue: false, Parameter: BooleanParameter },
-    // { name: 'project_xml', defaultValue: '', Parameter: PathParameter, path_type: PathType.FILE },
-    // { name: 'resources_xml', defaultValue: '', Parameter: PathParameter, path_type: PathType.FILE },
+    { name: 'project_xml', defaultValue: '', Parameter: StringParameter },
+    { name: 'resources_xml', defaultValue: '', Parameter: StringParameter },
     { name: 'summary', defaultValue: false, Parameter: BooleanParameter },
     {
       name: 'task_execution',
@@ -66,8 +66,8 @@ export const dialogBody = (): Dialog.IBodyWidget<
       Parameter: EnumerationParameter,
       options: ['compss', 'storage']
     },
-    // PathParameter("storage_impl", "", path_type = PathType.FILE),
-    // PathParameter("storage_conf", "", path_type = PathType.FILE),
+    { name: 'storage_impl', defaultValue: '', Parameter: StringParameter },
+    { name: 'storage_conf', defaultValue: '', Parameter: StringParameter },
     {
       name: 'streaming_backend',
       defaultValue: 'NONE',
@@ -91,10 +91,18 @@ export const dialogBody = (): Dialog.IBodyWidget<
       Parameter: StringParameter
     },
     { name: 'uuid', defaultValue: '', Parameter: StringParameter },
-    // PathParameter("log_dir", "", path_type = PathType.FOLDER),
-    // PathParameter("master_working_dir", "", path_type = PathType.FOLDER),
-    // PathParameter("extrae_cfg", "", path_type = PathType.FILE),
-    // PathParameter("extrae_final_directory", "", path_type = PathType.FOLDER),
+    { name: 'log_dir', defaultValue: '', Parameter: StringParameter },
+    {
+      name: 'master_working_dir',
+      defaultValue: '',
+      Parameter: StringParameter
+    },
+    { name: 'extrae_cfg', defaultValue: '', Parameter: StringParameter },
+    {
+      name: 'extrae_final_directory',
+      defaultValue: '',
+      Parameter: StringParameter
+    },
     {
       name: 'comm',
       defaultValue: 'NIO',
@@ -153,9 +161,9 @@ export const dialogBody = (): Dialog.IBodyWidget<
       Parameter: StringParameter
     },
     { name: 'fpga_reprogram', defaultValue: '', Parameter: StringParameter },
-    // PathParameter("profile_input", "", path_type = PathType.FILE),
-    // PathParameter("profile_output", "", path_type = PathType.FILE),
-    // PathParameter("scheduler_config", "", path_type = PathType.FILE),
+    { name: 'profile_input', defaultValue: '', Parameter: StringParameter },
+    { name: 'profile_output', defaultValue: '', Parameter: StringParameter },
+    { name: 'scheduler_config', defaultValue: '', Parameter: StringParameter },
     {
       name: 'external_adaptation',
       defaultValue: false,
@@ -174,14 +182,14 @@ export const dialogBody = (): Dialog.IBodyWidget<
       Parameter: BooleanParameter
     },
     { name: 'io_executors', defaultValue: 0, Parameter: IntegerParameter },
-    // PathParameter("env_script", "", path_type = PathType.FILE),
+    { name: 'env_script', defaultValue: '', Parameter: StringParameter },
     {
       name: 'tracing_task_dependencies',
       defaultValue: false,
       Parameter: BooleanParameter
     },
     { name: 'trace_label', defaultValue: '', Parameter: StringParameter },
-    // PathParameter("extrae_cfg_python", "", path_type = PathType.FILE),
+    { name: 'extrae_cfg_python', defaultValue: '', Parameter: StringParameter },
     { name: 'wcl', defaultValue: 0, Parameter: IntegerParameter },
     {
       name: 'cache_profiler',
@@ -205,7 +213,7 @@ export const dialogBody = (): Dialog.IBodyWidget<
       ]
     },
     { name: 'checkpoint_params', defaultValue: '', Parameter: StringParameter },
-    // PathParameter("checkpoint_folder", "", path_type = PathType.FOLDER),
+    { name: 'checkpoint_folder', defaultValue: '', Parameter: StringParameter },
     { name: 'verbose', defaultValue: false, Parameter: BooleanParameter },
     {
       name: 'disable_external',
