@@ -20,13 +20,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -U black pylint
-        python -m pip install -U comm ipykernel jupyter_client # jupyterlab~=3.1
+        python -m pip install -U comm ipykernel ipywidgets jupyter_client # jupyterlab~=3.1
         sudo apt install automake build-essential graphviz libboost-all-dev libopenmpi-dev \
           libpapi-dev libtool libxml2 openjdk-8-jdk openmpi-bin openmpi-doc openssh-server \
           papi-tools uuid-runtime xdg-utils
         python -m pip install graphviz matplotlib mpi4py
         export EXTRAE_MPI_HEADERS=/usr/include/x86_64-linux-gnu/mpi
-        # export EXTRAE_PAPI_HEADERS=/usr/include
         python -m pip install pycompss
 
     - name: Lint the kernel

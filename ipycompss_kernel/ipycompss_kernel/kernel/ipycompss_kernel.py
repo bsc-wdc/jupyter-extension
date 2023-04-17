@@ -31,6 +31,7 @@ class IPyCOMPSsKernel(IPythonKernel):
 
     def execute(self, expression: str) -> dict[str, Any]:
         """Execute the expression in the kernel"""
+        result = {}
         with capture_output() as capture:
             try:
                 self.do_execute(  # pylint: disable=no-member
