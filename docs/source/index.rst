@@ -20,11 +20,7 @@ PyCOMPSs Jupyter extensions documentation
    :caption: IPyCOMPSs JupyterLab extension
 
    pycompss_jupyterlab_extension/overview
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   pycompss_jupyterlab_extension/reference
+   pycompss_jupyterlab_extension/decorator
+   pycompss_jupyterlab_extension/start_stop
+   pycompss_jupyterlab_extension/execution_info
