@@ -6,7 +6,7 @@
   "-f",
   "{connection_file}"
  ],
- "display_name": "IPyCOMPSs",
+ "display_name": "PyCOMPSs",
  "language": "python",
  "metadata": {
   "debugger": true,

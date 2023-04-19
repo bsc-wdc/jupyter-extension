@@ -3,8 +3,8 @@
 HOST_LIST=$(scontrol show hostname ${SLURM_JOB_NODELIST} | awk {' print $1 '} | sed -e 's/\.[^\ ]*//g')
 export COMPSS_MASTER_NODE=$(hostname)
 export COMPSS_WORKER_NODES=$(echo ${HOST_LIST} | sed -e "s/${COMPSS_MASTER_NODE}//g")
-WORK_DIRECTORY=$(echo $@|sed -n 's/.*--master-working-dir=\([^ ]*\).*/\1/p')
-if [ "${WORK_DIRECTORY}" == '' ]; then
+WORK_DIRECTORY=$(echo $@|sed -n 's/.*--master_working_dir=\([^ ]*\).*/\1/p')
+if [ "${WORK_DIRECTORY}" == '' ] || [ ! -d "${WORK_DIRECTORY}" ]; then
   WORK_DIRECTORY=${HOME}
   set -- "$@ --master-working-dir=${WORK_DIRECTORY}"
 fi

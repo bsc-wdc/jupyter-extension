@@ -9,4 +9,5 @@ the function you wish to apply the decorator and click the 'define' button. This
 generate a decorator which will be placed over the selected function (...detected
 parameters?).
 
-**Warning**: Closing the drop-down list will wipe out the current values of the parameters.
+.. attention::
+    Closing the drop-down list will wipe out the current values of the parameters.

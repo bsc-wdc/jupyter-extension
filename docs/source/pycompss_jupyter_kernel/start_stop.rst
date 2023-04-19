@@ -16,11 +16,12 @@ tab with the PyCOMPSs monitor.
 
 When the user clicks the 'Start IPyCOMPSs' button, the kernel will start the PyCOMPSs runtime
 with the values that the parameters had in that precise moment and the pop-up will be closed.
-If the environment variable 'COMPSS_RUNNING_IN_SC' is set, clicking this button will also
+If the environment variable ``COMPSS_RUNNING_IN_SC`` is set, clicking this button will also
 cause the kernel to start the worker processes.
 
-**Warning**: Do not start the PyCOMPSs runtime if it is already running, this may cause some
-problems.
+.. warning::
+    Do not start the PyCOMPSs runtime if it is already running, this may cause some
+    problems.
 
 Stopping the runtime
 --------------------
@@ -31,10 +32,11 @@ take a while.
 The default shutdown time is 30 seconds. However, the runtime may take more to
 stop depending on the environment and the application that was executed. If a different
 shutdown time is desired, we allow changing such time by setting the environment variable
-'IPYCOMPSS_SHUTDOWN_TIME', which is defined in seconds and allows decimal values.
+``IPYCOMPSS_SHUTDOWN_TIME``, which is defined in seconds and allows decimal values.
 
-**Warning**: When using Jupyter Notebook App or JupyterLab, choosing to change kernel from
-PyCOMPSs to PyCOMPSs while the runtime is running will simultaneously shut down the kernel
-and start a new one. This is dangerous as starting the runtime while it shuts down may cause
-problems. We recommend that the kernel is always shut down before changing kernels if the
-runtime is running.
+.. caution::
+    When using Jupyter Notebook App or JupyterLab, choosing to change kernel from
+    PyCOMPSs to PyCOMPSs while the runtime is running will simultaneously shut down the
+    kernel and start a new one. This is dangerous as starting the runtime while it shuts down
+    may cause problems. We recommend that the kernel is always shut down before changing
+    kernels if the runtime is running.

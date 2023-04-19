@@ -31,5 +31,11 @@ ipycompss-provisioner = "ipycompss_kernel:IPyCOMPSsProvisioner"
 [tool.hatch.version]
 path = "ipycompss_kernel/_version.py"
 
+[tool.hatch.build.hooks.custom]
+dependencies = [
+    "jupyter_core",
+    "jupyter_client"
+]
+
 [tool.check-wheel-contents]
 ignore = ["W002"]
