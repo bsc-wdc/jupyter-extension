@@ -14,14 +14,17 @@ class Info:  # pylint: disable=too-few-public-methods
         "statistics": "statistics",
     }
 
-    @staticmethod
-    def _handle_request(function_name: str) -> InfoResponseDto:
+    @classmethod
+    def _handle_request(cls, info_type: str) -> InfoResponseDto:
+        function_name = cls.INFO_TYPE[info_type]
+        title = f"'{function_name.replace('_', ' ').capitalize()}'"
         return {
             "code": f"""
+                %matplotlib inline
                 import pycompss.interactive as ipycompss
                 from ipycompss_kernel import OuterInfo
 
-                with OuterInfo():
+                with OuterInfo(title={title}, type={info_type}):
                     ipycompss.{function_name}()
                 
                 del ipycompss, OuterInfo
@@ -30,7 +33,7 @@ class Info:  # pylint: disable=too-few-public-methods
 
     @classmethod
     def _callback(cls, request: InfoRequestDto) -> InfoResponseDto:
-        return cls._handle_request(cls.INFO_TYPE[request["type"]])
+        return cls._handle_request(request["type"])
 
     def start(self) -> None:
         """Register info callback"""

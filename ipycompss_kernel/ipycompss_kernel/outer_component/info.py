@@ -12,3 +12,5 @@ class OuterInfo(Output):
     _view_name = Unicode("View").tag(sync=True)
     _view_module = Unicode("ipycompss_lab_extension").tag(sync=True)
     _view_module_version = Unicode("0.1.0").tag(sync=True)
+    title = Unicode("Title").tag(sync=True)
+    type = Unicode("Type").tag(sync=True)

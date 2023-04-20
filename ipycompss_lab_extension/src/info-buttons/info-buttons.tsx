@@ -27,7 +27,7 @@ export namespace InfoButtons {
 }
 
 const INFO_ID = 'pycompss-execution-info';
-const INFO_TITLE = 'PyCOMPSs execution info';
+const INFO_TITLE = 'PyCOMPSs ';
 
 export const InfoButtons = ({
   shell,
@@ -43,7 +43,8 @@ export const InfoButtons = ({
         _model_module_version: '0.1.0',
         _view_name: 'View',
         _view_module: 'ipycompss_lab_extension',
-        _view_module_version: '0.1.0'
+        _view_module_version: '0.1.0',
+        title: `${INFO_TITLE} execution info`
       };
     }
 
@@ -59,11 +60,11 @@ export const InfoButtons = ({
       const outputArea = this._outputView;
       outputArea.addClass('jp-LinkedOutputView');
       outputArea.title.closable = true;
-      outputArea.title.label = INFO_TITLE;
+      outputArea.title.label = this.model.get('title');
       outputArea.title.icon = compss_icon;
-      outputArea.id = INFO_ID;
+      outputArea.id = INFO_ID + this.model.get('type');
 
-      outputArea.parent?.disposed.connect(() => this.model.destroy());
+      //outputArea.parent?.disposed.connect(() => this.model.destroy());
       shell.add(outputArea, 'main', { mode: 'split-right' });
     }
   };
@@ -78,13 +79,13 @@ export const InfoButtons = ({
 
 const openExecutionInfo =
   (shell: JupyterFrontEnd.IShell, tracker: INotebookTracker) =>
-  (type: InfoButtons.InfoType) =>
-  async (): Promise<void> => {
-    if (
-      toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID)
-    ) {
-      return;
-    }
+    (type: InfoButtons.InfoType) =>
+      async (): Promise<void> => {
+        if (
+          toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID + type)
+        ) {
+          return;
+        }
 
-    getExecutionInfo(tracker, type);
-  };
+        getExecutionInfo(tracker, type);
+      };
