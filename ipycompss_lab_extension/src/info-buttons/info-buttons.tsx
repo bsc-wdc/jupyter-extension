@@ -8,24 +8,32 @@ import React from 'react';
 
 import { compss_icon } from '../icon';
 import { getExecutionInfo } from './execution-info';
-import { InfoButtonView } from './view';
+import { InfoButtonsView } from './view';
 
-export namespace InfoButton {
+export namespace InfoButtons {
   export interface IProperties {
     shell: JupyterFrontEnd.IShell;
     tracker: INotebookTracker;
     widgetRegistry: IJupyterWidgetRegistry;
   }
+
+  export type InfoType =
+    | 'info'
+    | 'status'
+    | 'current_graph'
+    | 'complete_graph'
+    | 'resources'
+    | 'statistics';
 }
 
 const INFO_ID = 'pycompss-execution-info';
 const INFO_TITLE = 'PyCOMPSs execution info';
 
-export const InfoButton = ({
+export const InfoButtons = ({
   shell,
   tracker,
   widgetRegistry
-}: InfoButton.IProperties): JSX.Element => {
+}: InfoButtons.IProperties): JSX.Element => {
   const Model = class extends output.OutputModel {
     defaults(): any {
       return {
@@ -65,11 +73,12 @@ export const InfoButton = ({
     version: '0.1.0',
     exports: { Model, View }
   });
-  return <InfoButtonView onClick={openExecutionInfo(shell, tracker)} />;
+  return <InfoButtonsView onClick={openExecutionInfo(shell, tracker)} />;
 };
 
 const openExecutionInfo =
   (shell: JupyterFrontEnd.IShell, tracker: INotebookTracker) =>
+  (type: InfoButtons.InfoType) =>
   async (): Promise<void> => {
     if (
       toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID)
@@ -77,5 +86,5 @@ const openExecutionInfo =
       return;
     }
 
-    getExecutionInfo(tracker);
+    getExecutionInfo(tracker, type);
   };

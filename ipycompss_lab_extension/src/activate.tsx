@@ -8,7 +8,7 @@ import React from 'react';
 import '../style/index.css';
 import { DocumentationButton } from './documentation-button';
 import { compss_icon } from './icon';
-import { InfoButton } from './info-button';
+import { InfoButtons } from './info-buttons';
 import { StartStop } from './start-stop';
 import { TaskDropdown } from './task-dropdown';
 
@@ -28,7 +28,7 @@ export const activate = (
         <StartStop tracker={tracker} />
         <TaskDropdown tracker={tracker} />
         <DocumentationButton shell={app.shell} />
-        <InfoButton
+        <InfoButtons
           shell={app.shell}
           tracker={tracker}
           widgetRegistry={widgetRegistry}

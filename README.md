@@ -4,5 +4,8 @@
 
 Jupyter extensions that make the use of PyCOMPSs in Jupyter much easier.
 
-There are two extensions: the IPyCOMPSs Jupyter kernel and the IPyCOMPSs Lab extension. For 
-more information, see the docs in `docs/`.
+There are two extensions:
+ - IPyCOMPSs Jupyter kernel
+ - IPyCOMPSs Lab extension.
+
+For more information, see the documentation in `docs/`.
