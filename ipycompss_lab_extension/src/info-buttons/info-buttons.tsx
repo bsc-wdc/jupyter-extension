@@ -79,13 +79,15 @@ export const InfoButtons = ({
 
 const openExecutionInfo =
   (shell: JupyterFrontEnd.IShell, tracker: INotebookTracker) =>
-    (type: InfoButtons.InfoType) =>
-      async (): Promise<void> => {
-        if (
-          toArray(shell.widgets('main')).some((elem: Widget) => elem.id === INFO_ID + type)
-        ) {
-          return;
-        }
+  (type: InfoButtons.InfoType) =>
+  async (): Promise<void> => {
+    if (
+      toArray(shell.widgets('main')).some(
+        (elem: Widget) => elem.id === INFO_ID + type
+      )
+    ) {
+      return;
+    }
 
-        getExecutionInfo(tracker, type);
-      };
+    getExecutionInfo(tracker, type);
+  };
