@@ -26,7 +26,7 @@ export namespace InfoButtons {
     | 'statistics';
 }
 
-const INFO_ID = 'pycompss-execution-info';
+const INFO_ID = 'pycompss-execution-info-';
 const INFO_TITLE = 'PyCOMPSs ';
 
 export const InfoButtons = ({
@@ -44,7 +44,8 @@ export const InfoButtons = ({
         _view_name: 'View',
         _view_module: 'ipycompss_lab_extension',
         _view_module_version: '0.1.0',
-        title: `${INFO_TITLE} execution info`
+        title: `${INFO_TITLE} execution info`,
+        type: INFO_ID
       };
     }
 

@@ -24,8 +24,9 @@ class Info:  # pylint: disable=too-few-public-methods
                 import pycompss.interactive as ipycompss
                 from ipycompss_kernel import OuterInfo
 
-                with OuterInfo(title={title}, type={info_type}):
+                with OuterInfo(title={title}, type={f"'{info_type}'"}):
                     ipycompss.{function_name}()
+                    # print('No data to display yet')
                 
                 del ipycompss, OuterInfo
             """
