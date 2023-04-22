@@ -9,6 +9,12 @@ PyCOMPSs Jupyter extensions documentation
 
 .. toctree::
    :maxdepth: 1
+   :caption: Installing
+
+   install/install
+
+.. toctree::
+   :maxdepth: 1
    :caption: IPyCOMPSs kernel
    
    pycompss_jupyter_kernel/overview
