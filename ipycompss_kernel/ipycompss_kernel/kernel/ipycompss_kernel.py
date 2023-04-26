@@ -4,7 +4,7 @@ from typing import Any
 from ipykernel.ipkernel import IPythonKernel
 from IPython.utils.capture import capture_output
 
-from . import info
+from .info import info
 from .start_stop import StartStop
 
 
