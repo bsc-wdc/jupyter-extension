@@ -39,6 +39,6 @@ class IPyCOMPSsKernel(IPythonKernel):
                 ).send(None)
             except StopIteration as execution:
                 result = execution.value
-            self.log.debug(capture.stdout)
+            self.log.warn(capture.stdout)
             self.log.warn(capture.stderr)
         return result

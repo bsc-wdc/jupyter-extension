@@ -1,4 +1,4 @@
-"""PyCOMPSs startup popup"""
+"""PyCOMPSs startup pop-up"""
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
 from typing import Any, Callable
 
@@ -6,7 +6,7 @@ from .parameter.factory import ParameterFactory
 
 
 class Popup(Tk):
-    """PyCOMPs popup implementation"""
+    """PyCOMPs pop-up implementation"""
 
     @staticmethod
     def _make_grid_expandable(frame: Tk | Frame) -> None:
@@ -17,7 +17,7 @@ class Popup(Tk):
             frame.columnconfigure(i, weight=1)
 
     def __init__(self, *args: Any, **kwargs: Any):
-        """Popup creation"""
+        """Pop-up creation"""
         super().__init__(*args, **kwargs)
 
         self.wm_title("IPyCOMPSs configuration")
@@ -35,7 +35,7 @@ class Popup(Tk):
         self._make_grid_expandable(self)
 
     def create_button(self, text: str, command: Callable[[], None]) -> None:
-        """Create a button in the popup"""
+        """Create a button in the pop-up"""
         button: Button = Button(self, text=text, command=command)
         button.grid(row=self.row, column=self.column)
         self.column += 1
@@ -45,15 +45,13 @@ class Popup(Tk):
         return {key: value.get() for (key, value) in self.parameters.items()}
 
     def _create_label(self, text: str) -> Label:
-        """Create a label in the popup"""
+        """Create a label in the pop-up"""
         label: Label = Label(self, text=text)
         row: int = self.grid_size()[1]
         label.grid(row=row, column=0, columnspan=2)
         return label
 
-    def _create_parameters(
-        self, frame: Tk | Frame, advanced: bool = False
-    ) -> None:
+    def _create_parameters(self, frame: Tk | Frame, advanced: bool = False) -> None:
         """Create parameter widgets"""
         parameters = ParameterFactory.create_parameters(advanced=advanced)
         for parameter in parameters:

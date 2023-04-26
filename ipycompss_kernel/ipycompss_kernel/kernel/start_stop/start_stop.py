@@ -2,6 +2,7 @@
 import os
 import re
 import subprocess
+from tkinter import TclError
 from typing import TYPE_CHECKING, Any
 
 from .messaging import (
@@ -31,7 +32,7 @@ class StartStop:
     def start(self) -> None:
         """Start the kernel"""
         if not self._cluster:
-            self._execute(f"OuterStartStop().start({self._cluster})")
+            self._execute(self._init_expression())
 
         StartStopMessaging.on_status(self._get_status)
         StartStopMessaging.on_start(self._handle_start_request)
@@ -51,6 +52,11 @@ class StartStop:
             r"java.*compss-engine\.jar", processes.stdout.decode("utf-8")
         )
         return {"started": started is not None}
+
+    def _handle_init_request(self) -> SuccessResponseDto:
+        """Open start pop-up"""
+        result = self._execute(self._init_expression())
+        return {"success": not isinstance(result["error_in_exec"], TclError)}
 
     def _handle_start_request(self, request: StartRequestDto) -> SuccessResponseDto:
         """Execute code to start PyCOMPSs runtime"""
@@ -72,3 +78,6 @@ class StartStop:
                 del OuterStartStop
             """
         )
+
+    def _init_expression(self) -> str:
+        return f"OuterStartStop().start({self._cluster})"

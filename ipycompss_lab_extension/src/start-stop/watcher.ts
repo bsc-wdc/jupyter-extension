@@ -1,19 +1,20 @@
-import { ISessionContext } from '@jupyterlab/apputils';
+import { ISessionContext, IWidgetTracker } from '@jupyterlab/apputils';
+import { ConsolePanel } from '@jupyterlab/console';
 import { IChangedArgs } from '@jupyterlab/coreutils';
-import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { NotebookPanel } from '@jupyterlab/notebook';
 import { Kernel } from '@jupyterlab/services';
 
 import { StartStopMessaging } from './messaging';
 import { setState } from './start-stop';
 
-export const watchNotebookChanges = (
-  _: INotebookTracker,
-  notebook: NotebookPanel | null
+export const watchCurrentChanges = (
+  _: IWidgetTracker,
+  panel: ConsolePanel | NotebookPanel | null
 ): void => {
   setState(({ started }) => ({ enabled: false, started }));
-  notebook?.sessionContext.kernelChanged.connect(watchKernelChanges);
+  panel?.sessionContext.kernelChanged.connect(watchKernelChanges);
 
-  const kernel = notebook?.sessionContext.session?.kernel;
+  const kernel = panel?.sessionContext.session?.kernel;
   StartStopMessaging.sendStatusRequest(kernel).onReply(startState(kernel));
 };
 

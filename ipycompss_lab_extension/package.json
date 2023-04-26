@@ -61,6 +61,7 @@
     "@jupyterlab/apputils": "^3.4.8",
     "@jupyterlab/cells": "^3.4.8",
     "@jupyterlab/codeeditor": "^3.4.8",
+    "@jupyterlab/console": "^3.4.8",
     "@jupyterlab/coreutils": "^5.4.8",
     "@jupyterlab/mainmenu": "^3.4.8",
     "@jupyterlab/nbformat": "^3.4.8",

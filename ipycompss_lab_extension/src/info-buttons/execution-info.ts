@@ -1,12 +1,15 @@
+import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 
+import { Utils } from '../utils';
 import { InfoButtons } from './info-buttons';
 import { ExecutionInfoMessaging } from './messaging';
 
 export const getExecutionInfo = (
-  tracker: INotebookTracker,
+  consoleTracker: IConsoleTracker,
+  notebookTracker: INotebookTracker,
   type: InfoButtons.InfoType
 ): void => {
-  const kernel = tracker.currentWidget?.sessionContext?.session?.kernel;
+  const kernel = Utils.getKernel(consoleTracker, notebookTracker);
   ExecutionInfoMessaging.sendInfoRequest(kernel, { type });
 };

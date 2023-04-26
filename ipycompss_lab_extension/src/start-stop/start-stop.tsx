@@ -1,11 +1,13 @@
 import { Dialog, showDialog } from '@jupyterlab/apputils';
+import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
+import { toObject } from '@lumino/algorithm';
 import React, { useState } from 'react';
 
+import { Utils } from '../utils';
 import { StartStopMessaging } from './messaging';
 import { StartStopView, dialogBody } from './view';
-import { watchNotebookChanges } from './watcher';
-import { toObject } from '@lumino/algorithm';
+import { watchCurrentChanges } from './watcher';
 
 export namespace StartStop {
   export interface IState {
@@ -14,7 +16,8 @@ export namespace StartStop {
   }
 
   export interface IProperties {
-    tracker: INotebookTracker;
+    consoleTracker: IConsoleTracker;
+    notebookTracker: INotebookTracker;
   }
 }
 
@@ -24,8 +27,12 @@ export let setState: (
     | (({ enabled, started }: StartStop.IState) => StartStop.IState)
 ) => void;
 
-export const StartStop = ({ tracker }: StartStop.IProperties): JSX.Element => {
-  tracker.currentChanged.connect(watchNotebookChanges);
+export const StartStop = ({
+  consoleTracker,
+  notebookTracker
+}: StartStop.IProperties): JSX.Element => {
+  consoleTracker.currentChanged.connect(watchCurrentChanges);
+  notebookTracker.currentChanged.connect(watchCurrentChanges);
   let enabled, started;
   [{ enabled, started }, setState] = useState({
     enabled: false,
@@ -35,25 +42,29 @@ export const StartStop = ({ tracker }: StartStop.IProperties): JSX.Element => {
     <StartStopView
       start={{
         enabled: enabled && !started,
-        onClick: showStartDialog(tracker)
+        onClick: showStartDialog(consoleTracker, notebookTracker)
       }}
-      stop={{ enabled: enabled && started, onClick: shutdown(tracker) }}
+      stop={{
+        enabled: enabled && started,
+        onClick: shutdown(consoleTracker, notebookTracker)
+      }}
     />
   );
 };
 
 const showStartDialog =
-  (tracker: INotebookTracker) => async (): Promise<void> =>
+  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
+  async (): Promise<void> =>
     void showDialog({
       title: 'IPyCOMPSs configuration',
       body: dialogBody(),
       buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
-    }).then(startPycompss(tracker));
+    }).then(startPycompss(consoleTracker, notebookTracker));
 
 const startPycompss =
-  (tracker: INotebookTracker) =>
+  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
   (result: Dialog.IResult<Map<string, any> | undefined>): void => {
-    const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
+    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     result.button.accept &&
       result.value &&
       StartStopMessaging.sendStartRequest(kernel, {
@@ -68,10 +79,12 @@ const startPycompss =
       );
   };
 
-const shutdown = (tracker: INotebookTracker) => async (): Promise<void> => {
-  const kernel = tracker.currentWidget?.sessionContext.session?.kernel;
-  StartStopMessaging.sendStopRequest(kernel).onReply(
-    ({ success }: StartStopMessaging.ISuccessResponseDto) =>
-      setState(({ enabled }) => ({ enabled, started: !success }))
-  );
-};
+const shutdown =
+  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
+  async (): Promise<void> => {
+    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+    StartStopMessaging.sendStopRequest(kernel).onReply(
+      ({ success }: StartStopMessaging.ISuccessResponseDto) =>
+        setState(({ enabled }) => ({ enabled, started: !success }))
+    );
+  };

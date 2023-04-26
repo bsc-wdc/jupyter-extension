@@ -1,8 +1,8 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { ILayoutRestorer, JupyterFrontEnd } from '@jupyterlab/application';
 import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
+import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { IRenderMimeRegistry } from '@jupyterlab/rendermime';
 import React from 'react';
 
 import '../style/index.css';
@@ -16,8 +16,8 @@ const LEFT_PANEL_ID = 'pycompss-left-menu';
 
 export const activate = (
   app: JupyterFrontEnd,
-  tracker: INotebookTracker,
-  registry: IRenderMimeRegistry,
+  notebookTracker: INotebookTracker,
+  consoleTracker: IConsoleTracker,
   widgetRegistry: IJupyterWidgetRegistry,
   restorer?: ILayoutRestorer
 ): void => {
@@ -25,12 +25,16 @@ export const activate = (
     <div className="ipycompss-pycompss-sidebar">
       <div className="jp-stack-panel-header">IPyCOMPSs</div>
       <div className="ipycompss-stack-panel">
-        <StartStop tracker={tracker} />
-        <TaskDropdown tracker={tracker} />
+        <StartStop
+          consoleTracker={consoleTracker}
+          notebookTracker={notebookTracker}
+        />
+        <TaskDropdown tracker={notebookTracker} />
         <DocumentationButton shell={app.shell} />
         <InfoButtons
           shell={app.shell}
-          tracker={tracker}
+          consoleTracker={consoleTracker}
+          notebookTracker={notebookTracker}
           widgetRegistry={widgetRegistry}
         />
       </div>

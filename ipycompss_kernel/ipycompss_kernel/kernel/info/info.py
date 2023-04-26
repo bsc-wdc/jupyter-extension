@@ -26,7 +26,6 @@ class Info:  # pylint: disable=too-few-public-methods
 
                 with OuterInfo(title={title}, type={f"'{info_type}'"}):
                     ipycompss.{function_name}()
-                    # print('No data to display yet')
                 
                 del ipycompss, OuterInfo
             """

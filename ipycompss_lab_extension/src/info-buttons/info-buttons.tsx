@@ -1,6 +1,7 @@
 import { DOMWidgetModel, IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { output } from '@jupyter-widgets/jupyterlab-manager';
 import { JupyterFrontEnd } from '@jupyterlab/application';
+import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
@@ -13,7 +14,8 @@ import { InfoButtonsView } from './view';
 export namespace InfoButtons {
   export interface IProperties {
     shell: JupyterFrontEnd.IShell;
-    tracker: INotebookTracker;
+    consoleTracker: IConsoleTracker;
+    notebookTracker: INotebookTracker;
     widgetRegistry: IJupyterWidgetRegistry;
   }
 
@@ -31,7 +33,8 @@ const INFO_TITLE = 'PyCOMPSs ';
 
 export const InfoButtons = ({
   shell,
-  tracker,
+  consoleTracker,
+  notebookTracker,
   widgetRegistry
 }: InfoButtons.IProperties): JSX.Element => {
   const Model = class extends output.OutputModel {
@@ -75,11 +78,19 @@ export const InfoButtons = ({
     version: '0.1.0',
     exports: { Model, View }
   });
-  return <InfoButtonsView onClick={openExecutionInfo(shell, tracker)} />;
+  return (
+    <InfoButtonsView
+      onClick={openExecutionInfo(shell, consoleTracker, notebookTracker)}
+    />
+  );
 };
 
 const openExecutionInfo =
-  (shell: JupyterFrontEnd.IShell, tracker: INotebookTracker) =>
+  (
+    shell: JupyterFrontEnd.IShell,
+    consoleTracker: IConsoleTracker,
+    notebookTracker: INotebookTracker
+  ) =>
   (type: InfoButtons.InfoType) =>
   async (): Promise<void> => {
     if (
@@ -90,5 +101,5 @@ const openExecutionInfo =
       return;
     }
 
-    getExecutionInfo(tracker, type);
+    getExecutionInfo(consoleTracker, notebookTracker, type);
   };
