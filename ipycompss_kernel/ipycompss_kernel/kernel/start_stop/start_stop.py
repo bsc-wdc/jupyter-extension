@@ -35,6 +35,7 @@ class StartStop:
             self._execute(self._init_expression())
 
         StartStopMessaging.on_status(self._get_status)
+        StartStopMessaging.on_init(self._handle_init_request)
         StartStopMessaging.on_start(self._handle_start_request)
         StartStopMessaging.on_stop(self._handle_stop_request)
 
@@ -56,7 +57,7 @@ class StartStop:
     def _handle_init_request(self) -> SuccessResponseDto:
         """Open start pop-up"""
         result = self._execute(self._init_expression())
-        return {"success": not isinstance(result["error_in_exec"], TclError)}
+        return {"success": result["status"] != "error" or result["ename"] != "TclError"}
 
     def _handle_start_request(self, request: StartRequestDto) -> SuccessResponseDto:
         """Execute code to start PyCOMPSs runtime"""

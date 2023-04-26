@@ -1,6 +1,6 @@
 """Parameters with label"""
 from tkinter import Frame, Label, Tk
-from typing import Any
+from typing import Any, Union
 
 from .base import ParameterBase
 
@@ -12,7 +12,7 @@ class LabeledParameter(ParameterBase):
         super().__init__(*args)
         self.row: int
 
-    def create_label(self, frame: Tk | Frame) -> None:
+    def create_label(self, frame: Union[Tk, Frame]) -> None:
         """Create parameter label in frame"""
         label: Label = Label(frame, text=self.name.capitalize())
         label.grid(row=self.row, column=0, sticky="NSW")

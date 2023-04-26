@@ -41,6 +41,18 @@ class StartStopMessaging:
         )
 
     @staticmethod
+    def on_init(callback: Callable[[], SuccessResponseDto]) -> None:
+        """Register start message callback"""
+
+        def on_init_comm(init_comm: Comm, _) -> None:
+            """Process and reply start comm"""
+            response = callback()
+            init_comm.send(data=response)
+            del init_comm
+
+        comm.get_comm_manager().register_target("ipycompss_init_target", on_init_comm)
+
+    @staticmethod
     def on_start(callback: Callable[[StartRequestDto], SuccessResponseDto]) -> None:
         """Register start message callback"""
 

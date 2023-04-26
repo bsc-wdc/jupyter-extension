@@ -31,6 +31,21 @@ export namespace StartStopMessaging {
     };
   };
 
+  export const sendInitRequest = (
+    kernel: Kernel.IKernelConnection | null | undefined
+  ): Utils.IOnReply<ISuccessResponseDto> => {
+    const initComm = kernel?.createComm('ipycompss_init_target');
+    initComm?.open();
+    return {
+      onReply: (callback: (response: ISuccessResponseDto) => void) => {
+        initComm &&
+          (initComm.onMsg = (
+            message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
+          ): void => callback(message.content.data as ISuccessResponseDto));
+      }
+    };
+  };
+
   export const sendStartRequest = (
     kernel: Kernel.IKernelConnection | null | undefined,
     data: IStartRequestDto

@@ -54,12 +54,19 @@ export const StartStop = ({
 
 const showStartDialog =
   (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
-  async (): Promise<void> =>
-    void showDialog({
-      title: 'IPyCOMPSs configuration',
-      body: dialogBody(),
-      buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
-    }).then(startPycompss(consoleTracker, notebookTracker));
+  async (): Promise<void> => {
+    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+    StartStopMessaging.sendInitRequest(kernel).onReply(
+      ({ success }: StartStopMessaging.ISuccessResponseDto) => {
+        success ||
+          void showDialog({
+            title: 'IPyCOMPSs configuration',
+            body: dialogBody(),
+            buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
+          }).then(startPycompss(consoleTracker, notebookTracker));
+      }
+    );
+  };
 
 const startPycompss =
   (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>

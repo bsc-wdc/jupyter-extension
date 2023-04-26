@@ -1,7 +1,7 @@
 """Path parameter"""
 from enum import Enum, auto
 from tkinter import Button, Frame, StringVar, Tk, filedialog
-from typing import Any
+from typing import Any, Union
 
 from .str import StringParameter
 
@@ -20,7 +20,7 @@ class PathParameter(StringParameter):
         super().__init__(*args)
         self.file: PathType = kwargs["path_type"]
 
-    def make(self, frame: Tk | Frame) -> tuple[str, StringVar]:
+    def make(self, frame: Union[Tk, Frame]) -> tuple[str, StringVar]:
         var: StringVar = super().make(frame)[1]
 
         def browse():

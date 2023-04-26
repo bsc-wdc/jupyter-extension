@@ -1,5 +1,6 @@
 """Enumeration parameter"""
 from tkinter import Frame, OptionMenu, StringVar, Tk
+from typing import Union
 
 from .label import LabeledParameter
 
@@ -7,7 +8,7 @@ from .label import LabeledParameter
 class EnumerationParameter(LabeledParameter):
     """Class for enumeration parameters"""
 
-    def make(self, frame: Tk | Frame) -> tuple[str, StringVar]:
+    def make(self, frame: Union[Tk, Frame]) -> tuple[str, StringVar]:
         self.row = frame.grid_size()[1]
         super().create_label(frame)
 
