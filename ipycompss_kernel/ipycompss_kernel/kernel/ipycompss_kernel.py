@@ -4,7 +4,7 @@ from typing import Any
 from ipykernel.ipkernel import IPythonKernel
 from IPython.utils.capture import capture_output
 
-from .info import Info
+from . import info
 from .start_stop import StartStop
 
 
@@ -15,13 +15,12 @@ class IPyCOMPSsKernel(IPythonKernel):
         """Initialise kernel"""
         super().__init__(**kwargs)
         self._start_stop = StartStop(self)
-        self._info = Info()
 
     def start(self) -> None:
         """Start the kernel"""
         super().start()
         self._start_stop.start()
-        self._info.start()
+        info.start()
 
     def do_shutdown(self, restart: bool) -> dict[str, str]:
         """Shutdown kernel"""

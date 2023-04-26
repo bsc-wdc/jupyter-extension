@@ -1,3 +1,3 @@
 """Component of code to be executed by the kernel"""
 from .info import OuterInfo
-from .start_stop import OuterStartStop
+import .start_stop as outer_start_stop
