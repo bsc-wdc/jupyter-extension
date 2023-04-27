@@ -2,7 +2,6 @@
 from typing import Any
 
 from ipykernel.ipkernel import IPythonKernel
-from IPython.utils.capture import capture_output
 
 from .info import info
 from .start_stop import StartStop
@@ -31,13 +30,10 @@ class IPyCOMPSsKernel(IPythonKernel):
     def execute(self, expression: str) -> dict[str, Any]:
         """Execute the expression in the kernel"""
         result = {}
-        with capture_output() as capture:
-            try:
-                self.do_execute(  # pylint: disable=no-member
-                    expression, silent=True
-                ).send(None)
-            except StopIteration as execution:
-                result = execution.value
-            self.log.warn(capture.stdout)
-            self.log.warn(capture.stderr)
+        try:
+            self.do_execute(expression, silent=True).send(  # pylint: disable=no-member
+                None
+            )
+        except StopIteration as execution:
+            result = execution.value
         return result
