@@ -58,6 +58,10 @@ const showStartDialog =
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopMessaging.sendInitRequest(kernel).onReply(
       ({ success }: StartStopMessaging.ISuccessResponseDto) => {
+        StartStopMessaging.sendStatusRequest(kernel).onReply(
+          ({ started }: StartStopMessaging.IStatusResponseDto) =>
+            setState({ enabled: true, started: started })
+        );
         success ||
           void showDialog({
             title: 'IPyCOMPSs configuration',

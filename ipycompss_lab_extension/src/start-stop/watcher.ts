@@ -31,8 +31,8 @@ const watchKernelChanges = (
 
 const startState =
   (kernel: Kernel.IKernelConnection | null | undefined) =>
-  (data: StartStopMessaging.IStatusResponseDto): void => {
-    setState({ enabled: true, started: data.started });
+  ({ started }: StartStopMessaging.IStatusResponseDto): void => {
+    setState({ enabled: true, started });
 
     kernel?.statusChanged.connect(cleanUpState);
     kernel &&
