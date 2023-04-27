@@ -59,10 +59,10 @@ class Scheduler(Enum):
     LIFO_TS = "es.bsc.compss.scheduler.lookahead.lifo.LifoTS"
     LOCALITY_TS = "es.bsc.compss.scheduler.lookahead.locality.LocalityTS"
     CONSTRAINTS_FIFO_TS = (
-        "es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS"
+        "es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS",
     )
     MT_CONSTRAINTS_FIFO_TS = (
-        "es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS"
+        "es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS",
     )
     SUCCESSORS_FIFO_TS = "es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS"
     MT_SUCCESSORS_FIFO_TS = (

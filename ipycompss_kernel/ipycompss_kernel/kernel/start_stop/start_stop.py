@@ -67,13 +67,11 @@ class StartStop:
         return {"success": result["status"] == "ok"}
 
     def _execute(self, expression: str) -> dict[str, Any]:
-        return self._kernel.execute(
-            f"""
-                from ipycompss_kernel import outer_start_stop
-                {expression}
-                del outer_start_stop
-            """
-        )
+        return self._kernel.execute(f"""
+            from ipycompss_kernel import outer_start_stop
+            {expression}
+            del outer_start_stop
+        """)
 
     def _init_expression(self) -> str:
         return f"outer_start_stop.start({self._cluster})"

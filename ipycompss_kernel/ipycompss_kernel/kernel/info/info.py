@@ -15,18 +15,16 @@ INFO_TYPE = {
 def _handle_request(info_type: str) -> InfoResponseDto:
     function_name = INFO_TYPE[info_type]
     title = f"'{function_name.replace('_', ' ').capitalize()}'"
-    return {
-        "code": f"""
-            %matplotlib inline
-            import pycompss.interactive as ipycompss
-            from ipycompss_kernel import OuterInfo
+    return {"code": f"""
+        %matplotlib inline
+        import pycompss.interactive as ipycompss
+        from ipycompss_kernel import OuterInfo
 
-            with OuterInfo(title={title}, type={f"'{info_type}'"}):
-                ipycompss.{function_name}()
-            
-            del ipycompss, OuterInfo
-        """
-    }
+        with OuterInfo(title={title}, type={f"'{info_type}'"}):
+            ipycompss.{function_name}()
+        
+        del ipycompss, OuterInfo
+    """}
 
 
 def _callback(request: InfoRequestDto) -> InfoResponseDto:

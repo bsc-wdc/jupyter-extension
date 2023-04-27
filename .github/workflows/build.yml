@@ -31,7 +31,7 @@ jobs:
     - name: Lint the kernel
       run: |
         PYTHON_FILES=$(find ipycompss_kernel -name '*.py')
-        # black --preview --check $PYTHON_FILES
+        black --preview --check $PYTHON_FILES
         pylint $PYTHON_FILES
     
     - name: Build the kernel
