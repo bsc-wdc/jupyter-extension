@@ -6,7 +6,7 @@ from IPython.utils.capture import capture_output
 from .ipycompss_kernel import IPyCOMPSsKernel
 
 
-def on_call(
+def around_call(
     klass: type, original_function: str
 ) -> Callable[[Callable[..., Any]], None]:
     """Decorator to set aspects"""
@@ -18,14 +18,14 @@ def on_call(
     return set_new_function
 
 
-@on_call(IPyCOMPSsKernel, "do_execute")
+@around_call(IPyCOMPSsKernel, "execute")
 def log(function: Callable[..., Any]):
     """Logging aspect"""
 
-    async def logged_function(self: IPyCOMPSsKernel, *args: Any, **kwargs: Any) -> Any:
+    def logged_function(self: IPyCOMPSsKernel, *args: Any, **kwargs: Any) -> Any:
         result = None
         with capture_output() as capture:
-            result = await function(self, *args, **kwargs)
+            result = function(self, *args, **kwargs)
 
         self.log.warn(capture.stdout)
         self.log.warn(capture.stderr)
