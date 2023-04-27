@@ -1,11 +1,9 @@
 """Aspect for logging"""
-from logging import Logger
 from typing import Any, Callable
 
 from IPython.utils.capture import capture_output
-from traitlets import Instance
 
-from . import IPyCOMPSsKernel
+from .ipycompss_kernel import IPyCOMPSsKernel
 
 
 def on_call(
