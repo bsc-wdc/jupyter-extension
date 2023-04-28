@@ -6,7 +6,8 @@ Starting the runtime
 
 By default, the kernel will show a pop-up with the basic PyCOMPSs start parameters (graph,
 debug, tracing and monitor) and 3 button (Advanced options, Start PyCOMPSs monitor and Start
-IPyCOMPSs).
+IPyCOMPSs) when started. If the variable ``COMPSS_IN_JUPYTERLAB`` is set to true, the pop-up
+will not be shown.
 
 Clicking the 'Advanced options' button will reveal more PyCOMPSs start parameters. Clicking
 it again will hide them.
@@ -16,8 +17,8 @@ tab with the PyCOMPSs monitor.
 
 When the user clicks the 'Start IPyCOMPSs' button, the kernel will start the PyCOMPSs runtime
 with the values that the parameters had in that precise moment and the pop-up will be closed.
-If the environment variable ``COMPSS_RUNNING_IN_SC`` is set, clicking this button will also
-cause the kernel to start the worker processes.
+If the environment variable ``COMPSS_RUNNING_IN_SC`` is set to true, clicking this button will
+also cause the kernel to start the worker processes.
 
 .. warning::
     Do not start the PyCOMPSs runtime if it is already running, this may cause some
