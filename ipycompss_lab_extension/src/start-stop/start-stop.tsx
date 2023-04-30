@@ -21,39 +21,36 @@ export namespace StartStop {
   }
 }
 
-export let setState: (
-  callbackValue:
-    | StartStop.IState
-    | (({ enabled, started }: StartStop.IState) => StartStop.IState)
-) => void;
-
 export const StartStop = ({
   consoleTracker,
   notebookTracker
 }: StartStop.IProperties): JSX.Element => {
-  consoleTracker.currentChanged.connect(watchCurrentChanges);
-  notebookTracker.currentChanged.connect(watchCurrentChanges);
-  let enabled, started;
-  [{ enabled, started }, setState] = useState({
+  const [{ enabled, started }, setState] = useState({
     enabled: false,
     started: false
   } as StartStop.IState);
+  consoleTracker.currentChanged.connect(watchCurrentChanges(setState));
+  notebookTracker.currentChanged.connect(watchCurrentChanges(setState));
   return (
     <StartStopView
       start={{
         enabled: enabled && !started,
-        onClick: showStartDialog(consoleTracker, notebookTracker)
+        onClick: showStartDialog(consoleTracker, notebookTracker, setState)
       }}
       stop={{
         enabled: enabled && started,
-        onClick: shutdown(consoleTracker, notebookTracker)
+        onClick: shutdown(consoleTracker, notebookTracker, setState)
       }}
     />
   );
 };
 
 const showStartDialog =
-  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
+  (
+    consoleTracker: IConsoleTracker,
+    notebookTracker: INotebookTracker,
+    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+  ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopMessaging.sendInitRequest(kernel).onReply(
@@ -67,13 +64,17 @@ const showStartDialog =
             title: 'IPyCOMPSs configuration',
             body: dialogBody(),
             buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
-          }).then(startPycompss(consoleTracker, notebookTracker));
+          }).then(startPycompss(consoleTracker, notebookTracker, setState));
       }
     );
   };
 
 const startPycompss =
-  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
+  (
+    consoleTracker: IConsoleTracker,
+    notebookTracker: INotebookTracker,
+    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+  ) =>
   (result: Dialog.IResult<Map<string, any> | undefined>): void => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     result.button.accept &&
@@ -91,7 +92,11 @@ const startPycompss =
   };
 
 const shutdown =
-  (consoleTracker: IConsoleTracker, notebookTracker: INotebookTracker) =>
+  (
+    consoleTracker: IConsoleTracker,
+    notebookTracker: INotebookTracker,
+    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+  ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopMessaging.sendStopRequest(kernel).onReply(
