@@ -1,5 +1,4 @@
-import { DOMWidgetModel, IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-import { output } from '@jupyter-widgets/jupyterlab-manager';
+import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { JupyterFrontEnd } from '@jupyterlab/application';
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
@@ -7,9 +6,11 @@ import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React from 'react';
 
-import { compss_icon } from '../icon';
 import { getExecutionInfo } from './execution-info';
 import { InfoButtonsView } from './view';
+import { Model } from './widget-model';
+import { View } from './widget-view';
+import { INFO_ID } from './widget-view';
 
 export namespace InfoButtons {
   export interface IProperties {
@@ -28,55 +29,16 @@ export namespace InfoButtons {
     | 'statistics';
 }
 
-const INFO_ID = 'pycompss-execution-info-';
-const INFO_TITLE = 'PyCOMPSs ';
-
 export const InfoButtons = ({
   shell,
   consoleTracker,
   notebookTracker,
   widgetRegistry
 }: InfoButtons.IProperties): JSX.Element => {
-  const Model = class extends output.OutputModel {
-    defaults(): any {
-      return {
-        ...super.defaults(),
-        _model_name: 'Model',
-        _model_module: 'ipycompss_lab_extension',
-        _model_module_version: '0.1.0',
-        _view_name: 'View',
-        _view_module: 'ipycompss_lab_extension',
-        _view_module_version: '0.1.0',
-        title: `${INFO_TITLE} execution info`,
-        type: INFO_ID
-      };
-    }
-
-    initialize(attributes: any, options: any) {
-      super.initialize(attributes, options);
-      this.widget_manager.create_view(this as DOMWidgetModel, {});
-    }
-  };
-  const View = class extends output.OutputView {
-    render() {
-      super.render();
-
-      const outputArea = this._outputView;
-      outputArea.addClass('jp-LinkedOutputView');
-      outputArea.title.closable = true;
-      outputArea.title.label = this.model.get('title');
-      outputArea.title.icon = compss_icon;
-      outputArea.id = INFO_ID + this.model.get('type');
-
-      //outputArea.parent?.disposed.connect(() => this.model.destroy());
-      shell.add(outputArea, 'main', { mode: 'split-right' });
-    }
-  };
-
   widgetRegistry.registerWidget({
     name: 'ipycompss_lab_extension',
     version: '0.1.0',
-    exports: { Model, View }
+    exports: { Model, View: View(shell) }
   });
   return (
     <InfoButtonsView

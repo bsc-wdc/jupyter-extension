@@ -6,6 +6,7 @@ import { Kernel } from '@jupyterlab/services';
 
 import { StartStopMessaging } from './messaging';
 import { StartStop } from './start-stop';
+import { toObject } from '@lumino/algorithm';
 
 export const watchCurrentChanges =
   (setState: React.Dispatch<React.SetStateAction<StartStop.IState>>) =>
@@ -19,6 +20,40 @@ export const watchCurrentChanges =
     );
   };
 
+export const updateState = (
+  kernel: Kernel.IKernelConnection | null | undefined,
+  setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+): void =>
+  StartStopMessaging.sendStatusRequest(kernel).onReply(
+    ({ started }: StartStopMessaging.IStatusResponseDto) =>
+      setState({ enabled: true, started })
+  );
+
+export const startPycompss = (
+  kernel: Kernel.IKernelConnection | null | undefined,
+  values: Map<string, any>,
+  setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+): void =>
+  StartStopMessaging.sendStartRequest(kernel, {
+    arguments: toObject(
+      Array.from(values).map(([key, value]: [string, any]) => [
+        key,
+        value.default ?? value
+      ])
+    )
+  }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
+    setState(({ enabled }) => ({ enabled, started: success }))
+  );
+
+export const stopPycompss = (
+  kernel: Kernel.IKernelConnection | null | undefined,
+  setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+): void =>
+  StartStopMessaging.sendStopRequest(kernel).onReply(
+    ({ success }: StartStopMessaging.ISuccessResponseDto) =>
+      setState(({ enabled }) => ({ enabled, started: !success }))
+  );
+
 const watchKernelChanges =
   (setState: React.Dispatch<React.SetStateAction<StartStop.IState>>) =>
   (
@@ -29,9 +64,10 @@ const watchKernelChanges =
     >
   ): void => {
     const kernel = change.newValue;
-    StartStopMessaging.sendStatusRequest(kernel).onReply(
-      startState(kernel, setState)
-    );
+    StartStopMessaging.sendStatusRequest(kernel).onReply(() => {
+      updateState(kernel, setState);
+      startState(kernel, setState);
+    });
   };
 
 const startState =
@@ -39,9 +75,7 @@ const startState =
     kernel: Kernel.IKernelConnection | null | undefined,
     setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
   ) =>
-  ({ started }: StartStopMessaging.IStatusResponseDto): void => {
-    setState({ enabled: true, started });
-
+  (): void => {
     kernel?.statusChanged.connect(cleanUpState(setState));
     kernel &&
       StartStopMessaging.onStop(kernel, () =>

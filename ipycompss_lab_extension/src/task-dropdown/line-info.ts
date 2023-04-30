@@ -8,17 +8,17 @@ export interface ILineInfo {
 }
 
 export const getCurrentFunctionLineInfo = (
-  editor: CodeEditor.IEditor
+  position: CodeEditor.IPosition,
+  text: string
 ): ILineInfo | undefined => {
-  const position = editor.getCursorPosition();
-  const lines: (ILineInfo | undefined)[] = editor.model.value.text
+  const lines: (ILineInfo | undefined)[] = text
     .split('\n')
     .map((line: string, i: number): [string, number] => [line, i])
     .filter(
       ([line, i]: [string, number]): boolean =>
         i === position.line || (i < position.line && line.includes(':'))
     )
-    .map(toLineInfo(editor))
+    .map(toLineInfo)
     .filter(
       (line: ILineInfo | undefined) =>
         line?.lineNumber === position.line || line?.block
@@ -43,16 +43,16 @@ export const getCurrentFunctionLineInfo = (
   }
 };
 
-const toLineInfo =
-  (editor: CodeEditor.IEditor) =>
-  ([line, lineNumber]: [string, number]): ILineInfo | undefined => {
-    const { indent, keyword } =
-      line?.match(/^(?<indent>\s*)(?<keyword>\w+)/)?.groups || {};
+const toLineInfo = ([line, lineNumber]: [string, number]):
+  | ILineInfo
+  | undefined => {
+  const { indent, keyword } =
+    line?.match(/^(?<indent>\s*)(?<keyword>\w+)/)?.groups || {};
 
-    return {
-      keyword,
-      indentation: indent.length,
-      lineNumber,
-      block: /:$/.test(line || '')
-    };
+  return {
+    keyword,
+    indentation: indent.length,
+    lineNumber,
+    block: /:$/.test(line || '')
   };
+};

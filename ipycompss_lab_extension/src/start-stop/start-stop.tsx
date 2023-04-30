@@ -1,13 +1,17 @@
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { toObject } from '@lumino/algorithm';
 import React, { useState } from 'react';
 
 import { Utils } from '../utils';
 import { StartStopMessaging } from './messaging';
 import { StartStopView, dialogBody } from './view';
-import { watchCurrentChanges } from './watcher';
+import {
+  updateState,
+  startPycompss,
+  stopPycompss,
+  watchCurrentChanges
+} from './manager';
 
 export namespace StartStop {
   export interface IState {
@@ -29,8 +33,10 @@ export const StartStop = ({
     enabled: false,
     started: false
   } as StartStop.IState);
-  consoleTracker.currentChanged.connect(watchCurrentChanges(setState));
-  notebookTracker.currentChanged.connect(watchCurrentChanges(setState));
+  [consoleTracker, notebookTracker].map(
+    (tracker: IConsoleTracker | INotebookTracker) =>
+      tracker.currentChanged.connect(watchCurrentChanges(setState))
+  );
   return (
     <StartStopView
       start={{
@@ -39,7 +45,7 @@ export const StartStop = ({
       }}
       stop={{
         enabled: enabled && started,
-        onClick: shutdown(consoleTracker, notebookTracker, setState)
+        onClick: stop(consoleTracker, notebookTracker, setState)
       }}
     />
   );
@@ -55,21 +61,19 @@ const showStartDialog =
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopMessaging.sendInitRequest(kernel).onReply(
       ({ success }: StartStopMessaging.ISuccessResponseDto) => {
-        StartStopMessaging.sendStatusRequest(kernel).onReply(
-          ({ started }: StartStopMessaging.IStatusResponseDto) =>
-            setState({ enabled: true, started: started })
-        );
+        updateState(kernel, setState);
+
         success ||
           void showDialog({
             title: 'IPyCOMPSs configuration',
             body: dialogBody(),
             buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
-          }).then(startPycompss(consoleTracker, notebookTracker, setState));
+          }).then(start(consoleTracker, notebookTracker, setState));
       }
     );
   };
 
-const startPycompss =
+const start =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
@@ -79,19 +83,10 @@ const startPycompss =
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     result.button.accept &&
       result.value &&
-      StartStopMessaging.sendStartRequest(kernel, {
-        arguments: toObject(
-          Array.from(result.value).map(([key, value]: [string, any]) => [
-            key,
-            value.default ?? value
-          ])
-        )
-      }).onReply(({ success }: StartStopMessaging.ISuccessResponseDto): void =>
-        setState(({ enabled }) => ({ enabled, started: success }))
-      );
+      startPycompss(kernel, result.value, setState);
   };
 
-const shutdown =
+const stop =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
@@ -99,8 +94,5 @@ const shutdown =
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
-    StartStopMessaging.sendStopRequest(kernel).onReply(
-      ({ success }: StartStopMessaging.ISuccessResponseDto) =>
-        setState(({ enabled }) => ({ enabled, started: !success }))
-    );
+    stopPycompss(kernel, setState);
   };

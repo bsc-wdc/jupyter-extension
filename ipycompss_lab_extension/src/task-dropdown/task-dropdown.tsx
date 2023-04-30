@@ -27,9 +27,13 @@ export const TaskDropdown = ({
 const createTask =
   (tracker: INotebookTracker, parameters: ParameterGroupWidget) =>
   async (): Promise<void> => {
-    const values = parameters.getValue();
     const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
-    const lineInfo = editor && getCurrentFunctionLineInfo(editor);
+    const position = editor?.getCursorPosition();
+    const text = editor?.model.value.text;
+    if (text === undefined) {
+      return;
+    }
+    const lineInfo = position && getCurrentFunctionLineInfo(position, text);
 
     const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
       column: lineInfo.indentation,
@@ -37,6 +41,8 @@ const createTask =
     };
     linePosition && editor?.setCursorPosition(linePosition);
     editor?.newIndentedLine();
+
+    const values = parameters.getValue();
     linePosition &&
       editor?.model.value.insert(
         editor.getOffsetAt(linePosition),
