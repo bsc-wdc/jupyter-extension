@@ -8,7 +8,7 @@ import pycompss.interactive as ipycompss
 from .panel import Panel
 
 if TYPE_CHECKING and sys.version_info >= (3, 11):
-    from typing import NotRequired
+    from typing import NotRequired  # pylint: disable=no-name-in-module
 
 
 class InfoType(TypedDict):
