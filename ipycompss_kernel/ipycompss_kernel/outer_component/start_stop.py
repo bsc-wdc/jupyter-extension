@@ -1,4 +1,4 @@
-"""Helper code that the kernel executes"""
+"""Helper code that the kernel executes to start/stop the runtime"""
 import os
 import subprocess
 import time
