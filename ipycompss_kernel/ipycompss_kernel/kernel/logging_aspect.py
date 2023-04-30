@@ -18,17 +18,23 @@ def around_call(
     return set_new_function
 
 
-@around_call(IPyCOMPSsKernel, "execute")
+@around_call(IPyCOMPSsKernel, "do_execute")
 def log(function: Callable[..., Any]):
     """Logging aspect"""
 
-    def logged_function(self: IPyCOMPSsKernel, *args: Any, **kwargs: Any) -> Any:
+    async def logged_function(
+        self: IPyCOMPSsKernel, code: str, silent: bool, *args: Any, **kwargs: Any
+    ) -> Any:
         result = None
-        with capture_output() as capture:
-            result = function(self, *args, **kwargs)
-
-        self.log.warn(capture.stdout)
-        self.log.warn(capture.stderr)
+        if silent:
+            with capture_output() as capture:
+                result = await function(self, code, silent, *args, **kwargs)
+            if capture.stdout:
+                self.log.info(capture.stdout)
+            if capture.stderr:
+                self.log.warn(capture.stderr)
+        else:
+            result = await function(self, code, silent, *args, **kwargs)
         return result
 
     return logged_function
