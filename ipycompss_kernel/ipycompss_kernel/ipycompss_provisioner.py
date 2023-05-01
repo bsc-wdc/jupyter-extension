@@ -15,8 +15,8 @@ class IPyCOMPSsProvisioner(LocalProvisioner):
         """Initialise provisioner"""
         super().__init__(**kwargs)
 
-        self.shutdown_time = utils.read_float_env_var(TIME_VAR, 30.0)
+        self._shutdown_time = utils.read_float_env_var(TIME_VAR, 30.0)
 
     def get_shutdown_wait_time(self, recommended: float = 30.0) -> float:
         """Returns the time needed for a complete shutdown"""
-        return max(recommended, self.shutdown_time)
+        return max(recommended, self._shutdown_time)

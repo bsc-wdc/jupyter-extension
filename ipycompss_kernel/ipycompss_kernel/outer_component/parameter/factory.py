@@ -158,6 +158,4 @@ def create_parameters(frame: Frame, advanced: bool = False) -> dict[str, Any]:
     if advanced:
         parameters = ADVANCED_PARAMETERS
 
-    return {
-        name: var for (name, var) in [parameter.make(frame) for parameter in parameters]
-    }
+    return dict([parameter.make(frame) for parameter in parameters])
