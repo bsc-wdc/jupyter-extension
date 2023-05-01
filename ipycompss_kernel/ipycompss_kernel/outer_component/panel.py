@@ -6,10 +6,10 @@ from traitlets import Unicode
 class Panel(Output):
     """Output widget class"""
 
-    _model_name = Unicode("Model").tag(sync=True)
+    _model_name = Unicode("WidgetModel").tag(sync=True)
     _model_module = Unicode("ipycompss_lab_extension").tag(sync=True)
     _model_module_version = Unicode("0.1.0").tag(sync=True)
-    _view_name = Unicode("View").tag(sync=True)
+    _view_name = Unicode("WidgetView").tag(sync=True)
     _view_module = Unicode("ipycompss_lab_extension").tag(sync=True)
     _view_module_version = Unicode("0.1.0").tag(sync=True)
     title = Unicode("Title").tag(sync=True)

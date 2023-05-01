@@ -24,17 +24,19 @@ class Popup(Tk):
         self._create_label("IPyCOMPSs startup options")
 
         self._parameters: dict[str, Any] = {}
-        self._parameters = parameter_factory.create_parameters(
-            Frame(self), advanced=False
+        self._parameters.update(
+            parameter_factory.create_parameters(self, advanced=False)
         )
 
         self._options_opened: bool = False
         frame: Frame = self._create_advanced_options()
-        self._parameters = parameter_factory.create_parameters(frame, advanced=True)
+        self._parameters.update(
+            parameter_factory.create_parameters(frame, advanced=True)
+        )
         self._make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self._make_grid_expandable(Frame(self))
+        self._make_grid_expandable(self)
 
     def create_button(self, text: str, command: Callable[[], None]) -> None:
         """Create a button in the pop-up"""
