@@ -1,6 +1,5 @@
 """String parameter"""
-from tkinter import Entry, Frame, StringVar, Tk
-from typing import Union
+from tkinter import Entry, Frame, StringVar
 
 from .label import LabeledParameter
 
@@ -8,7 +7,7 @@ from .label import LabeledParameter
 class StringParameter(LabeledParameter):
     """Class for string parameters"""
 
-    def make(self, frame: Union[Tk, Frame]) -> tuple[str, StringVar]:
+    def make(self, frame: Frame) -> tuple[str, StringVar]:
         self.row = frame.grid_size()[1]
         super().create_label(frame)
 

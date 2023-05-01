@@ -1,7 +1,7 @@
 """Base for all parameters"""
 from abc import ABC, abstractmethod
-from tkinter import Frame, Tk
-from typing import Any, Union
+from tkinter import Frame
+from typing import Any
 
 
 class ParameterBase(ABC):  # pylint: disable=too-few-public-methods
@@ -12,5 +12,5 @@ class ParameterBase(ABC):  # pylint: disable=too-few-public-methods
         self.default: Any = default
 
     @abstractmethod
-    def make(self, frame: Union[Tk, Frame]) -> tuple[str, Any]:
+    def make(self, frame: Frame) -> tuple[str, Any]:
         """Create parameter in frame"""

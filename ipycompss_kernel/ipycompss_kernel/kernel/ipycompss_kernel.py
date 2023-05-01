@@ -4,27 +4,22 @@ from typing import Any
 from ipykernel.ipkernel import IPythonKernel
 
 from .info import info
-from .start_stop import StartStop
+from .start_stop import start_stop
 
 
 class IPyCOMPSsKernel(IPythonKernel):
     """IPyCOMPSs Kernel class"""
 
-    def __init__(self, **kwargs: Any) -> None:
-        """Initialise kernel"""
-        super().__init__(**kwargs)
-        self._start_stop = StartStop(self)
-
     def start(self) -> None:
         """Start the kernel"""
         super().start()
-        self._start_stop.start()
+        start_stop.start(self)
         info.start()
 
-    def do_shutdown(self, restart: bool) -> dict[str, str]:
+    def do_shutdown(self, restart: bool) -> dict[str, Any]:
         """Shutdown kernel"""
 
-        self._start_stop.do_shutdown()
+        start_stop.do_shutdown(self)
         return super().do_shutdown(restart)
 
     def execute(self, expression: str) -> dict[str, Any]:

@@ -1,15 +1,15 @@
 """PyCOMPSs startup pop-up"""
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
-from typing import Any, Callable, Union
+from typing import Any, Callable
 
-from .parameter.factory import ParameterFactory
+from .parameter import parameter_factory
 
 
 class Popup(Tk):
     """PyCOMPs pop-up implementation"""
 
     @staticmethod
-    def _make_grid_expandable(frame: Union[Tk, Frame]) -> None:
+    def _make_grid_expandable(frame: Frame) -> None:
         """Makes the grid of the frame expandable"""
         for i in range(frame.grid_size()[1]):
             frame.rowconfigure(i, weight=1)
@@ -23,16 +23,18 @@ class Popup(Tk):
         self.wm_title("IPyCOMPSs configuration")
         self._create_label("IPyCOMPSs startup options")
 
-        self.parameters: dict[str, Any] = {}
-        self._create_parameters(self)
+        self._parameters: dict[str, Any] = {}
+        self._parameters = parameter_factory.create_parameters(
+            Frame(self), advanced=False
+        )
 
-        self.options_opened: bool = False
+        self._options_opened: bool = False
         frame: Frame = self._create_advanced_options()
-        self._create_parameters(frame, advanced=True)
+        self._parameters = parameter_factory.create_parameters(frame, advanced=True)
         self._make_grid_expandable(frame)
 
         self.column, self.row = 0, self.grid_size()[1] + 1
-        self._make_grid_expandable(self)
+        self._make_grid_expandable(Frame(self))
 
     def create_button(self, text: str, command: Callable[[], None]) -> None:
         """Create a button in the pop-up"""
@@ -42,7 +44,7 @@ class Popup(Tk):
 
     def get_arguments(self) -> dict[str, Any]:
         """Get arguments from parameters"""
-        return {key: value.get() for (key, value) in self.parameters.items()}
+        return {key: value.get() for (key, value) in self._parameters.items()}
 
     def _create_label(self, text: str) -> Label:
         """Create a label in the pop-up"""
@@ -51,27 +53,18 @@ class Popup(Tk):
         label.grid(row=row, column=0, columnspan=2)
         return label
 
-    def _create_parameters(
-        self, frame: Union[Tk, Frame], advanced: bool = False
-    ) -> None:
-        """Create parameter widgets"""
-        parameters = ParameterFactory.create_parameters(advanced=advanced)
-        for parameter in parameters:
-            name, var = parameter.make(frame)
-            self.parameters[name] = var
-
     def _create_advanced_options(self) -> Frame:
         """Create advanced options canvas"""
 
         def open_close_options(_) -> None:
-            if self.options_opened:
+            if self._options_opened:
                 outer_frame.grid_forget()
                 label.configure(text=f"+ {text}")
             else:
                 outer_frame.grid(row=row, column=0, columnspan=2)
                 canvas.configure(scrollregion=frame.bbox("all"))
                 label.configure(text=f"- {text}")
-            self.options_opened = not self.options_opened
+            self._options_opened = not self._options_opened
 
         text: str = "Advanced options"
         label: Label = self._create_label(f"+ {text}")

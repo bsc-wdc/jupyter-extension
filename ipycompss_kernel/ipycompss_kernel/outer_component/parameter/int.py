@@ -1,7 +1,6 @@
 """Integer parameter"""
 import sys
-from tkinter import Frame, IntVar, Spinbox, Tk
-from typing import Union
+from tkinter import Frame, IntVar, Spinbox
 
 from .label import LabeledParameter
 
@@ -9,7 +8,7 @@ from .label import LabeledParameter
 class IntegerParameter(LabeledParameter):
     """Class for boolean parameters"""
 
-    def make(self, frame: Union[Tk, Frame]) -> tuple[str, IntVar]:
+    def make(self, frame: Frame) -> tuple[str, IntVar]:
         self.row = frame.grid_size()[1]
         super().create_label(frame)
 

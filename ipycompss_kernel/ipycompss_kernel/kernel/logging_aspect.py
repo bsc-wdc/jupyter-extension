@@ -19,7 +19,7 @@ def around_call(
 
 
 @around_call(IPyCOMPSsKernel, "execute")
-def log(function: Callable[..., Any]):
+def log(function: Callable[..., Any]) -> Callable[..., Any]:
     """Logging aspect"""
 
     def logged_function(self: IPyCOMPSsKernel, *args: Any, **kwargs: Any) -> Any:

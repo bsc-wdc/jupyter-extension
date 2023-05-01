@@ -1,6 +1,5 @@
 """Boolean parameter"""
-from tkinter import BooleanVar, Checkbutton, Frame, Tk
-from typing import Union
+from tkinter import BooleanVar, Checkbutton, Frame
 
 from .base import ParameterBase
 
@@ -8,7 +7,7 @@ from .base import ParameterBase
 class BooleanParameter(ParameterBase):  # pylint: disable=too-few-public-methods
     """Class for boolean parameters"""
 
-    def make(self, frame: Union[Tk, Frame]) -> tuple[str, BooleanVar]:
+    def make(self, frame: Frame) -> tuple[str, BooleanVar]:
         var: BooleanVar = BooleanVar()
         var.set(self.default)
         checkbutton: Checkbutton = Checkbutton(
