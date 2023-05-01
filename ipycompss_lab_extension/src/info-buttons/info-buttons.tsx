@@ -6,11 +6,12 @@ import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React from 'react';
 
-import { getExecutionInfo } from './execution-info';
+import { ExecutionInfo } from './execution-info';
 import { InfoButtonsView } from './view';
-import { Model } from './widget-model';
-import { View } from './widget-view';
+import { WidgetModel } from './widget-model';
+import { WidgetView } from './widget-view';
 import { INFO_ID } from './widget-view';
+import { Utils } from '../utils';
 
 export namespace InfoButtons {
   export interface IProperties {
@@ -38,7 +39,7 @@ export const InfoButtons = ({
   widgetRegistry.registerWidget({
     name: 'ipycompss_lab_extension',
     version: '0.1.0',
-    exports: { Model, View: View(shell) }
+    exports: { WidgetModel, WidgetView: WidgetView(shell) }
   });
   return (
     <InfoButtonsView
@@ -53,15 +54,17 @@ const openExecutionInfo =
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker
   ) =>
-  (type: InfoButtons.InfoType) =>
-  async (): Promise<void> => {
-    if (
-      toArray(shell.widgets('main')).some(
-        (elem: Widget) => elem.id === INFO_ID + type
-      )
-    ) {
-      return;
-    }
+    (type: InfoButtons.InfoType) =>
+      async (): Promise<void> => {
+        if (
+          toArray(shell.widgets('main')).some(
+            (elem: Widget) => elem.id === INFO_ID + type
+          )
+        ) {
+          return;
+        }
 
-    getExecutionInfo(consoleTracker, notebookTracker, type);
-  };
+        const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+        ExecutionInfo.getExecutionInfo(kernel, type);
+      };
+

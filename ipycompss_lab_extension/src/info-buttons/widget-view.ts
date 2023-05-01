@@ -5,7 +5,9 @@ import { compss_icon } from '../icon';
 
 export const INFO_ID = 'pycompss-execution-info-';
 
-export const View = (shell: JupyterFrontEnd.IShell): typeof output.OutputView =>
+export const WidgetView = (
+  shell: JupyterFrontEnd.IShell
+): typeof output.OutputView =>
   class extends output.OutputView {
     render() {
       super.render();

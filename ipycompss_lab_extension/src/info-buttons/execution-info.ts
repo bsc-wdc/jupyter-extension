@@ -1,15 +1,12 @@
-import { IConsoleTracker } from '@jupyterlab/console';
-import { INotebookTracker } from '@jupyterlab/notebook';
-
-import { Utils } from '../utils';
+import { Kernel } from '@jupyterlab/services';
 import { InfoButtons } from './info-buttons';
 import { ExecutionInfoMessaging } from './messaging';
 
-export const getExecutionInfo = (
-  consoleTracker: IConsoleTracker,
-  notebookTracker: INotebookTracker,
-  type: InfoButtons.InfoType
-): void => {
-  const kernel = Utils.getKernel(consoleTracker, notebookTracker);
-  ExecutionInfoMessaging.sendInfoRequest(kernel, { type });
-};
+export namespace ExecutionInfo {
+  export const getExecutionInfo = (
+    kernel: Kernel.IKernelConnection | null | undefined,
+    type: InfoButtons.InfoType
+  ): void => {
+    ExecutionInfoMessaging.sendInfoRequest(kernel, { type });
+  };
+}

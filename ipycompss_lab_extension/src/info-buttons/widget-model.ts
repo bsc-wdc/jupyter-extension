@@ -5,7 +5,7 @@ import { INFO_ID } from './widget-view';
 
 const INFO_TITLE = 'PyCOMPSs ';
 
-export class Model extends output.OutputModel {
+export class WidgetModel extends output.OutputModel {
   defaults(): any {
     return {
       ...super.defaults(),

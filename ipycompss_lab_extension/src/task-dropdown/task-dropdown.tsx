@@ -3,7 +3,7 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import { ParameterGroupWidget } from '../parameter';
-import { getCurrentFunctionLineInfo } from './line-info';
+import { LineInfo } from './line-info';
 import { TaskDropdownView } from './view';
 
 export namespace TaskDropdown {
@@ -33,7 +33,8 @@ const createTask =
     if (text === undefined) {
       return;
     }
-    const lineInfo = position && getCurrentFunctionLineInfo(position, text);
+    const lineInfo =
+      position && LineInfo.getCurrentFunctionLineInfo(position, text);
 
     const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
       column: lineInfo.indentation,

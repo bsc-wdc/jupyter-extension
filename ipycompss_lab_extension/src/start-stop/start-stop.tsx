@@ -4,14 +4,8 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React, { useState } from 'react';
 
 import { Utils } from '../utils';
-import { StartStopMessaging } from './messaging';
+import { StartStopManager } from './manager';
 import { StartStopView, dialogBody } from './view';
-import {
-  updateState,
-  startPycompss,
-  stopPycompss,
-  watchCurrentChanges
-} from './manager';
 
 export namespace StartStop {
   export interface IState {
@@ -35,7 +29,9 @@ export const StartStop = ({
   } as StartStop.IState);
   [consoleTracker, notebookTracker].map(
     (tracker: IConsoleTracker | INotebookTracker) =>
-      tracker.currentChanged.connect(watchCurrentChanges(setState))
+      tracker.currentChanged.connect(
+        StartStopManager.watchCurrentChanges(setState)
+      )
   );
   return (
     <StartStopView
@@ -59,17 +55,13 @@ const showStartDialog =
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
-    StartStopMessaging.sendInitRequest(kernel).onReply(
-      ({ success }: StartStopMessaging.ISuccessResponseDto) => {
-        updateState(kernel, setState);
-
-        success ||
-          void showDialog({
-            title: 'IPyCOMPSs configuration',
-            body: dialogBody(),
-            buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
-          }).then(start(consoleTracker, notebookTracker, setState));
-      }
+    StartStopManager.init(kernel, setState).onFailure(
+      () =>
+        void showDialog({
+          title: 'IPyCOMPSs configuration',
+          body: dialogBody(),
+          buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
+        }).then(start(consoleTracker, notebookTracker, setState))
     );
   };
 
@@ -83,7 +75,7 @@ const start =
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     result.button.accept &&
       result.value &&
-      startPycompss(kernel, result.value, setState);
+      StartStopManager.startPycompss(kernel, result.value, setState);
   };
 
 const stop =
@@ -94,5 +86,5 @@ const stop =
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
-    stopPycompss(kernel, setState);
+    StartStopManager.stopPycompss(kernel, setState);
   };
