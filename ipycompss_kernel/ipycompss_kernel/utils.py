@@ -6,6 +6,11 @@ from typing import Callable, TypeVar
 T = TypeVar("T")
 
 
+def clean_name(name: str) -> str:
+    """Cleans parameter names for displaying"""
+    return name.replace("_", " ").capitalize()
+
+
 def read_boolean_env_var(name: str) -> bool:
     """Read a boolean environmental variable"""
     return _read_env_var(name, lambda value: value.lower() == "true", False)

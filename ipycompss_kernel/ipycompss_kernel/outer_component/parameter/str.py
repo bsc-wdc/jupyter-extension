@@ -1,18 +1,16 @@
 """String parameter"""
 from tkinter import Entry, Frame, StringVar
 
-from .label import LabeledParameter
+from . import label
 
 
-class StringParameter(LabeledParameter):
-    """Class for string parameters"""
+def create(name: str, default: str, frame: Frame) -> tuple[str, StringVar]:
+    """Create string parameter"""
+    row = frame.grid_size()[1]
+    label.create_label(name, row, frame)
 
-    def make(self, frame: Frame) -> tuple[str, StringVar]:
-        self.row = frame.grid_size()[1]
-        super().create_label(frame)
-
-        var: StringVar = StringVar()
-        var.set(self.default)
-        entry: Entry = Entry(frame, textvariable=var)
-        entry.grid(row=self.row, column=1, sticky="NSW")
-        return self.name, var
+    var: StringVar = StringVar()
+    var.set(default)
+    entry: Entry = Entry(frame, textvariable=var)
+    entry.grid(row=row, column=1, sticky="NSW")
+    return name, var

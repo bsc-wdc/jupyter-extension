@@ -1,14 +1,19 @@
 """Factory for parameters"""
+import sys
 from enum import Enum
 from tkinter import Frame
-from typing import Any
+from types import ModuleType
+from typing import TYPE_CHECKING, Any, TypedDict
 
-from .base import ParameterBase
-from .bool import BooleanParameter
-from .enum import EnumerationParameter
-from .int import IntegerParameter
-from .path import PathParameter, PathType
-from .str import StringParameter
+from . import bool as boolean_parameter
+from . import enum as enumeration_parameter
+from . import int as integer_parameter
+from . import path as path_parameter
+from . import str as string_parameter
+from .path import PathType
+
+if TYPE_CHECKING and sys.version_info >= (3, 11):
+    from typing import NotRequired  # pylint: disable=no-name-in-module
 
 
 class LogLevel(Enum):
@@ -93,69 +98,182 @@ class CheckpointPolicy(Enum):
     NO = "es.bsc.compss.checkpoint.policies.NoCheckpoint"
 
 
-BASIC_PARAMETERS: list[ParameterBase] = [
-    BooleanParameter("graph", False),
-    BooleanParameter("debug", False),
-    BooleanParameter("trace", False),
-    IntegerParameter("monitor", 1000),
+class ParameterInfo(TypedDict):
+    """Dictionary representing the parameter to be created"""
+
+    name: str
+    default: Any
+    type: ModuleType
+    path_type: "NotRequired[PathType]"
+
+
+BASIC_PARAMETERS: list[ParameterInfo] = [
+    {"name": "graph", "default": False, "type": boolean_parameter},
+    {"name": "debug", "default": False, "type": boolean_parameter},
+    {"name": "trace", "default": False, "type": boolean_parameter},
+    {"name": "monitor", "default": 1000, "type": integer_parameter},
 ]
-ADVANCED_PARAMETERS: list[ParameterBase] = [
-    EnumerationParameter("log_level", LogLevel.OFF),
-    BooleanParameter("o_c", False),
-    PathParameter("project_xml", "", path_type=PathType.FILE),
-    PathParameter("resources_xml", "", path_type=PathType.FILE),
-    BooleanParameter("summary", False),
-    EnumerationParameter("task_execution", TaskExecution.COMPSS),
-    PathParameter("storage_impl", "", path_type=PathType.FILE),
-    PathParameter("storage_conf", "", path_type=PathType.FILE),
-    EnumerationParameter("streaming_backend", StreamingMode.NONE),
-    StringParameter("streaming_master_name", ""),
-    StringParameter("streaming_master_port", ""),
-    IntegerParameter("task_count", 50),
-    StringParameter("app_name", "InteractiveMode"),
-    StringParameter("uuid", ""),
-    PathParameter("log_dir", "", path_type=PathType.FOLDER),
-    PathParameter("master_working_dir", "", path_type=PathType.FOLDER),
-    PathParameter("extrae_cfg", "", path_type=PathType.FILE),
-    PathParameter("extrae_final_directory", "", path_type=PathType.FOLDER),
-    EnumerationParameter("comm", Communication.NIO),
-    EnumerationParameter("conn", Connector.SSH),
-    StringParameter("master_name", ""),
-    StringParameter("master_port", ""),
-    EnumerationParameter("scheduler", Scheduler.LOCALITY_TS),
-    StringParameter("jvm_workers", "-Xms1024m,-Xmx1024m,-Xmn400m"),
-    StringParameter("cpu_affinity", "automatic"),
-    StringParameter("gpu_affinity", "automatic"),
-    StringParameter("fpga_affinity", "automatic"),
-    StringParameter("fpga_reprogram", ""),
-    PathParameter("profile_input", "", path_type=PathType.FILE),
-    PathParameter("profile_output", "", path_type=PathType.FILE),
-    PathParameter("scheduler_config", "", path_type=PathType.FILE),
-    BooleanParameter("external_adaptation", False),
-    BooleanParameter("propagate_virtual_environment", True),
-    BooleanParameter("mpi_worker", False),
-    StringParameter("worker_cache", ""),
-    BooleanParameter("shutdown_in_node_failure", False),
-    IntegerParameter("io_executors", 0),
-    PathParameter("env_script", "", path_type=PathType.FILE),
-    BooleanParameter("tracing_task_dependencies", False),
-    StringParameter("trace_label", ""),
-    PathParameter("extrae_cfg_python", "", path_type=PathType.FILE),
-    IntegerParameter("wcl", 0),
-    BooleanParameter("cache_profiler", False),
-    BooleanParameter("data_provenance", False),
-    EnumerationParameter("checkpoint_policy", CheckpointPolicy.NO),
-    StringParameter("checkpoint_params", ""),
-    PathParameter("checkpoint_folder", "", path_type=PathType.FOLDER),
-    BooleanParameter("verbose", False),
-    BooleanParameter("disable_external", False),
+ADVANCED_PARAMETERS: list[ParameterInfo] = [
+    {"name": "log_level", "default": LogLevel.OFF, "type": enumeration_parameter},
+    {"name": "o_c", "default": False, "type": boolean_parameter},
+    {
+        "name": "project_xml",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "resources_xml",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {"name": "summary", "default": False, "type": boolean_parameter},
+    {
+        "name": "task_execution",
+        "default": TaskExecution.COMPSS,
+        "type": enumeration_parameter,
+    },
+    {
+        "name": "storage_impl",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "storage_conf",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "streaming_backend",
+        "default": StreamingMode.NONE,
+        "type": enumeration_parameter,
+    },
+    {"name": "streaming_master_name", "default": "", "type": string_parameter},
+    {"name": "streaming_master_port", "default": "", "type": string_parameter},
+    {"name": "task_count", "default": 50, "type": integer_parameter},
+    {"name": "app_name", "default": "InteractiveMode", "type": string_parameter},
+    {"name": "uuid", "default": "", "type": string_parameter},
+    {
+        "name": "log_dir",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FOLDER,
+    },
+    {
+        "name": "master_working_dir",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FOLDER,
+    },
+    {
+        "name": "extrae_cfg",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "extrae_final_directory",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FOLDER,
+    },
+    {"name": "comm", "default": Communication.NIO, "type": enumeration_parameter},
+    {"name": "conn", "default": Connector.SSH, "type": enumeration_parameter},
+    {"name": "master_name", "default": "", "type": string_parameter},
+    {"name": "master_port", "default": "", "type": string_parameter},
+    {
+        "name": "scheduler",
+        "default": Scheduler.LOCALITY_TS,
+        "type": enumeration_parameter,
+    },
+    {
+        "name": "jvm_workers",
+        "default": "-Xms1024m,-Xmx1024m,-Xmn400m",
+        "type": string_parameter,
+    },
+    {"name": "cpu_affinity", "default": "automatic", "type": string_parameter},
+    {"name": "gpu_affinity", "default": "automatic", "type": string_parameter},
+    {"name": "fpga_affinity", "default": "automatic", "type": string_parameter},
+    {"name": "fpga_reprogram", "default": "", "type": string_parameter},
+    {
+        "name": "profile_input",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "profile_output",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {
+        "name": "scheduler_config",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {"name": "external_adaptation", "default": False, "type": boolean_parameter},
+    {
+        "name": "propagate_virtual_environment",
+        "default": True,
+        "type": boolean_parameter,
+    },
+    {"name": "mpi_worker", "default": False, "type": boolean_parameter},
+    {"name": "worker_cache", "default": "", "type": string_parameter},
+    {"name": "shutdown_in_node_failure", "default": False, "type": boolean_parameter},
+    {"name": "io_executors", "default": 0, "type": integer_parameter},
+    {
+        "name": "env_script",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {"name": "tracing_task_dependencies", "default": False, "type": boolean_parameter},
+    {"name": "trace_label", "default": "", "type": string_parameter},
+    {
+        "name": "extrae_cfg_python",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FILE,
+    },
+    {"name": "wcl", "default": 0, "type": integer_parameter},
+    {"name": "cache_profiler", "default": False, "type": boolean_parameter},
+    {"name": "data_provenance", "default": False, "type": boolean_parameter},
+    {
+        "name": "checkpoint_policy",
+        "default": CheckpointPolicy.NO,
+        "type": enumeration_parameter,
+    },
+    {"name": "checkpoint_params", "default": "", "type": string_parameter},
+    {
+        "name": "checkpoint_folder",
+        "default": "",
+        "type": path_parameter,
+        "path_type": PathType.FOLDER,
+    },
+    {"name": "verbose", "default": False, "type": boolean_parameter},
+    {"name": "disable_external", "default": False, "type": boolean_parameter},
 ]
 
 
 def create_parameters(frame: Frame, advanced: bool = False) -> dict[str, Any]:
     """Create all basic or advanced parameters that PyCOMPSs allows"""
-    parameters: list[ParameterBase] = BASIC_PARAMETERS
+    parameters: list[ParameterInfo] = BASIC_PARAMETERS
     if advanced:
         parameters = ADVANCED_PARAMETERS
 
-    return dict([parameter.make(frame) for parameter in parameters])
+    return dict(
+        [
+            parameter["type"].create(
+                parameter["name"],
+                parameter["default"],
+                frame,
+                *([parameter["path_type"]] if "path_type" in parameter else []),
+            )
+            for parameter in parameters
+        ]
+    )

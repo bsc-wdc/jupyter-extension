@@ -1,19 +1,18 @@
 """Enumeration parameter"""
+from enum import Enum
 from tkinter import Frame, OptionMenu, StringVar
 
-from .label import LabeledParameter
+from . import label
 
 
-class EnumerationParameter(LabeledParameter):
-    """Class for enumeration parameters"""
+def create(name: str, default: Enum, frame: Frame) -> tuple[str, StringVar]:
+    """Create an enumeration parameter"""
+    row = frame.grid_size()[1]
+    label.create_label(name, row, frame)
 
-    def make(self, frame: Frame) -> tuple[str, StringVar]:
-        self.row = frame.grid_size()[1]
-        super().create_label(frame)
-
-        var: StringVar = StringVar()
-        var.set(self.default.value)
-        options: list[str] = [x.value for x in list(type(self.default))]
-        option_menu: OptionMenu = OptionMenu(frame, var, *options)
-        option_menu.grid(row=self.row, column=1, sticky="NSW")
-        return self.name, var
+    var: StringVar = StringVar()
+    var.set(default.value)
+    options: list[str] = [x.value for x in list(type(default))]
+    option_menu: OptionMenu = OptionMenu(frame, var, *options)
+    option_menu.grid(row=row, column=1, sticky="NSW")
+    return name, var

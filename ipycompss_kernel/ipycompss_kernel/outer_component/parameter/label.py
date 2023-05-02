@@ -1,18 +1,10 @@
 """Parameters with label"""
 from tkinter import Frame, Label
-from typing import Any
 
-from .base import ParameterBase
+from ... import utils
 
 
-class LabeledParameter(ParameterBase):
-    """Class for parameters that need a label"""
-
-    def __init__(self, *args: Any):
-        super().__init__(*args)
-        self.row: int
-
-    def create_label(self, frame: Frame) -> None:
-        """Create parameter label in frame"""
-        label: Label = Label(frame, text=self.name.capitalize())
-        label.grid(row=self.row, column=0, sticky="NSW")
+def create_label(name: str, row: int, frame: Frame) -> None:
+    """Create parameter label in frame"""
+    label: Label = Label(frame, text=utils.clean_name(name))
+    label.grid(row=row, column=0, sticky="NSW")
