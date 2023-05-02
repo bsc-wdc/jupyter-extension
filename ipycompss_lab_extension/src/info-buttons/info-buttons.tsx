@@ -6,14 +6,13 @@ import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React from 'react';
 
-import { ExecutionInfo } from './execution-info';
-import { InfoButtonsView } from './view';
-import { WidgetModel } from './widget-model';
-import { WidgetView } from './widget-view';
-import { INFO_ID } from './widget-view';
-import { Utils } from '../utils';
+import Utils from '../utils';
+import ExecutionInfo from './execution-info';
+import InfoButtonsView from './view';
+import WidgetModel from './widget-model';
+import WidgetView from './widget-view';
 
-export namespace InfoButtons {
+namespace InfoButtons {
   export interface IProperties {
     shell: JupyterFrontEnd.IShell;
     consoleTracker: IConsoleTracker;
@@ -30,7 +29,7 @@ export namespace InfoButtons {
     | 'statistics';
 }
 
-export const InfoButtons = ({
+const InfoButtons = ({
   shell,
   consoleTracker,
   notebookTracker,
@@ -54,17 +53,18 @@ const openExecutionInfo =
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker
   ) =>
-    (type: InfoButtons.InfoType) =>
-      async (): Promise<void> => {
-        if (
-          toArray(shell.widgets('main')).some(
-            (elem: Widget) => elem.id === INFO_ID + type
-          )
-        ) {
-          return;
-        }
+  (type: InfoButtons.InfoType) =>
+  async (): Promise<void> => {
+    if (
+      toArray(shell.widgets('main')).some(
+        (elem: Widget) => elem.id === WidgetView.INFO_ID + type
+      )
+    ) {
+      return;
+    }
 
-        const kernel = Utils.getKernel(consoleTracker, notebookTracker);
-        ExecutionInfo.getExecutionInfo(kernel, type);
-      };
+    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+    ExecutionInfo.getExecutionInfo(kernel, type);
+  };
 
+export default InfoButtons;

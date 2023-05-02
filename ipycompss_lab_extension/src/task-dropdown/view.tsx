@@ -1,28 +1,27 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
 import React from 'react';
 
-import { CollapsibleElement } from '../collapsible-element';
+import CollapsibleElement from '../collapsible-element';
 import {
   BooleanParameter,
   EnumerationParameter,
   IntegerParameter,
-  ParameterGroup,
   ParameterGroupWidget,
   StringParameter
 } from '../parameter';
 
-export namespace TaskDropdownView {
+namespace TaskDropdownView {
   export interface IProperties {
     parameterWidget: ParameterGroupWidget;
     onClick: () => Promise<void>;
   }
 }
 
-export const TaskDropdownView = ({
+const TaskDropdownView = ({
   parameterWidget,
   onClick
 }: TaskDropdownView.IProperties): JSX.Element => {
-  const parameters: ParameterGroup.IParameter[] = [
+  const parameters: ParameterGroupWidget.IParameter[] = [
     { name: 'returns', defaultValue: '', Parameter: StringParameter },
     { name: 'priority', defaultValue: false, Parameter: BooleanParameter },
     { name: 'is_reduce', defaultValue: true, Parameter: BooleanParameter },
@@ -43,3 +42,5 @@ export const TaskDropdownView = ({
     </CollapsibleElement>
   );
 };
+
+export default TaskDropdownView;

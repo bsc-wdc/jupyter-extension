@@ -1,1 +1,1 @@
-export { StartStop } from './start-stop';
+export { default } from './start-stop';

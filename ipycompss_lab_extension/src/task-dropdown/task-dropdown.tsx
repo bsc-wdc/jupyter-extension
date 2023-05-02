@@ -3,18 +3,16 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import { ParameterGroupWidget } from '../parameter';
-import { LineInfo } from './line-info';
-import { TaskDropdownView } from './view';
+import LineInfo from './line-info';
+import TaskDropdownView from './view';
 
-export namespace TaskDropdown {
+namespace TaskDropdown {
   export interface IProperties {
     tracker: INotebookTracker;
   }
 }
 
-export const TaskDropdown = ({
-  tracker
-}: TaskDropdown.IProperties): JSX.Element => {
+const TaskDropdown = ({ tracker }: TaskDropdown.IProperties): JSX.Element => {
   const widget: ParameterGroupWidget = new ParameterGroupWidget();
   return (
     <TaskDropdownView
@@ -56,3 +54,5 @@ const createTask =
         })`
       );
   };
+
+export default TaskDropdown;

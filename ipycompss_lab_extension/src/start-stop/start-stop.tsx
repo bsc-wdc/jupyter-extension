@@ -1,13 +1,13 @@
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Utils } from '../utils';
-import { StartStopManager } from './manager';
-import { StartStopView, dialogBody } from './view';
+import Utils from '../utils';
+import StartStopManager from './manager';
+import StartStopView from './view';
 
-export namespace StartStop {
+namespace StartStop {
   export interface IState {
     enabled: boolean;
     started: boolean;
@@ -19,11 +19,11 @@ export namespace StartStop {
   }
 }
 
-export const StartStop = ({
+const StartStop = ({
   consoleTracker,
   notebookTracker
 }: StartStop.IProperties): JSX.Element => {
-  const [{ enabled, started }, setState] = useState({
+  const [{ enabled, started }, setState] = React.useState({
     enabled: false,
     started: false
   } as StartStop.IState);
@@ -59,7 +59,7 @@ const showStartDialog =
       () =>
         void showDialog({
           title: 'IPyCOMPSs configuration',
-          body: dialogBody(),
+          body: StartStopView.dialogBody(),
           buttons: [Dialog.okButton({ label: 'Start IPyCOMPSs' })]
         }).then(start(consoleTracker, notebookTracker, setState))
     );
@@ -88,3 +88,5 @@ const stop =
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopManager.stopPycompss(kernel, setState);
   };
+
+export default StartStop;

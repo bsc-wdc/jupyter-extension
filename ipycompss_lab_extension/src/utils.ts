@@ -1,8 +1,8 @@
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { IKernelConnection } from '@jupyterlab/services/lib/kernel/kernel';
+import { Kernel } from '@jupyterlab/services';
 
-export namespace Utils {
+namespace Utils {
   export interface IOnReply<T> {
     onReply: (callback: (response: T) => void) => void;
   }
@@ -14,7 +14,9 @@ export namespace Utils {
   export const getKernel = (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker
-  ): IKernelConnection | null | undefined =>
+  ): Kernel.IKernelConnection | null | undefined =>
     consoleTracker.currentWidget?.sessionContext.session?.kernel ??
     notebookTracker.currentWidget?.sessionContext.session?.kernel;
 }
+
+export default Utils;

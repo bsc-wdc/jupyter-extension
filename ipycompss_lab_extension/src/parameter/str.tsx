@@ -1,9 +1,9 @@
 import { InputGroup } from '@jupyterlab/ui-components';
 import React from 'react';
 
-import { onChange, Parameter } from './base';
+import Parameter from './base';
 
-export const StringParameter = ({
+const StringParameter = ({
   name,
   values,
   defaultValue
@@ -11,7 +11,7 @@ export const StringParameter = ({
   <Parameter name={name} values={values} defaultValue={defaultValue}>
     <InputGroup
       defaultValue={defaultValue}
-      onChange={onChange<string, React.FormEvent<HTMLInputElement>>(
+      onChange={Parameter.onChange<string, React.FormEvent<HTMLInputElement>>(
         name,
         values,
         defaultValue,
@@ -23,3 +23,5 @@ export const StringParameter = ({
 
 const getValue = (event: React.FormEvent<HTMLInputElement>): string =>
   (event.target as HTMLInputElement)['value'];
+
+export default StringParameter;

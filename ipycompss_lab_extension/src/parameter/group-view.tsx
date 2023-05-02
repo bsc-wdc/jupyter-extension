@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { ParameterGroupWidget } from './group';
-import { CollapsibleElement } from '../collapsible-element';
+import ParameterGroupWidget from './group';
+import CollapsibleElement from '../collapsible-element';
 
-export namespace ParameterGroupView {
+namespace ParameterGroupView {
   export interface IProperties {
     parameters: ParameterGroupWidget.IParameter[];
     values: React.MutableRefObject<Map<string, any>>;
@@ -12,7 +12,7 @@ export namespace ParameterGroupView {
   }
 }
 
-export const ParameterGroupView = ({
+const ParameterGroupView = ({
   parameters,
   values,
   toSend,
@@ -46,3 +46,5 @@ const toParameter =
         options={options}
       />
     );
+
+export default ParameterGroupView;

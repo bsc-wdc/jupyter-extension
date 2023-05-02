@@ -1,9 +1,9 @@
 import { NumericInput } from '@blueprintjs/core';
 import React from 'react';
 
-import { onChange, Parameter } from './base';
+import Parameter from './base';
 
-export const IntegerParameter = ({
+const IntegerParameter = ({
   name,
   values,
   defaultValue,
@@ -12,7 +12,7 @@ export const IntegerParameter = ({
   <Parameter name={name} values={values} defaultValue={defaultValue}>
     <NumericInput
       defaultValue={defaultValue}
-      onValueChange={onChange<number, number>(
+      onValueChange={Parameter.onChange<number, number>(
         name,
         values,
         ...((toSend
@@ -29,3 +29,5 @@ export const IntegerParameter = ({
 const getValue = (value: number): string => getValueToSend(value).toString();
 
 const getValueToSend = (value: number): number => value;
+
+export default IntegerParameter;

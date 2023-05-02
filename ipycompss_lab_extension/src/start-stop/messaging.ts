@@ -1,9 +1,9 @@
 import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
 
-import { Utils } from '../utils';
+import Utils from '../utils';
 
-export namespace StartStopMessaging {
+namespace StartStopMessaging {
   export interface IStartRequestDto extends JSONObject {
     arguments: JSONObject;
   }
@@ -84,3 +84,5 @@ export namespace StartStopMessaging {
     kernel.registerCommTarget('ipycompss_stop_target', callback);
   };
 }
+
+export default StartStopMessaging;

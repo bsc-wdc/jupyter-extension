@@ -1,8 +1,9 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
 import React from 'react';
-import { InfoButtons } from './info-buttons';
 
-export namespace InfoButtonsView {
+import InfoButtons from './info-buttons';
+
+namespace InfoButtonsView {
   export interface IButton {
     label: string;
     type: InfoButtons.InfoType;
@@ -13,7 +14,7 @@ export namespace InfoButtonsView {
   }
 }
 
-export const InfoButtonsView = ({
+const InfoButtonsView = ({
   onClick
 }: InfoButtonsView.IProperties): JSX.Element => {
   const buttons: InfoButtonsView.IButton[] = [
@@ -32,3 +33,5 @@ export const InfoButtonsView = ({
     </>
   );
 };
+
+export default InfoButtonsView;

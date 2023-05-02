@@ -4,21 +4,21 @@ import {
   caretRightIcon,
   Collapse
 } from '@jupyterlab/ui-components';
-import React, { useState } from 'react';
+import React from 'react';
 
-export namespace CollapsibleElement {
+namespace CollapsibleElement {
   export interface IProperties {
     label: string;
     children: React.ReactNode;
   }
 }
 
-export const CollapsibleElement = ({
+const CollapsibleElement = ({
   label,
   children
 }: CollapsibleElement.IProperties): JSX.Element => {
-  const [open, setOpen] = useState(false);
-  const [icons, setIcons] = useState({
+  const [open, setOpen] = React.useState(false);
+  const [icons, setIcons] = React.useState({
     main: caretRightIcon,
     other: caretDownIcon
   });
@@ -38,3 +38,5 @@ export const CollapsibleElement = ({
     </>
   );
 };
+
+export default CollapsibleElement;

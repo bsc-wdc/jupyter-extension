@@ -1,1 +1,1 @@
-export { InfoButtons } from './info-buttons';
+export { default } from './info-buttons';

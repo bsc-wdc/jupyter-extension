@@ -1,10 +1,10 @@
 import { Checkbox } from '@jupyterlab/ui-components';
 import React from 'react';
 
-import { onChange, Parameter } from './base';
-import { Utils } from '../utils';
+import Utils from '../utils';
+import Parameter from './base';
 
-export const BooleanParameter = ({
+const BooleanParameter = ({
   name,
   values,
   defaultValue,
@@ -13,7 +13,7 @@ export const BooleanParameter = ({
   <Parameter name={name} values={values} defaultValue={defaultValue}>
     <Checkbox
       defaultChecked={defaultValue}
-      onChange={onChange<boolean, React.FormEvent<HTMLInputElement>>(
+      onChange={Parameter.onChange<boolean, React.FormEvent<HTMLInputElement>>(
         name,
         values,
         ...((toSend
@@ -32,3 +32,5 @@ const getValue = (event: React.FormEvent<HTMLInputElement>): string =>
 
 const getValueToSend = (event: React.FormEvent<HTMLInputElement>): boolean =>
   (event.target as HTMLInputElement)['checked'];
+
+export default BooleanParameter;

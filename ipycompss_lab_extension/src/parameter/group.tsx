@@ -1,9 +1,9 @@
 import { Dialog, ReactWidget } from '@jupyterlab/apputils';
-import React, { useRef } from 'react';
+import React from 'react';
 
-import { ParameterGroupView } from './group-view';
+import ParameterGroupView from './group-view';
 
-export namespace ParameterGroupWidget {
+namespace ParameterGroupWidget {
   export interface IProperties {
     parameters: IParameter[];
     toSend: boolean;
@@ -18,7 +18,7 @@ export namespace ParameterGroupWidget {
   }
 }
 
-export class ParameterGroupWidget
+class ParameterGroupWidget
   extends ReactWidget
   implements Dialog.IBodyWidget<Map<string, any> | undefined>
 {
@@ -32,7 +32,7 @@ export class ParameterGroupWidget
     toSend,
     advancedParameters
   }: ParameterGroupWidget.IProperties) => {
-    this._values = useRef(new Map<string, any>());
+    this._values = React.useRef(new Map<string, any>());
     return (
       <ParameterGroupView
         parameters={parameters}
@@ -71,3 +71,5 @@ export class ParameterGroupWidget
     return this._values?.current;
   }
 }
+
+export default ParameterGroupWidget;

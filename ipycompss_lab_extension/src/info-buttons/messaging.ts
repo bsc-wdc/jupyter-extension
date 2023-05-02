@@ -1,8 +1,9 @@
 import { Kernel, KernelMessage } from '@jupyterlab/services';
 import { JSONObject } from '@lumino/coreutils';
-import { InfoButtons } from './info-buttons';
 
-export namespace ExecutionInfoMessaging {
+import InfoButtons from './info-buttons';
+
+namespace ExecutionInfoMessaging {
   export interface IInfoRequestDto extends JSONObject {
     type: InfoButtons.InfoType;
   }
@@ -28,3 +29,5 @@ export namespace ExecutionInfoMessaging {
       });
   };
 }
+
+export default ExecutionInfoMessaging;

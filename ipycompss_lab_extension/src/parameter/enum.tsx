@@ -1,23 +1,23 @@
 import { MenuItem } from '@blueprintjs/core';
 import { Button, Select } from '@jupyterlab/ui-components';
-import React, { useState } from 'react';
+import React from 'react';
 
-import { onChange, Parameter } from './base';
+import Parameter from './base';
 
-export namespace EnumerationParameter {
+namespace EnumerationParameter {
   export interface IProperties extends Parameter.IProperties<string> {
     options: string[];
   }
 }
 
-export const EnumerationParameter = ({
+const EnumerationParameter = ({
   name,
   values,
   defaultValue,
   toSend,
   options
 }: EnumerationParameter.IProperties): JSX.Element => {
-  const [selectedItem, setSelectedItem] = useState(defaultValue);
+  const [selectedItem, setSelectedItem] = React.useState(defaultValue);
   return (
     <Parameter name={name} values={values} defaultValue={defaultValue}>
       <Select
@@ -28,7 +28,7 @@ export const EnumerationParameter = ({
         )}
         onItemSelect={item => {
           setSelectedItem(item);
-          onChange<string, string>(
+          Parameter.onChange<string, string>(
             name,
             values,
             ...((toSend
@@ -50,3 +50,5 @@ export const EnumerationParameter = ({
 const getValue = (item: string): string => `"${getValueToSend(item)}"`;
 
 const getValueToSend = (item: string): string => item;
+
+export default EnumerationParameter;

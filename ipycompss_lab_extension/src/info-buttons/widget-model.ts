@@ -1,11 +1,11 @@
 import { DOMWidgetModel, IBackboneModelOptions } from '@jupyter-widgets/base';
 import { output } from '@jupyter-widgets/jupyterlab-manager';
 
-import { INFO_ID } from './widget-view';
+import WidgetView from './widget-view';
 
 const INFO_TITLE = 'PyCOMPSs ';
 
-export class WidgetModel extends output.OutputModel {
+export default class extends output.OutputModel {
   defaults(): any {
     return {
       ...super.defaults(),
@@ -16,7 +16,7 @@ export class WidgetModel extends output.OutputModel {
       _view_module: 'ipycompss_lab_extension',
       _view_module_version: '0.1.0',
       title: `${INFO_TITLE} execution info`,
-      type: INFO_ID
+      type: WidgetView.INFO_ID
     };
   }
 

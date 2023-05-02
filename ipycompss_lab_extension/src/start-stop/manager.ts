@@ -5,10 +5,10 @@ import { NotebookPanel } from '@jupyterlab/notebook';
 import { Kernel } from '@jupyterlab/services';
 import { toObject } from '@lumino/algorithm';
 
-import { StartStopMessaging } from './messaging';
-import { StartStop } from './start-stop';
+import StartStopMessaging from './messaging';
+import StartStop from './start-stop';
 
-export namespace StartStopManager {
+namespace StartStopManager {
   export const watchCurrentChanges =
     (setState: React.Dispatch<React.SetStateAction<StartStop.IState>>) =>
     (_: IWidgetTracker, panel: ConsolePanel | NotebookPanel | null): void => {
@@ -108,3 +108,5 @@ export namespace StartStopManager {
       }
     };
 }
+
+export default StartStopManager;

@@ -12,10 +12,7 @@ from urllib.request import Request
 
 import pycompss.interactive as ipycompss
 
-try:
-    from .popup import Popup
-except ImportError:
-    pass
+from .popup import Popup
 
 URL: Request = Request("http://localhost:8080/compss-monitor", method="HEAD")
 

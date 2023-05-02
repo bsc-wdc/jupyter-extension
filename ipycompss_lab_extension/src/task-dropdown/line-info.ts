@@ -1,6 +1,6 @@
 import { CodeEditor } from '@jupyterlab/codeeditor';
 
-export namespace LineInfo {
+namespace LineInfo {
   export interface ILineInfo {
     keyword: string;
     indentation: number;
@@ -58,3 +58,5 @@ export namespace LineInfo {
     };
   };
 }
+
+export default LineInfo;
