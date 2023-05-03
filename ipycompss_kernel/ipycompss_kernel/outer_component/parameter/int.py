@@ -1,11 +1,12 @@
 """Integer parameter"""
 import sys
-from tkinter import Frame, IntVar, Spinbox
+from tkinter import Frame, IntVar, Spinbox, Tk
+from typing import Union
 
 from . import label
 
 
-def create(name: str, default: int, frame: Frame) -> tuple[str, IntVar]:
+def create(name: str, default: int, frame: Union[Tk, Frame]) -> tuple[str, IntVar]:
     """Create integer parameter"""
     row = frame.grid_size()[1]
     label.create_label(name, row, frame)

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any, TypedDict
 
 import pycompss.interactive as ipycompss
 
-from .. import utils
+from ... import utils
 from .panel import Panel
 
 if TYPE_CHECKING and sys.version_info >= (3, 11):

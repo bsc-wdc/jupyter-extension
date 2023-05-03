@@ -1,9 +1,9 @@
 """Factory for parameters"""
 import sys
 from enum import Enum
-from tkinter import Frame
+from tkinter import Frame, Tk
 from types import ModuleType
-from typing import TYPE_CHECKING, Any, TypedDict
+from typing import TYPE_CHECKING, Any, TypedDict, Union
 
 from . import bool as boolean_parameter
 from . import enum as enumeration_parameter
@@ -260,7 +260,9 @@ ADVANCED_PARAMETERS: list[ParameterInfo] = [
 ]
 
 
-def create_parameters(frame: Frame, advanced: bool = False) -> dict[str, Any]:
+def create_parameters(
+    frame: Union[Tk, Frame], advanced: bool = False
+) -> dict[str, Any]:
     """Create all basic or advanced parameters that PyCOMPSs allows"""
     parameters: list[ParameterInfo] = BASIC_PARAMETERS
     if advanced:

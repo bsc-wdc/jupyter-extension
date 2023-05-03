@@ -4,6 +4,7 @@ from typing import Any
 from ipykernel.ipkernel import IPythonKernel
 
 from .info import info
+from .monitor import monitor
 from .start_stop import start_stop
 
 
@@ -13,16 +14,18 @@ class IPyCOMPSsKernel(IPythonKernel):
     def start(self) -> None:
         """Start the kernel"""
         super().start()
-        start_stop.start(self)
+        start_stop.start(self._execute)
+        monitor.start(self._execute)
         info.start()
 
     def do_shutdown(self, restart: bool) -> dict[str, Any]:
         """Shutdown kernel"""
 
-        start_stop.do_shutdown(self)
+        start_stop.do_shutdown(self._execute)
+        monitor.do_shutdown(self._execute)
         return super().do_shutdown(restart)
 
-    def execute(self, expression: str) -> dict[str, Any]:
+    def _execute(self, expression: str) -> dict[str, Any]:
         """Execute the expression in the kernel"""
         result = {}
         try:

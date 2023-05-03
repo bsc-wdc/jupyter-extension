@@ -18,7 +18,7 @@ def around_call(
     return set_new_function
 
 
-@around_call(IPyCOMPSsKernel, "execute")
+@around_call(IPyCOMPSsKernel, "_execute")
 def log(function: Callable[..., Any]) -> Callable[..., Any]:
     """Logging aspect"""
 

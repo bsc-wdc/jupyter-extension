@@ -1,15 +1,15 @@
 """PyCOMPSs startup pop-up"""
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
-from typing import Any, Callable
+from typing import Any, Callable, Union
 
-from .parameter import parameter_factory
+from ..parameter import parameter_factory
 
 
 class Popup(Tk):
     """PyCOMPs pop-up implementation"""
 
     @staticmethod
-    def _make_grid_expandable(frame: Frame) -> None:
+    def _make_grid_expandable(frame: Union[Tk, Frame]) -> None:
         """Makes the grid of the frame expandable"""
         for i in range(frame.grid_size()[1]):
             frame.rowconfigure(i, weight=1)

@@ -1,6 +1,7 @@
 """Path parameter"""
 from enum import Enum, auto
-from tkinter import Button, Frame, StringVar, filedialog
+from tkinter import Button, Frame, StringVar, Tk, filedialog
+from typing import Union
 
 from . import str as string_parameter
 
@@ -13,7 +14,7 @@ class PathType(Enum):
 
 
 def create(
-    name: str, default: str, frame: Frame, file: PathType
+    name: str, default: str, frame: Union[Tk, Frame], file: PathType
 ) -> tuple[str, StringVar]:
     """Create a path parameter"""
     var: StringVar = string_parameter.create(name, default, frame)[1]
