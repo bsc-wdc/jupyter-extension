@@ -11,6 +11,7 @@ import { compss_icon } from './icon';
 import InfoButtons from './info-buttons';
 import StartStop from './start-stop';
 import TaskDropdown from './task-dropdown';
+import Monitor from './monitor/monitor';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
@@ -26,6 +27,10 @@ export const activate = (
       <div className="jp-stack-panel-header">IPyCOMPSs</div>
       <div className="ipycompss-stack-panel">
         <StartStop
+          consoleTracker={consoleTracker}
+          notebookTracker={notebookTracker}
+        />
+        <Monitor
           consoleTracker={consoleTracker}
           notebookTracker={notebookTracker}
         />
