@@ -5,6 +5,7 @@ import React from 'react';
 import { ParameterGroupWidget } from '../parameter';
 import LineInfo from './line-info';
 import TaskDropdownView from './view';
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 
 namespace TaskDropdown {
   export interface IProperties {
@@ -34,6 +35,14 @@ const createTask =
     const lineInfo =
       position && LineInfo.getCurrentFunctionLineInfo(position, text);
 
+    const functionParameters =
+      editor &&
+      LineInfo.getCurrentFunctionParameters(
+        editor?.getTokens(),
+        (offset: number) => editor.getPositionAt(offset)?.line,
+        lineInfo
+      );
+
     const linePosition: CodeEditor.IPosition | undefined = lineInfo && {
       column: lineInfo.indentation,
       line: lineInfo.lineNumber
@@ -41,18 +50,48 @@ const createTask =
     linePosition && editor?.setCursorPosition(linePosition);
     editor?.newIndentedLine();
 
-    const values = parameters.getValue();
-    linePosition &&
-      editor?.model.value.insert(
-        editor.getOffsetAt(linePosition),
-        `@task(${
-          values &&
-          Array.from(values)
-            .filter(([_, value]: [string, any]) => value.default === undefined)
-            .map(([key, value]: [string, any]) => `${key}=${value}`)
-            .join(', ')
-        })`
-      );
+    const staticValues = parameters.getValue();
+    if (functionParameters?.length) {
+      void showDialog({
+        title: 'Task parameters',
+        body: TaskDropdownView.dialogBody(functionParameters),
+        buttons: [Dialog.okButton({ label: 'Define task' })]
+      }).then(defineTaskWithParameters(editor, linePosition, staticValues));
+    } else {
+      defineTask(editor, linePosition, staticValues);
+    }
   };
+
+const defineTaskWithParameters =
+  (
+    editor: CodeEditor.IEditor | undefined,
+    linePosition: CodeEditor.IPosition | undefined,
+    staticValues: Map<string, any> | undefined
+  ) =>
+  (result: Dialog.IResult<Map<string, any> | undefined>): void => {
+    const values =
+      staticValues &&
+      result.value &&
+      new Map([...result.value, ...staticValues]);
+    result.button.accept && defineTask(editor, linePosition, values);
+  };
+
+const defineTask = (
+  editor: CodeEditor.IEditor | undefined,
+  linePosition: CodeEditor.IPosition | undefined,
+  values: Map<string, any> | null | undefined
+) => {
+  linePosition &&
+    editor?.model.value.insert(
+      editor.getOffsetAt(linePosition),
+      `@task(${
+        values &&
+        Array.from(values)
+          .filter(([_, value]: [string, any]) => value.default === undefined)
+          .map(([key, value]: [string, any]) => `${key}=${value}`)
+          .join(', ')
+      })`
+    );
+};
 
 export default TaskDropdown;

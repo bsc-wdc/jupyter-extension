@@ -44,6 +44,19 @@ namespace LineInfo {
     }
   };
 
+  export const getCurrentFunctionParameters = (
+    tokens: CodeEditor.IToken[],
+    getLine: (offset: number) => number | undefined,
+    lineInfo: ILineInfo | undefined
+  ): string[] =>
+    tokens
+      .filter(
+        (token: CodeEditor.IToken) =>
+          getLine(token.offset) === lineInfo?.lineNumber &&
+          token.type === 'variable'
+      )
+      .map((token: CodeEditor.IToken) => token.value);
+
   const toLineInfo = ([line, lineNumber]: [string, number]):
     | ILineInfo
     | undefined => {
