@@ -1,1 +1,1 @@
-export { DocumentationButton } from './documentation-button';
+export { default } from './documentation-button';

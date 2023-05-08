@@ -6,12 +6,12 @@ import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import '../style/index.css';
-import { DocumentationButton } from './documentation-button';
+import DocumentationButton from './documentation-button';
 import { compss_icon } from './icon';
 import InfoButtons from './info-buttons';
+import Monitor from './monitor/monitor';
 import StartStop from './start-stop';
 import TaskDropdown from './task-dropdown';
-import Monitor from './monitor/monitor';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
