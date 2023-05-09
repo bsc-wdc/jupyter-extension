@@ -1,4 +1,8 @@
-import { DOMWidgetModel, IBackboneModelOptions } from '@jupyter-widgets/base';
+import {
+  DOMWidgetModel,
+  Dict,
+  IBackboneModelOptions
+} from '@jupyter-widgets/base';
 import { output } from '@jupyter-widgets/jupyterlab-manager';
 
 import WidgetView from './widget-view';
@@ -16,7 +20,8 @@ export default class extends output.OutputModel {
       _view_module: 'ipycompss_lab_extension',
       _view_module_version: '0.1.0',
       title: `${INFO_TITLE} execution info`,
-      type: WidgetView.INFO_ID
+      type: WidgetView.INFO_ID,
+      poll: false
     };
   }
 
@@ -26,5 +31,16 @@ export default class extends output.OutputModel {
   ): void {
     super.initialize(attributes, options);
     this.widget_manager.create_view(this as DOMWidgetModel, {});
+  }
+
+  set_state(state: Dict<unknown>): void {
+    state.outputs &&
+      this.get_state().poll &&
+      (state.outputs = [
+        (state.outputs as Array<unknown>)[
+          (state.outputs as Array<unknown>).length - 1
+        ]
+      ]);
+    super.set_state(state);
   }
 }

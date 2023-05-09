@@ -1,6 +1,6 @@
 """Output widget the IPyCOMPSs kernel"""
 from ipywidgets import Output
-from traitlets import Unicode
+from traitlets import Bool, Unicode
 
 
 class Panel(Output):
@@ -14,3 +14,4 @@ class Panel(Output):
     _view_module_version = Unicode("0.1.0").tag(sync=True)
     title = Unicode("Title").tag(sync=True)
     type = Unicode("Type").tag(sync=True)
+    poll = Bool(False).tag(sync=True)

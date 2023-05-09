@@ -20,7 +20,7 @@ def create(
     var: StringVar = string_parameter.create(name, default, frame)[1]
     row = frame.grid_size()[1] - 1
 
-    def browse():
+    def browse() -> None:
         if file == PathType.FILE:
             path: str = filedialog.askopenfilename()
         else:

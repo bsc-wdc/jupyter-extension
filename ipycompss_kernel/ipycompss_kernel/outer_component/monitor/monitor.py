@@ -47,8 +47,7 @@ def _stop_monitor() -> None:
 def _wait_start() -> bool:
     """Wait until the monitor has started"""
     code: int = 0
-    init_time: float = time.time()
-    current_time: float = init_time
+    [init_time, current_time] = [time.time()] * 2
     while code != 200 and current_time - init_time < 60:
         time.sleep(0.25)
         try:

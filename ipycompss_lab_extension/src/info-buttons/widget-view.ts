@@ -15,7 +15,6 @@ function WidgetView(shell: JupyterFrontEnd.IShell): typeof output.OutputView {
       outputArea.title.icon = compss_icon;
       outputArea.id = WidgetView.INFO_ID + this.model.get('type');
 
-      //outputArea.parent?.disposed.connect(() => this.model.destroy());
       shell.add(outputArea, 'main', { mode: 'split-right' });
     }
   };
