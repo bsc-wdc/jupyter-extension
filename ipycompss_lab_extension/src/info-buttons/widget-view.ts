@@ -1,9 +1,11 @@
 import { output } from '@jupyter-widgets/jupyterlab-manager';
-import { JupyterFrontEnd } from '@jupyterlab/application';
+import { ILabShell } from '@jupyterlab/application';
 
 import { compss_icon } from '../icon';
+import { toArray } from '@lumino/algorithm';
+import { Widget } from '@lumino/widgets';
 
-function WidgetView(shell: JupyterFrontEnd.IShell): typeof output.OutputView {
+function WidgetView(shell: ILabShell): typeof output.OutputView {
   return class extends output.OutputView {
     render() {
       super.render();
@@ -16,6 +18,15 @@ function WidgetView(shell: JupyterFrontEnd.IShell): typeof output.OutputView {
       outputArea.id = WidgetView.INFO_ID + this.model.get('type');
 
       shell.add(outputArea, 'main', { mode: 'split-right' });
+      shell.layoutModified.connect(() => {
+        if (
+          toArray(shell.widgets('main')).every(
+            (widget: Widget) => widget.id !== outputArea.id
+          )
+        ) {
+          this.model.close();
+        }
+      });
     }
   };
 }

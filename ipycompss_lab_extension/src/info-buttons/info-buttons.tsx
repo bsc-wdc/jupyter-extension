@@ -1,5 +1,5 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-import { JupyterFrontEnd } from '@jupyterlab/application';
+import { ILabShell } from '@jupyterlab/application';
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { toArray } from '@lumino/algorithm';
@@ -14,7 +14,7 @@ import WidgetView from './widget-view';
 
 namespace InfoButtons {
   export interface IProperties {
-    shell: JupyterFrontEnd.IShell;
+    shell: ILabShell;
     consoleTracker: IConsoleTracker;
     notebookTracker: INotebookTracker;
     widgetRegistry: IJupyterWidgetRegistry;
@@ -49,7 +49,7 @@ const InfoButtons = ({
 
 const openExecutionInfo =
   (
-    shell: JupyterFrontEnd.IShell,
+    shell: ILabShell,
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker
   ) =>

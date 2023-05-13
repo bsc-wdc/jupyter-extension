@@ -1,5 +1,9 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
-import { ILayoutRestorer, JupyterFrontEnd } from '@jupyterlab/application';
+import {
+  ILabShell,
+  ILayoutRestorer,
+  JupyterFrontEnd
+} from '@jupyterlab/application';
 import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
@@ -17,6 +21,7 @@ const LEFT_PANEL_ID = 'pycompss-left-menu';
 
 export const activate = (
   app: JupyterFrontEnd,
+  shell: ILabShell,
   notebookTracker: INotebookTracker,
   consoleTracker: IConsoleTracker,
   widgetRegistry: IJupyterWidgetRegistry,
@@ -35,9 +40,9 @@ export const activate = (
           notebookTracker={notebookTracker}
         />
         <TaskDropdown tracker={notebookTracker} />
-        <DocumentationButton shell={app.shell} />
+        <DocumentationButton shell={shell} restorer={restorer} />
         <InfoButtons
-          shell={app.shell}
+          shell={shell}
           consoleTracker={consoleTracker}
           notebookTracker={notebookTracker}
           widgetRegistry={widgetRegistry}

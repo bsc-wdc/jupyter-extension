@@ -1,5 +1,6 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import {
+  ILabShell,
   ILayoutRestorer,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
@@ -14,7 +15,12 @@ import { activate } from './activate';
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'ipycompss_lab_extension:plugin',
   autoStart: true,
-  requires: [INotebookTracker, IConsoleTracker, IJupyterWidgetRegistry],
+  requires: [
+    ILabShell,
+    INotebookTracker,
+    IConsoleTracker,
+    IJupyterWidgetRegistry
+  ],
   optional: [ILayoutRestorer],
   activate
 };

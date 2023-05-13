@@ -1,4 +1,4 @@
-import { ILayoutRestorer, JupyterFrontEnd } from '@jupyterlab/application';
+import { ILabShell, ILayoutRestorer } from '@jupyterlab/application';
 import { MainAreaWidget, ReactWidget } from '@jupyterlab/apputils';
 import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
@@ -9,7 +9,7 @@ import { DocumentationButtonView, DocumentationIFrame } from './view';
 
 namespace DocumentationButton {
   export interface IProperties {
-    shell: JupyterFrontEnd.IShell;
+    shell: ILabShell;
     restorer?: ILayoutRestorer;
   }
 }
@@ -25,8 +25,7 @@ const DocumentationButton = ({
 );
 
 const openDocumentation =
-  (shell: JupyterFrontEnd.IShell, restorer?: ILayoutRestorer) =>
-  async (): Promise<void> => {
+  (shell: ILabShell, restorer?: ILayoutRestorer) => async (): Promise<void> => {
     if (
       toArray(shell.widgets('main')).some(
         (elem: Widget) => elem.id === REFERENCE_ID
