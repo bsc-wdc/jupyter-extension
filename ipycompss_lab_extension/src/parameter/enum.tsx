@@ -6,7 +6,7 @@ import Parameter from './base';
 
 namespace EnumerationParameter {
   export interface IProperties extends Parameter.IProperties<string> {
-    options: string[];
+    options: { [key: string]: string };
   }
 }
 
@@ -22,7 +22,7 @@ const EnumerationParameter = ({
     <Parameter name={name} values={values} defaultValue={defaultValue}>
       <Select
         filterable={false}
-        items={options}
+        items={Object.values(options)}
         itemRenderer={(item: string, { handleClick }): JSX.Element => (
           <MenuItem key={item} text={item} onClick={handleClick} />
         )}

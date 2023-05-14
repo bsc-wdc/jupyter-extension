@@ -14,7 +14,7 @@ namespace ParameterGroupWidget {
     name: string;
     defaultValue: any;
     Parameter: (properties: any) => JSX.Element;
-    options?: string[];
+    options?: { [key: string]: string };
   }
 }
 

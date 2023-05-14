@@ -40,6 +40,60 @@ namespace StartStopView {
     onClick: () => Promise<void>;
   }
 
+  enum LogLevel {
+    TRACE = 'trace',
+    DEBUG = 'debug',
+    INFO = 'info',
+    API = 'api',
+    OFF = 'off'
+  }
+
+  enum TaskExecution {
+    COMPSS = 'compss',
+    STORAGE = 'storage'
+  }
+
+  enum StreamingMode {
+    FILES = 'FILES',
+    OBJECTS = 'OBJECTS',
+    PSCOS = 'PSCOS',
+    ALL = 'ALL',
+    NONE = 'NONE'
+  }
+
+  enum Communication {
+    NIO = 'NIO',
+    GAT = 'GAT'
+  }
+
+  enum Connector {
+    SSH = 'es.bsc.compss.connectors.DefaultSSHConnector',
+    NO_SSH = 'es.bsc.compss.connectors.DefaultNoSSHConnector'
+  }
+
+  enum Scheduler {
+    TASK = 'es.bsc.compss.components.impl.TaskScheduler',
+    ORDER_STRICT_FIFO_TS = 'es.bsc.compss.scheduler.orderstrict.fifo.FifoTS',
+    FIFO_TS = 'es.bsc.compss.scheduler.lookahead.fifo.FifoTS',
+    LIFO_TS = 'es.bsc.compss.scheduler.lookahead.lifo.LifoTS',
+    LOCALITY_TS = 'es.bsc.compss.scheduler.lookahead.locality.LocalityTS',
+    CONSTRAINTS_FIFO_TS = 'es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS',
+    MT_CONSTRAINTS_FIFO_TS = 'es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS',
+    SUCCESSORS_FIFO_TS = 'es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS',
+    MT_SUCCESSORS_FIFO_TS = 'es.bsc.compss.scheduler.lookahead.mt.successors.fifo.FifoTS',
+    SUCCESSORS_LIFO_TS = 'es.bsc.compss.scheduler.lookahead.successors.lifo.LifoTS',
+    MT_SUCCESSORS_LIFO_TS = 'es.bsc.compss.scheduler.lookahead.mt.successors.lifo.LifoTS',
+    SUCCESSORS_LOCALITY_TS = 'es.bsc.compss.scheduler.lookahead.successors.locality.LocalityTS',
+    MT_SUCCESSORS_LOCALITY_TS = 'es.bsc.compss.scheduler.lookahead.mt.successors.locality.LocalityTS'
+  }
+
+  enum CheckpointPolicy {
+    INSTANCIATED_GROUP = 'es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup',
+    PERIODIC_TIME = 'es.bsc.compss.checkpoint.policies.CheckpointPolicyPeriodicTime',
+    FINISHED_TASKS = 'es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks',
+    NO = 'es.bsc.compss.checkpoint.policies.NoCheckpoint'
+  }
+
   export const dialogBody = (): Dialog.IBodyWidget<
     Map<string, any> | undefined
   > => {
@@ -52,9 +106,9 @@ namespace StartStopView {
     const advancedParameters: ParameterGroupWidget.IParameter[] = [
       {
         name: 'log_level',
-        defaultValue: 'off',
+        defaultValue: LogLevel.OFF,
         Parameter: EnumerationParameter,
-        options: ['trace', 'debug', 'info', 'api', 'off']
+        options: LogLevel
       },
       { name: 'o_c', defaultValue: false, Parameter: BooleanParameter },
       { name: 'project_xml', defaultValue: '', Parameter: StringParameter },
@@ -62,17 +116,17 @@ namespace StartStopView {
       { name: 'summary', defaultValue: false, Parameter: BooleanParameter },
       {
         name: 'task_execution',
-        defaultValue: 'compss',
+        defaultValue: TaskExecution.COMPSS,
         Parameter: EnumerationParameter,
-        options: ['compss', 'storage']
+        options: TaskExecution
       },
       { name: 'storage_impl', defaultValue: '', Parameter: StringParameter },
       { name: 'storage_conf', defaultValue: '', Parameter: StringParameter },
       {
         name: 'streaming_backend',
-        defaultValue: 'NONE',
+        defaultValue: StreamingMode.NONE,
         Parameter: EnumerationParameter,
-        options: ['FILES', 'OBJECTS', 'PSCOS', 'ALL', 'NONE']
+        options: StreamingMode
       },
       {
         name: 'streaming_master_name',
@@ -105,40 +159,23 @@ namespace StartStopView {
       },
       {
         name: 'comm',
-        defaultValue: 'NIO',
+        defaultValue: Communication.NIO,
         Parameter: EnumerationParameter,
-        options: ['NIO', 'GAT']
+        options: Communication
       },
       {
         name: 'conn',
-        defaultValue: 'es.bsc.compss.connectors.DefaultSSHConnector',
+        defaultValue: Connector.SSH,
         Parameter: EnumerationParameter,
-        options: [
-          'es.bsc.compss.connectors.DefaultSSHConnector',
-          'es.bsc.compss.connectors.DefaultNoSSHConnector'
-        ]
+        options: Connector
       },
       { name: 'master_name', defaultValue: '', Parameter: StringParameter },
       { name: 'master_port', defaultValue: '', Parameter: StringParameter },
       {
         name: 'scheduler',
-        defaultValue: 'es.bsc.compss.scheduler.lookahead.locality.LocalityTS',
+        defaultValue: Scheduler.LOCALITY_TS,
         Parameter: EnumerationParameter,
-        options: [
-          'es.bsc.compss.components.impl.TaskScheduler',
-          'es.bsc.compss.scheduler.orderstrict.fifo.FifoTS',
-          'es.bsc.compss.scheduler.lookahead.fifo.FifoTS',
-          'es.bsc.compss.scheduler.lookahead.lifo.LifoTS',
-          'es.bsc.compss.scheduler.lookahead.locality.LocalityTS',
-          'es.bsc.compss.scheduler.lookahead.successors.constraintsfifo.ConstraintsFifoTS',
-          'es.bsc.compss.scheduler.lookahead.mt.successors.constraintsfifo.ConstraintsFifoTS',
-          'es.bsc.compss.scheduler.lookahead.successors.fifo.FifoTS',
-          'es.bsc.compss.scheduler.lookahead.mt.successors.fifo.FifoTS',
-          'es.bsc.compss.scheduler.lookahead.successors.lifo.LifoTS',
-          'es.bsc.compss.scheduler.lookahead.mt.successors.lifo.LifoTS',
-          'es.bsc.compss.scheduler.lookahead.successors.locality.LocalityTS',
-          'es.bsc.compss.scheduler.lookahead.mt.successors.locality.LocalityTS'
-        ]
+        options: Scheduler
       },
       {
         name: 'jvm_workers',
@@ -211,14 +248,9 @@ namespace StartStopView {
       },
       {
         name: 'checkpoint_policy',
-        defaultValue: 'es.bsc.compss.checkpoint.policies.NoCheckpoint',
+        defaultValue: CheckpointPolicy.NO,
         Parameter: EnumerationParameter,
-        options: [
-          'es.bsc.compss.checkpoint.policies.CheckpointPolicyInstantiatedGroup',
-          'es.bsc.compss.checkpoint.policies.CheckpointPolicyPeriodicTime',
-          'es.bsc.compss.checkpoint.policies.CheckpointPolicyFinishedTasks',
-          'es.bsc.compss.checkpoint.policies.NoCheckpoint'
-        ]
+        options: CheckpointPolicy
       },
       {
         name: 'checkpoint_params',

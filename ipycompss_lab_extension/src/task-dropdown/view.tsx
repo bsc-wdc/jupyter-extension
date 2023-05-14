@@ -22,9 +22,9 @@ function TaskDropdownView({
     { name: 'time_out', defaultValue: 0, Parameter: IntegerParameter },
     {
       name: 'on_failure',
-      defaultValue: 'RETRY',
+      defaultValue: TaskDropdownView.OnFailure.RETRY,
       Parameter: EnumerationParameter,
-      options: ['RETRY', 'CANCEL_SUCCESSORS', 'FAIL', 'IGNORE']
+      options: TaskDropdownView.OnFailure
     }
   ];
   parameterWidget.data = { parameters, toSend: false };
@@ -42,6 +42,45 @@ namespace TaskDropdownView {
     onClick: () => Promise<void>;
   }
 
+  export enum OnFailure {
+    RETRY = 'RETRY',
+    CANCEL_SUCCESSORS = 'CANCEL_SUCCESSORS',
+    FAIL = 'FAIL',
+    IGNORE = 'IGNORE'
+  }
+
+  enum ParameterDirection {
+    IN = 'IN',
+    IN_DELETE = 'IN_DELETE',
+    INOUT = 'INOUT',
+    OUT = 'OUT',
+    CONCURRENT = 'CONCURRENT',
+    COMMUTATIVE = 'COMMUTATIVE',
+    FILE_IN = 'FILE_IN',
+    FILE_INOUT = 'FILE_INOUT',
+    FILE_OUT = 'FILE_OUT',
+    FILE_CONCURRENT = 'FILE_CONCURRENT',
+    FILE_COMMUTATIVE = 'FILE_COMMUTATIVE',
+    DIRECTORY_IN = 'DIRECTORY_IN',
+    DIRECTORY_INOUT = 'DIRECTORY_INOUT',
+    DIRECTORY_OUT = 'DIRECTORY_OUT',
+    COLLECTION_IN = 'COLLECTION_IN',
+    COLLECTION_IN_DELETE = 'COLLECTION_IN_DELETE',
+    COLLECTION_INOUT = 'COLLECTION_INOUT',
+    COLLECTION_OUT = 'COLLECTION_OUT',
+    COLLECTION_FILE_IN = 'COLLECTION_FILE_IN',
+    COLLECTION_FILE_INOUT = 'COLLECTION_FILE_INOUT',
+    COLLECTION_FILE_OUT = 'COLLECTION_FILE_OUT',
+    DICTIONARY_IN = 'DICTIONARY_IN',
+    DICTIONARY_IN_DELETE = 'DICTIONARY_IN_DELETE',
+    DICTIONARY_INOUT = 'DICTIONARY_INOUT',
+    STREAM_IN = 'STREAM_IN',
+    STREAM_OUT = 'STREAM_OUT',
+    STDIN = 'STDIN',
+    STDOUT = 'STDOUT',
+    STDERR = 'STDERR'
+  }
+
   export const dialogBody = (
     functionParameters: string[] | undefined
   ): Dialog.IBodyWidget<Map<string, any> | undefined> => {
@@ -49,39 +88,9 @@ namespace TaskDropdownView {
       functionParameters?.map(
         (parameter: string): ParameterGroupWidget.IParameter => ({
           name: parameter,
-          defaultValue: 'IN',
+          defaultValue: ParameterDirection.IN,
           Parameter: EnumerationParameter,
-          options: [
-            'IN',
-            'IN_DELETE',
-            'INOUT',
-            'OUT',
-            'CONCURRENT',
-            'COMMUTATIVE',
-            'FILE_IN',
-            'FILE_INOUT',
-            'FILE_OUT',
-            'FILE_CONCURRENT',
-            'FILE_COMMUTATIVE',
-            'DIRECTORY_IN',
-            'DIRECTORY_INOUT',
-            'DIRECTORY_OUT',
-            'COLLECTION_IN',
-            'COLLECTION_IN_DELETE',
-            'COLLECTION_INOUT',
-            'COLLECTION_OUT',
-            'COLLECTION_FILE_IN',
-            'COLLECTION_FILE_INOUT',
-            'COLLECTION_FILE_OUT',
-            'DICTIONARY_IN',
-            'DICTIONARY_IN_DELETE',
-            'DICTIONARY_INOUT',
-            'STREAM_IN',
-            'STREAM_OUT',
-            'STDIN',
-            'STDOUT',
-            'STDERR'
-          ]
+          options: ParameterDirection
         })
       ) || [];
     const widget = new ParameterGroupWidget();
