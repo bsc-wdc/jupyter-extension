@@ -43,9 +43,9 @@ def show_info(info_type: str) -> None:
     else:
 
         def callback() -> None:
-            id = widget.comm.comm_id
+            comm_id = widget.comm.comm_id
             comm_manager = comm.get_comm_manager()
-            while comm_manager.get_comm(id) is not None:
+            while comm_manager.get_comm(comm_id) is not None:
                 time.sleep(0.25)
                 function(widget=widget)
 
