@@ -26,7 +26,7 @@ jobs:
           papi-tools uuid-runtime xdg-utils
         python -m pip install -U graphviz matplotlib mpi4py
         export EXTRAE_MPI_HEADERS=/usr/include/x86_64-linux-gnu/mpi
-        python -m pip install -U pycompss
+        python -m pip install -U pycompss --no-cache-dir
 
     - name: Lint the kernel
       run: |
@@ -55,7 +55,7 @@ jobs:
           papi-tools uuid-runtime xdg-utils
         python -m pip install -U graphviz matplotlib mpi4py
         export EXTRAE_MPI_HEADERS=/usr/include/x86_64-linux-gnu/mpi
-        python -m pip install -U pycompss
+        python -m pip install -U pycompss --no-cache-dir
         pip install -U ./ipycompss_kernel
 
     - name: Lint the extension

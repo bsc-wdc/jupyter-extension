@@ -5,7 +5,7 @@ Starting the runtime
 --------------------
 
 By default, the kernel will show a pop-up with the basic PyCOMPSs start parameters (graph,
-debug, tracing and monitor) and 3 button (Advanced options, Start PyCOMPSs monitor and Start
+debug, tracing and monitor) and 3 buttons (Advanced options, Start PyCOMPSs monitor and Start
 IPyCOMPSs) when started. If the variable ``COMPSS_IN_JUPYTERLAB`` is set to true, the pop-up
 will not be shown.
 
@@ -21,7 +21,7 @@ If the environment variable ``COMPSS_RUNNING_IN_SC`` is set to true, clicking th
 also cause the kernel to start the worker processes.
 
 .. warning::
-    Do not start the PyCOMPSs runtime if it is already running, this may cause some
+    Do not start the PyCOMPSs runtime if it is already running. This may cause some
     problems.
 
 Stopping the runtime
@@ -33,7 +33,7 @@ take a while.
 The default shutdown time is 30 seconds. However, the runtime may take more to
 stop depending on the environment and the application that was executed. If a different
 shutdown time is desired, we allow changing such time by setting the environment variable
-``IPYCOMPSS_SHUTDOWN_TIME``, which is defined in seconds and allows decimal values.
+``COMPSS_SHUTDOWN_TIME``, which is defined in seconds and allows decimal values.
 
 .. caution::
     When using Jupyter Notebook App or JupyterLab, choosing to change kernel from
