@@ -49,7 +49,6 @@ const createTask =
       line: lineInfo.lineNumber
     };
     linePosition && editor?.setCursorPosition(linePosition);
-    editor?.newIndentedLine();
 
     const staticValues = parameters.getValue();
     if (functionParameters?.length) {
@@ -74,14 +73,19 @@ const defineTaskWithParameters =
       staticValues &&
       result.value &&
       new Map([...result.value, ...staticValues]);
-    result.button.accept && defineTask(editor, linePosition, values);
+    if (result.button.accept) {
+      defineTask(editor, linePosition, values);
+      addImport(editor, 'from pycompss.api.parameter import *');
+    }
   };
 
 const defineTask = (
   editor: CodeEditor.IEditor | undefined,
   linePosition: CodeEditor.IPosition | undefined,
-  values: Map<string, any> | null | undefined
+  values: Map<string, any> | null | undefined,
+  extraImport = ''
 ) => {
+  editor?.newIndentedLine();
   linePosition &&
     editor?.model.value.insert(
       editor.getOffsetAt(linePosition),
@@ -93,6 +97,16 @@ const defineTask = (
           .join(', ')
       })`
     );
+  addImport(editor, 'from pycompss.api.task import task');
+};
+
+const addImport = (
+  editor: CodeEditor.IEditor | undefined,
+  importStatement: string
+) => {
+  const code = editor?.model.value;
+  !code?.text.includes(importStatement) &&
+    code?.insert(0, `${importStatement}\n`);
 };
 
 export default TaskDropdown;
