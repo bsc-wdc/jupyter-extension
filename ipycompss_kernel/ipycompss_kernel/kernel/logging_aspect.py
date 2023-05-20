@@ -12,24 +12,27 @@ def around_call(
     """Decorator to set aspects"""
 
     def set_new_function(aspect: Callable[..., Any]) -> None:
-        new_function = aspect(getattr(klass, original_function))
+        function = getattr(klass, original_function)
+
+        def new_function(*args: Any, **kwargs: Any) -> Any:
+            return aspect(function, *args, **kwargs)
+
         setattr(klass, original_function, new_function)
 
     return set_new_function
 
 
 @around_call(IPyCOMPSsKernel, "_execute")
-def log(function: Callable[..., Any]) -> Callable[..., Any]:
+def log(
+    function: Callable[..., Any], self: IPyCOMPSsKernel, *args: Any, **kwargs: Any
+) -> Any:
     """Logging aspect"""
 
-    def logged_function(self: IPyCOMPSsKernel, *args: Any, **kwargs: Any) -> Any:
-        result = None
-        with capture_output() as capture:
-            result = function(self, *args, **kwargs)
-        if capture.stdout:
-            self.log.info(capture.stdout)
-        if capture.stderr:
-            self.log.warn(capture.stderr)
-        return result
-
-    return logged_function
+    result = None
+    with capture_output() as capture:
+        result = function(self, *args, **kwargs)
+    if capture.stdout:
+        self.log.info(capture.stdout)
+    if capture.stderr:
+        self.log.warn(capture.stderr)
+    return result
