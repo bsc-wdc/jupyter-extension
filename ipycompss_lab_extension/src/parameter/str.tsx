@@ -10,6 +10,7 @@ const StringParameter = ({
 }: Parameter.IProperties<string>): JSX.Element => (
   <Parameter name={name} values={values} defaultValue={defaultValue}>
     <InputGroup
+      className="ipycompss-input"
       defaultValue={defaultValue}
       onChange={Parameter.onChange<string, React.FormEvent<HTMLInputElement>>(
         name,

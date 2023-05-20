@@ -11,7 +11,7 @@ import React from 'react';
 
 import '../style/index.css';
 import DocumentationButton from './documentation-button';
-import { compss_icon } from './icon';
+import Icon from './icon';
 import InfoButtons from './info-buttons';
 import Monitor from './monitor/monitor';
 import StartStop from './start-stop';
@@ -19,7 +19,7 @@ import TaskDropdown from './task-dropdown';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
-export const activate = (
+const activate = (
   app: JupyterFrontEnd,
   shell: ILabShell,
   notebookTracker: INotebookTracker,
@@ -28,7 +28,7 @@ export const activate = (
   restorer?: ILayoutRestorer
 ): void => {
   const content = ReactWidget.create(
-    <div className="ipycompss-pycompss-sidebar">
+    <div className="ipycompss-base">
       <div className="jp-stack-panel-header">IPyCOMPSs</div>
       <div className="ipycompss-stack-panel">
         <StartStop
@@ -47,13 +47,16 @@ export const activate = (
           notebookTracker={notebookTracker}
           widgetRegistry={widgetRegistry}
         />
+        <Icon.bsc_icon.react className="ipycompss-footer" />
       </div>
     </div>
   );
   const widget = new MainAreaWidget({ content });
   widget.id = LEFT_PANEL_ID;
-  widget.title.icon = compss_icon;
+  widget.title.icon = Icon.compss_icon;
   app.shell.add(widget, 'left', { rank: 510 });
 
   restorer?.add(widget, LEFT_PANEL_ID);
 };
+
+export default activate;

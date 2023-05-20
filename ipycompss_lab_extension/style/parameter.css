@@ -4,8 +4,17 @@
   justify-content: space-between;
 }
 
+.ipycompss-parameter .ipycompss-input {
+  align-self: flex-end;
+  max-width: 70%;
+}
+
 .ipycompss-parameter .bp3-input-group {
   flex-shrink: 1;
+}
+
+.ipycompss-parameter > .ipycompss-input > .bp3-button-group {
+  margin-right: 0;
 }
 
 /* stylelint-disable selector-class-pattern */

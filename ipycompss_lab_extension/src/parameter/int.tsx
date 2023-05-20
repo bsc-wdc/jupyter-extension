@@ -11,6 +11,7 @@ const IntegerParameter = ({
 }: Parameter.IProperties<number>): JSX.Element => (
   <Parameter name={name} values={values} defaultValue={defaultValue}>
     <NumericInput
+      className="ipycompss-input"
       defaultValue={defaultValue}
       onValueChange={Parameter.onChange<number, number>(
         name,

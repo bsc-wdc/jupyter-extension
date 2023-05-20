@@ -1,13 +1,8 @@
 import { Dialog, ToolbarButtonComponent } from '@jupyterlab/apputils';
+import { runIcon, stopIcon } from '@jupyterlab/ui-components';
 import React from 'react';
 
-import {
-  BooleanParameter,
-  EnumerationParameter,
-  IntegerParameter,
-  ParameterGroupWidget,
-  StringParameter
-} from '../parameter';
+import Parameter from '../parameter';
 
 function StartStopView({
   start,
@@ -16,12 +11,16 @@ function StartStopView({
   return (
     <>
       <ToolbarButtonComponent
+        className="ipycompss-button"
         label="Start"
+        icon={runIcon}
         enabled={start.enabled}
         onClick={start.onClick}
       />
       <ToolbarButtonComponent
+        className="ipycompss-button"
         label="Stop"
+        icon={stopIcon}
         enabled={stop.enabled}
         onClick={stop.onClick}
       />
@@ -97,181 +96,277 @@ namespace StartStopView {
   export const dialogBody = (): Dialog.IBodyWidget<
     Map<string, any> | undefined
   > => {
-    const parameters: ParameterGroupWidget.IParameter[] = [
-      { name: 'graph', defaultValue: false, Parameter: BooleanParameter },
-      { name: 'debug', defaultValue: false, Parameter: BooleanParameter },
-      { name: 'trace', defaultValue: false, Parameter: BooleanParameter },
-      { name: 'monitor', defaultValue: 1000, Parameter: IntegerParameter }
+    const parameters: Parameter.ParameterGroupWidget.IParameter[] = [
+      {
+        name: 'graph',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
+      {
+        name: 'debug',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
+      {
+        name: 'trace',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
+      {
+        name: 'monitor',
+        defaultValue: 1000,
+        Parameter: Parameter.IntegerParameter
+      }
     ];
-    const advancedParameters: ParameterGroupWidget.IParameter[] = [
+    const advancedParameters: Parameter.ParameterGroupWidget.IParameter[] = [
       {
         name: 'log_level',
         defaultValue: LogLevel.OFF,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: LogLevel
       },
-      { name: 'o_c', defaultValue: false, Parameter: BooleanParameter },
-      { name: 'project_xml', defaultValue: '', Parameter: StringParameter },
-      { name: 'resources_xml', defaultValue: '', Parameter: StringParameter },
-      { name: 'summary', defaultValue: false, Parameter: BooleanParameter },
+      {
+        name: 'o_c',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
+      {
+        name: 'project_xml',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'resources_xml',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'summary',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
       {
         name: 'task_execution',
         defaultValue: TaskExecution.COMPSS,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: TaskExecution
       },
-      { name: 'storage_impl', defaultValue: '', Parameter: StringParameter },
-      { name: 'storage_conf', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'storage_impl',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'storage_conf',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'streaming_backend',
         defaultValue: StreamingMode.NONE,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: StreamingMode
       },
       {
         name: 'streaming_master_name',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'streaming_master_port',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'task_count', defaultValue: 50, Parameter: IntegerParameter },
+      {
+        name: 'task_count',
+        defaultValue: 50,
+        Parameter: Parameter.IntegerParameter
+      },
       {
         name: 'app_name',
         defaultValue: 'InteractiveMode',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'uuid', defaultValue: '', Parameter: StringParameter },
-      { name: 'log_dir', defaultValue: '', Parameter: StringParameter },
+      { name: 'uuid', defaultValue: '', Parameter: Parameter.StringParameter },
+      {
+        name: 'log_dir',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'master_working_dir',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'extrae_cfg', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'extrae_cfg',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'extrae_final_directory',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'comm',
         defaultValue: Communication.NIO,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: Communication
       },
       {
         name: 'conn',
         defaultValue: Connector.SSH,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: Connector
       },
-      { name: 'master_name', defaultValue: '', Parameter: StringParameter },
-      { name: 'master_port', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'master_name',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'master_port',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'scheduler',
         defaultValue: Scheduler.LOCALITY_TS,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: Scheduler
       },
       {
         name: 'jvm_workers',
         defaultValue: '-Xms1024m,-Xmx1024m,-Xmn400m',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'cpu_affinity',
         defaultValue: 'automatic',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'gpu_affinity',
         defaultValue: 'automatic',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'fpga_affinity',
         defaultValue: 'automatic',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'fpga_reprogram', defaultValue: '', Parameter: StringParameter },
-      { name: 'profile_input', defaultValue: '', Parameter: StringParameter },
-      { name: 'profile_output', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'fpga_reprogram',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'profile_input',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
+      {
+        name: 'profile_output',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'scheduler_config',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'external_adaptation',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
       {
         name: 'propagate_virtual_environment',
         defaultValue: true,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
-      { name: 'mpi_worker', defaultValue: false, Parameter: BooleanParameter },
-      { name: 'worker_cache', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'mpi_worker',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
+      {
+        name: 'worker_cache',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'shutdown_in_node_failure',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
-      { name: 'io_executors', defaultValue: 0, Parameter: IntegerParameter },
-      { name: 'env_script', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'io_executors',
+        defaultValue: 0,
+        Parameter: Parameter.IntegerParameter
+      },
+      {
+        name: 'env_script',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'tracing_task_dependencies',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
-      { name: 'trace_label', defaultValue: '', Parameter: StringParameter },
+      {
+        name: 'trace_label',
+        defaultValue: '',
+        Parameter: Parameter.StringParameter
+      },
       {
         name: 'extrae_cfg_python',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'wcl', defaultValue: 0, Parameter: IntegerParameter },
+      { name: 'wcl', defaultValue: 0, Parameter: Parameter.IntegerParameter },
       {
         name: 'cache_profiler',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
       {
         name: 'data_provenance',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       },
       {
         name: 'checkpoint_policy',
         defaultValue: CheckpointPolicy.NO,
-        Parameter: EnumerationParameter,
+        Parameter: Parameter.EnumerationParameter,
         options: CheckpointPolicy
       },
       {
         name: 'checkpoint_params',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
       {
         name: 'checkpoint_folder',
         defaultValue: '',
-        Parameter: StringParameter
+        Parameter: Parameter.StringParameter
       },
-      { name: 'verbose', defaultValue: false, Parameter: BooleanParameter },
+      {
+        name: 'verbose',
+        defaultValue: false,
+        Parameter: Parameter.BooleanParameter
+      },
       {
         name: 'disable_external',
         defaultValue: false,
-        Parameter: BooleanParameter
+        Parameter: Parameter.BooleanParameter
       }
     ];
-    const widget = new ParameterGroupWidget();
+    const widget = new Parameter.ParameterGroupWidget();
     widget.data = { parameters, toSend: true, advancedParameters };
-    widget.addClass('ipycompss-popup');
+    widget.addClass('ipycompss-base');
     return widget;
   };
 }

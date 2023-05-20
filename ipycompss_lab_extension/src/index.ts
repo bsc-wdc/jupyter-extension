@@ -7,7 +7,7 @@ import {
 import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 
-import { activate } from './activate';
+import activate from './activate';
 
 /**
  * Initialization data for the ipycompss_lab_extension extension.

@@ -2,43 +2,61 @@ import { Dialog, ToolbarButtonComponent } from '@jupyterlab/apputils';
 import React from 'react';
 
 import CollapsibleElement from '../collapsible-element';
-import {
-  BooleanParameter,
-  EnumerationParameter,
-  IntegerParameter,
-  ParameterGroupWidget,
-  StringParameter
-} from '../parameter';
+import Parameter from '../parameter';
+import { editIcon } from '@jupyterlab/ui-components';
 
 function TaskDropdownView({
   parameterWidget,
   onClick
 }: TaskDropdownView.IProperties): JSX.Element {
-  const parameters: ParameterGroupWidget.IParameter[] = [
-    { name: 'returns', defaultValue: '', Parameter: StringParameter },
-    { name: 'priority', defaultValue: false, Parameter: BooleanParameter },
-    { name: 'is_reduce', defaultValue: true, Parameter: BooleanParameter },
-    { name: 'chunk_size', defaultValue: 0, Parameter: IntegerParameter },
-    { name: 'time_out', defaultValue: 0, Parameter: IntegerParameter },
+  const parameters: Parameter.ParameterGroupWidget.IParameter[] = [
+    { name: 'returns', defaultValue: '', Parameter: Parameter.StringParameter }
+  ];
+  const advancedParameters: Parameter.ParameterGroupWidget.IParameter[] = [
+    {
+      name: 'priority',
+      defaultValue: false,
+      Parameter: Parameter.BooleanParameter
+    },
+    {
+      name: 'is_reduce',
+      defaultValue: true,
+      Parameter: Parameter.BooleanParameter
+    },
+    {
+      name: 'chunk_size',
+      defaultValue: 0,
+      Parameter: Parameter.IntegerParameter
+    },
+    {
+      name: 'time_out',
+      defaultValue: 0,
+      Parameter: Parameter.IntegerParameter
+    },
     {
       name: 'on_failure',
       defaultValue: TaskDropdownView.OnFailure.RETRY,
-      Parameter: EnumerationParameter,
+      Parameter: Parameter.EnumerationParameter,
       options: TaskDropdownView.OnFailure
     }
   ];
-  parameterWidget.data = { parameters, toSend: false };
+  parameterWidget.data = { parameters, advancedParameters, toSend: false };
   return (
     <CollapsibleElement label="Task">
       {parameterWidget.render()}
-      <ToolbarButtonComponent label="Define task" onClick={onClick} />
+      <ToolbarButtonComponent
+        className="ipycompss-button"
+        label="Define task"
+        icon={editIcon}
+        onClick={onClick}
+      />
     </CollapsibleElement>
   );
 }
 
 namespace TaskDropdownView {
   export interface IProperties {
-    parameterWidget: ParameterGroupWidget;
+    parameterWidget: Parameter.ParameterGroupWidget;
     onClick: () => Promise<void>;
   }
 
@@ -84,18 +102,17 @@ namespace TaskDropdownView {
   export const dialogBody = (
     functionParameters: string[] | undefined
   ): Dialog.IBodyWidget<Map<string, any> | undefined> => {
-    const parameters: ParameterGroupWidget.IParameter[] =
+    const parameters: Parameter.ParameterGroupWidget.IParameter[] =
       functionParameters?.map(
-        (parameter: string): ParameterGroupWidget.IParameter => ({
+        (parameter: string): Parameter.ParameterGroupWidget.IParameter => ({
           name: parameter,
           defaultValue: ParameterDirection.IN,
-          Parameter: EnumerationParameter,
+          Parameter: Parameter.EnumerationParameter,
           options: ParameterDirection
         })
       ) || [];
-    const widget = new ParameterGroupWidget();
+    const widget = new Parameter.ParameterGroupWidget();
     widget.data = { parameters, toSend: true };
-    widget.addClass('ipycompss-popup');
     return widget;
   };
 }

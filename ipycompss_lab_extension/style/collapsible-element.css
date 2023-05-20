@@ -1,19 +1,23 @@
-.ipycompss-pycompss-sidebar .jp-stack-panel-header-text {
+.ipycompss-base .jp-stack-panel-header-text {
   flex: 1 0 auto;
   margin: 0 4px;
 }
 
-.ipycompss-pycompss-sidebar .bp3-collapse-body {
+.ipycompss-base .bp3-collapse-body {
   display: flex;
   flex-direction: column;
+  border-bottom: calc(5 * var(--jp-border-width)) solid var(--jp-border-color2);
 }
 
-.ipycompss-popup .jp-stack-panel-header-text {
-  flex: 1 0 auto;
-  margin: 0 4px;
+/* stylelint-disable selector-class-pattern */
+.ipycompss-base .bp3-collapse-body .jp-stack-panel-header-text,
+.jp-Dialog-content .ipycompss-base .jp-stack-panel-header {
+  font-size: calc(var(--jp-ui-font-size0) * 0.8);
 }
 
-.ipycompss-popup .bp3-collapse-body {
-  display: flex;
-  flex-direction: column;
+.ipycompss-base .bp3-collapse-body .bp3-collapse-body,
+.jp-Dialog-content .ipycompss-base .bp3-collapse-body {
+  border-bottom: calc(3 * var(--jp-border-width)) solid var(--jp-border-color2);
 }
+
+/* stylelint-enable selector-class-pattern */

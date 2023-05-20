@@ -1,4 +1,5 @@
 import { ToolbarButtonComponent } from '@jupyterlab/apputils';
+import { tabIcon } from '@jupyterlab/ui-components';
 import React from 'react';
 
 import InfoButtons from './info-buttons';
@@ -28,7 +29,12 @@ const InfoButtonsView = ({
   return (
     <>
       {buttons.map(({ label, type }: InfoButtonsView.IButton) => (
-        <ToolbarButtonComponent label={label} onClick={onClick(type)} />
+        <ToolbarButtonComponent
+          className="ipycompss-button"
+          label={label}
+          icon={tabIcon}
+          onClick={onClick(type)}
+        />
       ))}
     </>
   );

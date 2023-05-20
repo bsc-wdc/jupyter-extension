@@ -13,7 +13,7 @@ function Parameter<Type>({
   }, []);
   return (
     <div className="ipycompss-parameter">
-      {Utils.capitalise(name)}
+      {Utils.capitalise(name).replace('_', ' ')}
       {children}
     </div>
   );

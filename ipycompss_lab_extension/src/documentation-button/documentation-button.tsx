@@ -4,8 +4,8 @@ import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React from 'react';
 
-import { compss_icon } from '../icon';
-import { DocumentationButtonView, DocumentationIFrame } from './view';
+import Icon from '../icon';
+import DocumentationButtonView from './view';
 
 namespace DocumentationButton {
   export interface IProperties {
@@ -35,11 +35,11 @@ const openDocumentation =
     }
 
     const content = ReactWidget.create(
-      <DocumentationIFrame title={REFERENCE_TITLE} />
+      <DocumentationButtonView.DocumentationIFrame title={REFERENCE_TITLE} />
     );
     const widget = new MainAreaWidget({ content });
     widget.title.label = REFERENCE_TITLE;
-    widget.title.icon = compss_icon;
+    widget.title.icon = Icon.compss_icon;
     widget.id = REFERENCE_ID;
 
     shell.add(widget, 'main', { mode: 'split-right' });

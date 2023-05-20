@@ -1,11 +1,11 @@
+import { Dialog, showDialog } from '@jupyterlab/apputils';
 import { CodeEditor } from '@jupyterlab/codeeditor';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
-import { ParameterGroupWidget } from '../parameter';
+import Parameter from '../parameter';
 import LineInfo from './line-info';
 import TaskDropdownView from './view';
-import { Dialog, showDialog } from '@jupyterlab/apputils';
 
 namespace TaskDropdown {
   export interface IProperties {
@@ -14,7 +14,8 @@ namespace TaskDropdown {
 }
 
 const TaskDropdown = ({ tracker }: TaskDropdown.IProperties): JSX.Element => {
-  const widget: ParameterGroupWidget = new ParameterGroupWidget();
+  const widget: Parameter.ParameterGroupWidget =
+    new Parameter.ParameterGroupWidget();
   return (
     <TaskDropdownView
       parameterWidget={widget}
@@ -24,7 +25,7 @@ const TaskDropdown = ({ tracker }: TaskDropdown.IProperties): JSX.Element => {
 };
 
 const createTask =
-  (tracker: INotebookTracker, parameters: ParameterGroupWidget) =>
+  (tracker: INotebookTracker, parameters: Parameter.ParameterGroupWidget) =>
   async (): Promise<void> => {
     const editor: CodeEditor.IEditor | undefined = tracker.activeCell?.editor;
     const position = editor?.getCursorPosition();
