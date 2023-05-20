@@ -3,16 +3,13 @@ import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
+import StatusManager from '../status';
 import Utils from '../utils';
 import StartStopManager from './manager';
 import StartStopView from './view';
+import Status from '../status';
 
 namespace StartStop {
-  export interface IState {
-    enabled: boolean;
-    started: boolean;
-  }
-
   export interface IProperties {
     consoleTracker: IConsoleTracker;
     notebookTracker: INotebookTracker;
@@ -23,16 +20,7 @@ const StartStop = ({
   consoleTracker,
   notebookTracker
 }: StartStop.IProperties): JSX.Element => {
-  const [{ enabled, started }, setState] = React.useState({
-    enabled: false,
-    started: false
-  } as StartStop.IState);
-  [consoleTracker, notebookTracker].map(
-    (tracker: IConsoleTracker | INotebookTracker) =>
-      tracker.currentChanged.connect(
-        StartStopManager.watchCurrentChanges(setState)
-      )
-  );
+  const [{ enabled, started }, setState] = React.useContext(Status.Context);
   return (
     <StartStopView
       start={{
@@ -51,7 +39,7 @@ const showStartDialog =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
@@ -69,7 +57,7 @@ const start =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
   ) =>
   (result: Dialog.IResult<Map<string, any> | undefined>): void => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
@@ -82,7 +70,7 @@ const stop =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StartStop.IState>>
+    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);

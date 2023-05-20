@@ -4,13 +4,14 @@ import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import Utils from '../utils';
 import ExecutionInfo from './execution-info';
 import InfoButtonsView from './view';
 import WidgetModel from './widget-model';
 import WidgetView from './widget-view';
+import Status from '../status';
 
 namespace InfoButtons {
   export interface IProperties {
@@ -40,8 +41,10 @@ const InfoButtons = ({
     version: '0.1.0',
     exports: { WidgetModel, WidgetView: WidgetView(shell) }
   });
+  const [{ enabled }] = useContext(Status.Context);
   return (
     <InfoButtonsView
+      enabled={enabled}
       onClick={openExecutionInfo(shell, consoleTracker, notebookTracker)}
     />
   );

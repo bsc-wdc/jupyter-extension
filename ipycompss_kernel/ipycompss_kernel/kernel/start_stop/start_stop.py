@@ -1,11 +1,9 @@
 """Kernel start and stop methods"""
-import re
-import subprocess
 from typing import Any, Callable
 
 from ... import utils
 from . import messaging as start_stop_messaging
-from .messaging import StartRequestDto, StatusDto, SuccessResponseDto
+from .messaging import StartRequestDto, SuccessResponseDto
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
 JL_VAR = "COMPSS_IN_JUPYTERLAB"
@@ -18,8 +16,6 @@ def start(execute: Callable[[str], dict[str, Any]]) -> None:
     if not utils.read_boolean_env_var(JL_VAR):
         _init(execute, cluster)
 
-    start_stop_messaging.on_status(_get_status)
-
     start_stop_messaging.on_init(_handle_init_request(execute, cluster))
     start_stop_messaging.on_start(_handle_start_request(execute, cluster))
     start_stop_messaging.on_stop(_handle_stop_request(execute))
@@ -29,13 +25,6 @@ def do_shutdown(execute: Callable[[str], dict[str, Any]]) -> None:
     """Shutdown kernel"""
     _execute(execute, STOP_EXPRESSION)
     start_stop_messaging.send_stop()
-
-
-def _get_status() -> StatusDto:
-    """Send status comm to the frontend"""
-    processes = subprocess.run(["ps", "aux", "ww"], stdout=subprocess.PIPE, check=False)
-    started = re.search(r"java.*compss-engine\.jar", processes.stdout.decode("utf-8"))
-    return {"started": started is not None}
 
 
 def _handle_init_request(

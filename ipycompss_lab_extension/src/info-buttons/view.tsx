@@ -3,6 +3,7 @@ import { tabIcon } from '@jupyterlab/ui-components';
 import React from 'react';
 
 import InfoButtons from './info-buttons';
+import CollapsibleElement from '../collapsible-element';
 
 namespace InfoButtonsView {
   export interface IButton {
@@ -11,11 +12,13 @@ namespace InfoButtonsView {
   }
 
   export interface IProperties {
+    enabled: boolean;
     onClick: (type: InfoButtons.InfoType) => () => Promise<void>;
   }
 }
 
 const InfoButtonsView = ({
+  enabled,
   onClick
 }: InfoButtonsView.IProperties): JSX.Element => {
   const buttons: InfoButtonsView.IButton[] = [
@@ -27,16 +30,17 @@ const InfoButtonsView = ({
     { label: 'See statistics', type: 'statistics' }
   ];
   return (
-    <>
+    <CollapsibleElement label="Execution Info">
       {buttons.map(({ label, type }: InfoButtonsView.IButton) => (
         <ToolbarButtonComponent
           className="ipycompss-button"
           label={label}
           icon={tabIcon}
+          enabled={enabled}
           onClick={onClick(type)}
         />
       ))}
-    </>
+    </CollapsibleElement>
   );
 };
 

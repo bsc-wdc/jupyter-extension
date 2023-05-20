@@ -12,25 +12,6 @@ namespace StartStopMessaging {
     success: boolean;
   }
 
-  export interface IStatusResponseDto extends JSONObject {
-    started: boolean;
-  }
-
-  export const sendStatusRequest = (
-    kernel: Kernel.IKernelConnection | null | undefined
-  ): Utils.IOnReply<IStatusResponseDto> => {
-    const statusComm = kernel?.createComm('ipycompss_status_target');
-    statusComm?.open();
-    return {
-      onReply: (callback: (response: IStatusResponseDto) => void) => {
-        statusComm &&
-          (statusComm.onMsg = (
-            message: KernelMessage.ICommMsgMsg<'iopub' | 'shell'>
-          ): void => callback(message.content.data as IStatusResponseDto));
-      }
-    };
-  };
-
   export const sendInitRequest = (
     kernel: Kernel.IKernelConnection | null | undefined
   ): Utils.IOnReply<ISuccessResponseDto> => {
@@ -75,13 +56,6 @@ namespace StartStopMessaging {
           ): void => callback(message.content.data as ISuccessResponseDto));
       }
     };
-  };
-
-  export const onStop = (
-    kernel: Kernel.IKernelConnection,
-    callback: () => void
-  ): void => {
-    kernel.registerCommTarget('ipycompss_stop_target', callback);
   };
 }
 

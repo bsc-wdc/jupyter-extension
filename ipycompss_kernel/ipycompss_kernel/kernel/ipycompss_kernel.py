@@ -6,6 +6,7 @@ from ipykernel.ipkernel import IPythonKernel
 from .info import info
 from .monitor import monitor
 from .start_stop import start_stop
+from .status import status
 
 
 class IPyCOMPSsKernel(IPythonKernel):
@@ -14,6 +15,7 @@ class IPyCOMPSsKernel(IPythonKernel):
     def start(self) -> None:
         """Start the kernel"""
         super().start()
+        status.start()
         start_stop.start(self._execute)
         monitor.start(self._execute)
         info.start()

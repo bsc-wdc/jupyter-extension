@@ -82,8 +82,7 @@ const defineTaskWithParameters =
 const defineTask = (
   editor: CodeEditor.IEditor | undefined,
   linePosition: CodeEditor.IPosition | undefined,
-  values: Map<string, any> | null | undefined,
-  extraImport = ''
+  values: Map<string, any> | null | undefined
 ) => {
   editor?.newIndentedLine();
   linePosition &&
