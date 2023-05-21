@@ -75,7 +75,11 @@ const defineTaskWithParameters =
       new Map([...result.value, ...staticValues]);
     if (result.button.accept) {
       defineTask(editor, linePosition, values);
-      addImport(editor, 'from pycompss.api.parameter import *');
+      result.value &&
+        Array.from(result.value).filter(
+          ([_, value]: [string, any]) => value.default === undefined
+        ).length &&
+        addImport(editor, 'from pycompss.api.parameter import *');
     }
   };
 
@@ -84,8 +88,8 @@ const defineTask = (
   linePosition: CodeEditor.IPosition | undefined,
   values: Map<string, any> | null | undefined
 ) => {
-  editor?.newIndentedLine();
-  linePosition &&
+  if (linePosition) {
+    editor?.newIndentedLine();
     editor?.model.value.insert(
       editor.getOffsetAt(linePosition),
       `@task(${
@@ -96,7 +100,8 @@ const defineTask = (
           .join(', ')
       })`
     );
-  addImport(editor, 'from pycompss.api.task import task');
+    addImport(editor, 'from pycompss.api.task import task');
+  }
 };
 
 const addImport = (
