@@ -2,25 +2,30 @@ import { Kernel } from '@jupyterlab/services';
 import { toObject } from '@lumino/algorithm';
 
 import Status from '../status';
-import StatusManager from '../status/manager';
 import StartStopMessaging from './messaging';
 
 namespace StartStopManager {
   export const init = (
     kernel: Kernel.IKernelConnection | null | undefined,
     setState: React.Dispatch<React.SetStateAction<Status.IState>>
-  ): { onFailure: (callback: () => void) => void } => {
-    return {
-      onFailure: (callback: () => void) => {
-        StartStopMessaging.sendInitRequest(kernel).onReply(
-          ({ success }: StartStopMessaging.ISuccessResponseDto) => {
-            StatusManager.updateState(kernel, setState);
-            success || callback();
-          }
-        );
-      }
-    };
-  };
+  ): {
+    onFailure: (
+      updateState: (
+        kernel: Kernel.IKernelConnection | null | undefined,
+        setState: React.Dispatch<React.SetStateAction<Status.IState>>
+      ) => void,
+      callback: () => void
+    ) => void;
+  } => ({
+    onFailure: (updateState, callback) => {
+      StartStopMessaging.sendInitRequest(kernel).onReply(
+        ({ success }: StartStopMessaging.ISuccessResponseDto) => {
+          updateState(kernel, setState);
+          success || callback();
+        }
+      );
+    }
+  });
 
   export const startPycompss = (
     kernel: Kernel.IKernelConnection | null | undefined,

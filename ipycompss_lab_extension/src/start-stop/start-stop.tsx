@@ -3,11 +3,10 @@ import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
-import StatusManager from '../status';
+import Status from '../status';
 import Utils from '../utils';
 import StartStopManager from './manager';
 import StartStopView from './view';
-import Status from '../status';
 
 namespace StartStop {
   export interface IProperties {
@@ -39,11 +38,12 @@ const showStartDialog =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
+    setState: React.Dispatch<React.SetStateAction<Status.IState>>
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
     StartStopManager.init(kernel, setState).onFailure(
+      Status.updateState,
       () =>
         void showDialog({
           title: 'IPyCOMPSs configuration',
@@ -57,7 +57,7 @@ const start =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
+    setState: React.Dispatch<React.SetStateAction<Status.IState>>
   ) =>
   (result: Dialog.IResult<Map<string, any> | undefined>): void => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);
@@ -70,7 +70,7 @@ const stop =
   (
     consoleTracker: IConsoleTracker,
     notebookTracker: INotebookTracker,
-    setState: React.Dispatch<React.SetStateAction<StatusManager.IState>>
+    setState: React.Dispatch<React.SetStateAction<Status.IState>>
   ) =>
   async (): Promise<void> => {
     const kernel = Utils.getKernel(consoleTracker, notebookTracker);

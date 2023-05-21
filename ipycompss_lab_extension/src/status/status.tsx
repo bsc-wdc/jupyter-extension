@@ -18,11 +18,9 @@ function Status({
   children
 }: Status.IProperties): JSX.Element {
   const [state, setState] = React.useState(defaultState);
-  [consoleTracker, notebookTracker].map(
-    (tracker: IConsoleTracker | INotebookTracker) =>
-      tracker.currentChanged.connect(
-        StatusManager.watchCurrentChanges(setState)
-      )
+  React.useEffect(
+    registerCallback(consoleTracker, notebookTracker, setState),
+    []
   );
   return (
     <Status.Context.Provider value={[state, setState]}>
@@ -30,6 +28,21 @@ function Status({
     </Status.Context.Provider>
   );
 }
+
+const registerCallback =
+  (
+    consoleTracker: IConsoleTracker,
+    notebookTracker: INotebookTracker,
+    setState: React.Dispatch<React.SetStateAction<Status.IState>>
+  ) =>
+  (): void => {
+    [consoleTracker, notebookTracker].map(
+      (tracker: IConsoleTracker | INotebookTracker) =>
+        tracker.currentChanged.connect(
+          StatusManager.watchCurrentChanges(setState)
+        )
+    );
+  };
 
 namespace Status {
   export interface IState {

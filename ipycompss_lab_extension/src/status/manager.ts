@@ -20,9 +20,7 @@ namespace StatusManager {
       panel?.sessionContext.kernelChanged.connect(watchKernelChanges(setState));
 
       const kernel = panel?.sessionContext.session?.kernel;
-      StatusMessaging.sendStatusRequest(kernel).onReply(
-        startState(kernel, setState)
-      );
+      startState(kernel, setState);
     };
 
   export const updateState = (
@@ -53,29 +51,25 @@ namespace StatusManager {
       >
     ): void => {
       const kernel = change.newValue;
-      StatusMessaging.sendStatusRequest(kernel).onReply(() => {
-        updateState(kernel, setState);
-        startState(kernel, setState);
-      });
+      startState(kernel, setState);
     };
 
-  const startState =
-    (
-      kernel: Kernel.IKernelConnection | null | undefined,
-      setState: React.Dispatch<React.SetStateAction<Status.IState>>
-    ) =>
-    (): void => {
-      kernel?.statusChanged.connect(cleanUpState(setState));
-      kernel &&
-        StatusMessaging.onStop(kernel, () =>
-          setState(({ enabled, cluster, monitorStarted }) => ({
-            enabled,
-            cluster,
-            started: false,
-            monitorStarted
-          }))
-        );
-    };
+  const startState = (
+    kernel: Kernel.IKernelConnection | null | undefined,
+    setState: React.Dispatch<React.SetStateAction<Status.IState>>
+  ) => {
+    updateState(kernel, setState);
+    kernel?.statusChanged.connect(cleanUpState(setState));
+    kernel &&
+      StatusMessaging.onStop(kernel, () =>
+        setState(({ enabled, cluster, monitorStarted }) => ({
+          enabled,
+          cluster,
+          started: false,
+          monitorStarted
+        }))
+      );
+  };
 
   const cleanUpState =
     (setState: React.Dispatch<React.SetStateAction<Status.IState>>) =>
