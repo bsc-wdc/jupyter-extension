@@ -1,8 +1,19 @@
 Generating decorators
 =====================
 
-Clicking on the 'task', (...) will show a drop-down list with parameters that the decorator
+Clicking on the 'task' button will show a drop-down list with parameters that the decorator
 accepts.
+
+.. image:: images/task_dropdown.png
+    :alt: IPyCOMPSs Lab extension task button
+    :align: center
+
+Clicking the 'Advanced options' button will reveal more decorator parameters. Clicking
+it again will hide them.
+
+.. image:: images/task_dropdown_advanced.png
+    :alt: IPyCOMPSs Lab extension task drop-down with advanced options shown
+    :align: center
 
 To define a new decorator, fill in the desired values of the parameters, place the cursor on
 the function you wish to apply the decorator and click the 'Define task' button. If some
@@ -15,3 +26,8 @@ selected function.
 
 .. attention::
     Closing the drop-down list will wipe out the current values of the parameters.
+
+.. caution::
+    For the 'task' decorator, the detected parameters are the function arguments. However,
+    these will not be detected correctly if a variable is used as a default value for an
+    argument.

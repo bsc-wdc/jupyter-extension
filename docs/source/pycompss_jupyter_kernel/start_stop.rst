@@ -9,8 +9,16 @@ debug, tracing and monitor) and 3 buttons (Advanced options, Start PyCOMPSs moni
 IPyCOMPSs) when started. If the variable ``COMPSS_IN_JUPYTERLAB`` is set to true, the pop-up
 will not be shown.
 
+.. image:: ../shared/start_popup.png
+    :alt: IPyCOMPSs kernel start pop-up
+    :align: center
+
 Clicking the 'Advanced options' button will reveal more PyCOMPSs start parameters. Clicking
 it again will hide them.
+
+.. image:: ../shared/start_popup_advanced.png
+    :alt: IPyCOMPSs kernel start pop-up with advanced options shown
+    :align: center
 
 The user also has the option to click 'Start PyCOMPSs monitor', which will open a browser
 tab with the PyCOMPSs monitor.

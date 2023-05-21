@@ -26,7 +26,8 @@ PyCOMPSs Jupyter extensions documentation
    :caption: IPyCOMPSs JupyterLab extension
 
    pycompss_jupyterlab_extension/overview
-   pycompss_jupyterlab_extension/reference
-   pycompss_jupyterlab_extension/decorator
    pycompss_jupyterlab_extension/start_stop
+   pycompss_jupyterlab_extension/monitor
    pycompss_jupyterlab_extension/execution_info
+   pycompss_jupyterlab_extension/decorator
+   pycompss_jupyterlab_extension/reference
