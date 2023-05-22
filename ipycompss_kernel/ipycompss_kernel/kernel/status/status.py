@@ -8,7 +8,6 @@ from . import messaging as status_messaging
 from .messaging import StatusDto
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
-STOP_EXPRESSION = "outer_start_stop.stop_pycompss()"
 
 
 def start() -> None:
