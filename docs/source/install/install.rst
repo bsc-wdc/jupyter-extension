@@ -31,6 +31,25 @@ downloaded):
 - To install the IPyCOMPSs Lab extension: ``pip install
   ipycompss_lab_extension-<version>.tar.gz``
 
+Installing on Jupyter JSC
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For the above to work, JupyterLab must be initiated in a place where it can see the
+ipycompss_kernel package which contains the IPyCOMPSs provisioner. In Jupyter JSC, in
+the default configuration this is not possible because loading python libraries from
+the user directory is blocked until JupyterLab has loaded.
+
+To prevent that from happening, a virtual environment must be created. To do so, follow the
+steps in the official documentation, found `here <https://docs.jupyter-jsc.fz-juelich.de/
+github/FZJ-JSC/jupyter-jsc-notebooks/blob/documentation/index.ipynb>`_). Remember to install
+the extensions and install or load PyCOMPSs in the new virtual environment.
+
+Then, as seen in the section 'Load additional software models' of the same documentation,
+create the file ``$HOME/.jupyter/start_jupyter-jsc.sh`` that loads the appropiate modules,
+activates the virtual enviroment and updates the ``PYTHONPATH`` variable to point to the
+virtual environment's Python packages directory. Also remember to update the ``JUPYTER_PATH``
+and export the ``COMPSS_IN_JUPYTERLAB`` and ``COMPSS_RUNNING_IN_SC`` variables.
+.
 
 Install from source
 -------------------
