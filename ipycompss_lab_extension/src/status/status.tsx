@@ -2,7 +2,8 @@ import { IConsoleTracker } from '@jupyterlab/console';
 import { INotebookTracker } from '@jupyterlab/notebook';
 import { Kernel } from '@jupyterlab/services';
 
-import React, { ReactNode } from 'react';
+import React from 'react';
+import Utils from '../utils';
 import StatusManager from './manager';
 
 const defaultState = {
@@ -12,16 +13,9 @@ const defaultState = {
   monitorStarted: false
 };
 
-function Status({
-  consoleTracker,
-  notebookTracker,
-  children
-}: Status.IProperties): JSX.Element {
+function Status({ trackers, children }: Status.IProperties): JSX.Element {
   const [state, setState] = React.useState(defaultState);
-  React.useEffect(
-    registerCallback(consoleTracker, notebookTracker, setState),
-    []
-  );
+  React.useEffect(registerCallback(trackers, setState), []);
   return (
     <Status.Context.Provider value={[state, setState]}>
       {children}
@@ -31,8 +25,7 @@ function Status({
 
 const registerCallback =
   (
-    consoleTracker: IConsoleTracker,
-    notebookTracker: INotebookTracker,
+    { consoleTracker, notebookTracker }: Utils.ITrackers,
     setState: React.Dispatch<React.SetStateAction<Status.IState>>
   ) =>
   (): void => {
@@ -53,9 +46,8 @@ namespace Status {
   }
 
   export interface IProperties {
-    consoleTracker: IConsoleTracker;
-    notebookTracker: INotebookTracker;
-    children: ReactNode;
+    trackers: Utils.ITrackers;
+    children: React.ReactNode;
   }
 
   export const Context: React.Context<

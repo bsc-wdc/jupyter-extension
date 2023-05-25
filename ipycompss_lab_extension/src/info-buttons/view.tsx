@@ -2,8 +2,8 @@ import { ToolbarButtonComponent } from '@jupyterlab/apputils';
 import { tabIcon } from '@jupyterlab/ui-components';
 import React from 'react';
 
-import InfoButtons from './info-buttons';
 import CollapsibleElement from '../collapsible-element';
+import InfoButtons from './info-buttons';
 
 namespace InfoButtonsView {
   export interface IButton {

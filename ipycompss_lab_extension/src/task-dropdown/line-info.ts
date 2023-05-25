@@ -58,7 +58,7 @@ namespace LineInfo {
       .map((token: CodeEditor.IToken) => token.value);
 
   const toLineInfo = ([line, lineNumber]: [string, number]):
-    | ILineInfo
+    ILineInfo
     | undefined => {
     const { indent, keyword } =
       line?.match(/^(?<indent>\s*)(?<keyword>\w+)/)?.groups || {};

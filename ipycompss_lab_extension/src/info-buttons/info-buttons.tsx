@@ -1,23 +1,20 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { ILabShell } from '@jupyterlab/application';
-import { IConsoleTracker } from '@jupyterlab/console';
-import { INotebookTracker } from '@jupyterlab/notebook';
 import { toArray } from '@lumino/algorithm';
 import { Widget } from '@lumino/widgets';
 import React, { useContext } from 'react';
 
+import Status from '../status';
 import Utils from '../utils';
 import ExecutionInfo from './execution-info';
 import InfoButtonsView from './view';
 import WidgetModel from './widget-model';
 import WidgetView from './widget-view';
-import Status from '../status';
 
 namespace InfoButtons {
   export interface IProperties {
     shell: ILabShell;
-    consoleTracker: IConsoleTracker;
-    notebookTracker: INotebookTracker;
+    trackers: Utils.ITrackers;
     widgetRegistry: IJupyterWidgetRegistry;
   }
 
@@ -32,8 +29,7 @@ namespace InfoButtons {
 
 const InfoButtons = ({
   shell,
-  consoleTracker,
-  notebookTracker,
+  trackers,
   widgetRegistry
 }: InfoButtons.IProperties): JSX.Element => {
   widgetRegistry.registerWidget({
@@ -45,17 +41,13 @@ const InfoButtons = ({
   return (
     <InfoButtonsView
       enabled={enabled}
-      onClick={openExecutionInfo(shell, consoleTracker, notebookTracker)}
+      onClick={openExecutionInfo(shell, trackers)}
     />
   );
 };
 
 const openExecutionInfo =
-  (
-    shell: ILabShell,
-    consoleTracker: IConsoleTracker,
-    notebookTracker: INotebookTracker
-  ) =>
+  (shell: ILabShell, trackers: Utils.ITrackers) =>
   (type: InfoButtons.InfoType) =>
   async (): Promise<void> => {
     if (
@@ -66,7 +58,7 @@ const openExecutionInfo =
       return;
     }
 
-    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+    const kernel = Utils.getKernel(trackers);
     ExecutionInfo.getExecutionInfo(kernel, type);
   };
 

@@ -1,5 +1,3 @@
-import { IConsoleTracker } from '@jupyterlab/console';
-import { INotebookTracker } from '@jupyterlab/notebook';
 import React from 'react';
 
 import Status from '../status';
@@ -11,15 +9,11 @@ namespace Monitor {
   export type ActionType = 'start' | 'open' | 'stop';
 
   export interface IProperties {
-    consoleTracker: IConsoleTracker;
-    notebookTracker: INotebookTracker;
+    trackers: Utils.ITrackers;
   }
 }
 
-const Monitor = ({
-  consoleTracker,
-  notebookTracker
-}: Monitor.IProperties): JSX.Element => {
+const Monitor = ({ trackers }: Monitor.IProperties): JSX.Element => {
   const [{ enabled, cluster, monitorStarted }, setState] = React.useContext(
     Status.Context
   );
@@ -28,20 +22,19 @@ const Monitor = ({
       start={{ enabled: enabled && !cluster && !monitorStarted }}
       open={{ enabled: enabled && !cluster && monitorStarted }}
       stop={{ enabled: enabled && !cluster && monitorStarted }}
-      onClick={onClick(consoleTracker, notebookTracker, setState)}
+      onClick={onClick(trackers, setState)}
     />
   );
 };
 
 const onClick =
   (
-    consoleTracker: IConsoleTracker,
-    notebookTracker: INotebookTracker,
+    trackers: Utils.ITrackers,
     setState: React.Dispatch<React.SetStateAction<Status.IState>>
   ) =>
   (action: Monitor.ActionType) =>
   async (): Promise<void> => {
-    const kernel = Utils.getKernel(consoleTracker, notebookTracker);
+    const kernel = Utils.getKernel(trackers);
     MonitorManager.executeAction(kernel, action);
     Status.updateState(kernel, setState);
   };

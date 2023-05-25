@@ -17,15 +17,15 @@ namespace DocumentationButton {
 const REFERENCE_ID = 'pycompss-reference';
 const REFERENCE_TITLE = 'PyCOMPSs reference';
 
-const DocumentationButton = ({
-  shell,
-  restorer
-}: DocumentationButton.IProperties): JSX.Element => (
-  <DocumentationButtonView onClick={openDocumentation(shell, restorer)} />
+const DocumentationButton = (
+  props: DocumentationButton.IProperties
+): JSX.Element => (
+  <DocumentationButtonView onClick={openDocumentation(props)} />
 );
 
 const openDocumentation =
-  (shell: ILabShell, restorer?: ILayoutRestorer) => async (): Promise<void> => {
+  ({ shell, restorer }: DocumentationButton.IProperties) =>
+  async (): Promise<void> => {
     if (
       toArray(shell.widgets('main')).some(
         (elem: Widget) => elem.id === REFERENCE_ID

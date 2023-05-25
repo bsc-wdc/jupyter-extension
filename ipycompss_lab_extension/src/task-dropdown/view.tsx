@@ -1,9 +1,9 @@
 import { Dialog, ToolbarButtonComponent } from '@jupyterlab/apputils';
+import { editIcon } from '@jupyterlab/ui-components';
 import React from 'react';
 
 import CollapsibleElement from '../collapsible-element';
 import Parameter from '../parameter';
-import { editIcon } from '@jupyterlab/ui-components';
 
 function TaskDropdownView({
   parameterWidget,

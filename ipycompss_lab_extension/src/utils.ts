@@ -7,14 +7,19 @@ namespace Utils {
     onReply: (callback: (response: T) => void) => void;
   }
 
+  export interface ITrackers {
+    consoleTracker: IConsoleTracker;
+    notebookTracker: INotebookTracker;
+  }
+
   export const capitalise = (name: string): string => {
     return name[0].toUpperCase() + name.slice(1);
   };
 
-  export const getKernel = (
-    consoleTracker: IConsoleTracker,
-    notebookTracker: INotebookTracker
-  ): Kernel.IKernelConnection | null | undefined =>
+  export const getKernel = ({
+    consoleTracker,
+    notebookTracker
+  }: ITrackers): Kernel.IKernelConnection | null | undefined =>
     consoleTracker.currentWidget?.sessionContext.session?.kernel ??
     notebookTracker.currentWidget?.sessionContext.session?.kernel;
 }

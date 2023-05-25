@@ -1,7 +1,7 @@
 import React from 'react';
 
-import ParameterGroupWidget from './group';
 import CollapsibleElement from '../collapsible-element';
+import ParameterGroupWidget from './group';
 
 namespace ParameterGroupView {
   export interface IProperties {

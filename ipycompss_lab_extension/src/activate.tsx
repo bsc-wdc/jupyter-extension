@@ -15,8 +15,8 @@ import Icon from './icon';
 import InfoButtons from './info-buttons';
 import Monitor from './monitor/monitor';
 import StartStop from './start-stop';
-import TaskDropdown from './task-dropdown';
 import Status from './status';
+import TaskDropdown from './task-dropdown';
 
 const LEFT_PANEL_ID = 'pycompss-left-menu';
 
@@ -32,22 +32,12 @@ const activate = (
     <div className="ipycompss-base">
       <div className="jp-stack-panel-header">IPyCOMPSs</div>
       <div className="ipycompss-stack-panel">
-        <Status
-          consoleTracker={consoleTracker}
-          notebookTracker={notebookTracker}
-        >
-          <StartStop
-            consoleTracker={consoleTracker}
-            notebookTracker={notebookTracker}
-          />
-          <Monitor
-            consoleTracker={consoleTracker}
-            notebookTracker={notebookTracker}
-          />
+        <Status trackers={{ consoleTracker, notebookTracker }}>
+          <StartStop trackers={{ consoleTracker, notebookTracker }} />
+          <Monitor trackers={{ consoleTracker, notebookTracker }} />
           <InfoButtons
             shell={shell}
-            consoleTracker={consoleTracker}
-            notebookTracker={notebookTracker}
+            trackers={{ consoleTracker, notebookTracker }}
             widgetRegistry={widgetRegistry}
           />
         </Status>
