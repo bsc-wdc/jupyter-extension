@@ -31,7 +31,7 @@ class ParameterGroupWidget
     parameters,
     toSend,
     advancedParameters
-  }: ParameterGroupWidget.IProperties) => {
+  }: ParameterGroupWidget.IProperties): JSX.Element => {
     this._values = React.useRef(new Map<string, any>());
     return (
       <ParameterGroupView

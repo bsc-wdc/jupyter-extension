@@ -19,9 +19,9 @@ const Monitor = ({ trackers }: Monitor.IProperties): JSX.Element => {
   );
   return (
     <MonitorView
-      start={{ enabled: enabled && !cluster && !monitorStarted }}
-      open={{ enabled: enabled && !cluster && monitorStarted }}
-      stop={{ enabled: enabled && !cluster && monitorStarted }}
+      start={enabled && !cluster && !monitorStarted}
+      open={enabled && !cluster && monitorStarted}
+      stop={enabled && !cluster && monitorStarted}
       onClick={onClick(trackers, setState)}
     />
   );

@@ -57,7 +57,7 @@ namespace StatusManager {
   const startState = (
     kernel: Kernel.IKernelConnection | null | undefined,
     setState: React.Dispatch<React.SetStateAction<Status.IState>>
-  ) => {
+  ): void => {
     updateState(kernel, setState);
     kernel?.statusChanged.connect(cleanUpState(setState));
     kernel &&
@@ -73,7 +73,7 @@ namespace StatusManager {
 
   const cleanUpState =
     (setState: React.Dispatch<React.SetStateAction<Status.IState>>) =>
-    (_: Kernel.IKernelConnection, status: Kernel.Status) => {
+    (_: Kernel.IKernelConnection, status: Kernel.Status): void => {
       if (/^(?:unknown|restarting|autorestarting|dead)$/.test(status)) {
         setState(({ cluster, started, monitorStarted }) => ({
           enabled: false,

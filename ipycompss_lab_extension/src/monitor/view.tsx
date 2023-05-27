@@ -14,19 +14,15 @@ namespace MonitorView {
   export interface IButton {
     label: string;
     icon: LabIcon;
-    state: IEnabled;
+    enabled: boolean;
     action: Monitor.ActionType;
   }
 
   export interface IProperties {
-    start: IEnabled;
-    open: IEnabled;
-    stop: IEnabled;
+    start: boolean;
+    open: boolean;
+    stop: boolean;
     onClick: (type: Monitor.ActionType) => () => Promise<void>;
-  }
-
-  export interface IEnabled {
-    enabled: boolean;
   }
 }
 
@@ -37,18 +33,18 @@ const MonitorView = ({
   onClick
 }: MonitorView.IProperties): JSX.Element => {
   const buttons: MonitorView.IButton[] = [
-    { label: 'Start', icon: runIcon, state: start, action: 'start' },
-    { label: 'Open', icon: launchIcon, state: open, action: 'open' },
-    { label: 'Stop', icon: stopIcon, state: stop, action: 'stop' }
+    { label: 'Start', icon: runIcon, enabled: start, action: 'start' },
+    { label: 'Open', icon: launchIcon, enabled: open, action: 'open' },
+    { label: 'Stop', icon: stopIcon, enabled: stop, action: 'stop' }
   ];
   return (
     <CollapsibleElement label="Monitor">
-      {buttons.map(({ label, icon, state, action }: MonitorView.IButton) => (
+      {buttons.map(({ label, icon, enabled, action }: MonitorView.IButton) => (
         <ToolbarButtonComponent
           className="ipycompss-button"
           icon={icon}
           label={label}
-          enabled={state.enabled}
+          enabled={enabled}
           onClick={onClick(action)}
         />
       ))}

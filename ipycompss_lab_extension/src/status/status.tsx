@@ -6,7 +6,7 @@ import React from 'react';
 import Utils from '../utils';
 import StatusManager from './manager';
 
-const defaultState = {
+const DEFAULT_STATE = {
   enabled: false,
   cluster: false,
   started: false,
@@ -14,7 +14,7 @@ const defaultState = {
 };
 
 function Status({ trackers, children }: Status.IProperties): JSX.Element {
-  const [state, setState] = React.useState(defaultState);
+  const [state, setState] = React.useState(DEFAULT_STATE);
   React.useEffect(registerCallback(trackers, setState), []);
   return (
     <Status.Context.Provider value={[state, setState]}>
@@ -53,7 +53,7 @@ namespace Status {
   export const Context: React.Context<
     [IState, React.Dispatch<React.SetStateAction<IState>>]
   > = React.createContext([
-    defaultState,
+    DEFAULT_STATE,
     _ => {
       return;
     }
