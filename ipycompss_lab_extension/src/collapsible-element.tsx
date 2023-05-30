@@ -17,7 +17,7 @@ const CollapsibleElement = ({
   label,
   children
 }: CollapsibleElement.IProperties): JSX.Element => {
-  const [state, setState] = React.useState({
+  const [{ open, mainIcon }, setState] = React.useState({
     open: false,
     mainIcon: caretRightIcon,
     otherIcon: caretDownIcon
@@ -26,9 +26,9 @@ const CollapsibleElement = ({
     <>
       <div className="jp-stack-panel-header">
         <ToolbarButtonComponent
-          icon={state.mainIcon}
+          icon={mainIcon}
           onClick={() => {
-            setState(({ mainIcon, otherIcon }) => ({
+            setState(({ otherIcon }) => ({
               open: !open,
               mainIcon: otherIcon,
               otherIcon: mainIcon
@@ -37,7 +37,7 @@ const CollapsibleElement = ({
         />
         <span className="jp-stack-panel-header-text">{label}</span>
       </div>
-      <Collapse isOpen={state.open}>{children}</Collapse>
+      <Collapse isOpen={open}>{children}</Collapse>
     </>
   );
 };

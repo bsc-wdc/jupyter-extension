@@ -20,7 +20,7 @@ namespace StartStopManager {
     onFailure: (updateState, callback) => {
       StartStopMessaging.sendInitRequest(kernel).onReply(
         ({ success }: StartStopMessaging.ISuccessResponseDto) => {
-          updateState(kernel, setState);
+          setTimeout(() => updateState(kernel, setState), 500);
           success || callback();
         }
       );
