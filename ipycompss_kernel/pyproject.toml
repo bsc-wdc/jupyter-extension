@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "comm",
-    "ipykernel",
+    "ipykernel>=6.18.2",
     "IPython",
     "jupyter_client",
     "pycompss"
