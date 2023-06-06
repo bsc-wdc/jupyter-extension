@@ -43,7 +43,7 @@ def start_pycompss(cluster: bool, arguments: dict[str, Any]) -> None:
     if cluster:
         worker_arguments = to_worker_arguments(arguments)
         with resources.as_file(
-            resources.files("ipycompss_kernel").joinpath("start_workers.sh")
+            resources.files(__package__).joinpath("start_workers.sh")
         ) as script_path:
             env = run_and_get_env(str(script_path), worker_arguments)
         for var, value in env:
