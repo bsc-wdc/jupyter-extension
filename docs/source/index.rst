@@ -7,6 +7,17 @@
 PyCOMPSs Jupyter extensions documentation
 #########################################
 
+The PyCOMPSs Jupyter extensions are a group of extensions consisting of a Jupyter kernel and
+a JupyterLab extension that are developed to improve the integration that PyCOMPSs has in such
+environment. This documentation is divided in 3 sections: one for the installation of the
+extensions and another one for each of them. Its index can be found at the end of this page.
+
+.. image:: images/main.png
+    :alt: JupyterLab with extension and kernel
+    :align: center
+
+|
+
 .. toctree::
    :maxdepth: 1
    :caption: Installing

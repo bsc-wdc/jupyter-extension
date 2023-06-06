@@ -48,8 +48,26 @@ Then, as seen in the section 'Load additional software models' of the same docum
 create the file ``$HOME/.jupyter/start_jupyter-jsc.sh`` that loads the appropiate modules,
 activates the virtual enviroment and updates the ``PYTHONPATH`` variable to point to the
 virtual environment's Python packages directory. Also remember to update the ``JUPYTER_PATH``
-and export the ``COMPSS_IN_JUPYTERLAB`` and ``COMPSS_RUNNING_IN_SC`` variables.
-.
+and export the ``COMPSS_IN_JUPYTERLAB`` and ``COMPSS_RUNNING_IN_SC`` variables. See the
+following example:
+
+.. code-block:: bash
+
+  module purge
+  module use $OTHERSTAGES
+  module load Stages/2022
+  module load GCCcore/.11.2.0
+  module load JupyterCollection/2022.3.4
+  module load Graphviz/5.0.0
+
+  module use <COMPSs module path>
+  module load compssTrunk
+
+  source <virtual enviroment path>/bin/activate
+  export PYTHONPATH=<virtual enviroment path>/lib/python3.9/site-packages:$PYTHONPATH
+  export JUPYTER_PATH=<virtual enviroment path>/share/jupyter:$JUPYTER_PATH
+  export COMPSS_IN_JUPYTERLAB=true
+  export COMPSS_RUNNING_IN_SC=true
 
 Install from source
 -------------------
@@ -69,5 +87,6 @@ Clone the repository and execute the following commands:
 
   pip install ./ipycompss_kernel
   cd ipycompss_lab_extension
-  jlpm run build
+  jlpm run install
+  jlpm run build:prod
   pip install .
