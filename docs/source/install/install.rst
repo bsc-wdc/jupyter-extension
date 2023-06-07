@@ -87,6 +87,6 @@ Clone the repository and execute the following commands:
 
   pip install ./ipycompss_kernel
   cd ipycompss_lab_extension
-  jlpm run install
+  jlpm install
   jlpm run build:prod
   pip install .
