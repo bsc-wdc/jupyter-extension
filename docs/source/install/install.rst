@@ -58,7 +58,7 @@ following example:
   module load Stages/2022
   module load GCCcore/.11.2.0
   module load JupyterCollection/2022.3.4
-  module load Graphviz/5.0.0
+  module load Graphviz/2.49.3
 
   module use <COMPSs module path>
   module load compssTrunk
