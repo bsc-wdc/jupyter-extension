@@ -26,6 +26,12 @@ def start(cluster: bool) -> None:
     view.mainloop()
 
 
+def stop() -> None:
+    """Stop PyCOMPSs and monitor"""
+    monitor.execute_action("stop")
+    stop_pycompss()
+
+
 def start_pycompss(cluster: bool, arguments: dict[str, Any]) -> None:
     """Start PyCOMPSs"""
 

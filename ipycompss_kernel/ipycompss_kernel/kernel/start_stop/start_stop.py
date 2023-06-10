@@ -7,7 +7,6 @@ from .messaging import StartRequestDto, SuccessResponseDto
 
 SC_VAR = "COMPSS_RUNNING_IN_SC"
 JL_VAR = "COMPSS_IN_JUPYTERLAB"
-STOP_EXPRESSION = "outer_start_stop.stop_pycompss()"
 
 
 def start(execute: Callable[[str], dict[str, Any]]) -> None:
@@ -23,7 +22,7 @@ def start(execute: Callable[[str], dict[str, Any]]) -> None:
 
 def do_shutdown(execute: Callable[[str], dict[str, Any]]) -> None:
     """Shutdown kernel"""
-    _execute(execute, STOP_EXPRESSION)
+    _execute(execute, "outer_start_stop.stop()")
     start_stop_messaging.send_stop()
 
 
@@ -60,7 +59,7 @@ def _handle_stop_request(
     """Execute code to stop PyCOMPSs runtime"""
 
     def callback() -> SuccessResponseDto:
-        result = _execute(execute, STOP_EXPRESSION)
+        result = _execute(execute, "outer_start_stop.stop_pycompss()")
         return {"success": result["status"] == "ok"}
 
     return callback

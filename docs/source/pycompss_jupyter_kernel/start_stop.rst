@@ -36,7 +36,7 @@ Stopping the runtime
 --------------------
 
 When the kernel is shut down, it will stop the PyCOMPSs runtime if it is running. This may
-take a while.
+take a while. If the PyCOMPSs monitor is running, it will also be shut down.
 
 The default shutdown time is 30 seconds. However, the runtime may take more to
 stop depending on the environment and the application that was executed. If a different
