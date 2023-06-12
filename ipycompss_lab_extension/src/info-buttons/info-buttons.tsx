@@ -34,7 +34,7 @@ const InfoButtons = ({
 }: InfoButtons.IProperties): JSX.Element => {
   widgetRegistry.registerWidget({
     name: 'ipycompss_lab_extension',
-    version: '0.1.0',
+    version: '1.0.0',
     exports: { WidgetModel, WidgetView: WidgetView(shell) }
   });
   const [{ enabled }] = useContext(Status.Context);
