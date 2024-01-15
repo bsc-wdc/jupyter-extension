@@ -1,5 +1,5 @@
 """Methods for the start/stop messaging between the kernel and the front end"""
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, TypedDict, Dict
 
 import comm
 from ipykernel.comm import Comm
@@ -8,7 +8,7 @@ from ipykernel.comm import Comm
 class StartRequestDto(TypedDict):
     """Runtime start arguments"""
 
-    arguments: dict[str, Any]
+    arguments: Dict[str, Any]
 
 
 class SuccessResponseDto(TypedDict):
@@ -31,7 +31,7 @@ def on_init(callback: Callable[[], SuccessResponseDto]) -> None:
 def on_start(callback: Callable[[StartRequestDto], SuccessResponseDto]) -> None:
     """Register start message callback"""
 
-    def on_start_comm(start_comm: Comm, open_start_comm: dict[str, Any]) -> None:
+    def on_start_comm(start_comm: Comm, open_start_comm: Dict[str, Any]) -> None:
         response = callback(open_start_comm["content"]["data"])
         start_comm.send(data=response)
         del start_comm

@@ -2,7 +2,7 @@
 import re
 import time
 from threading import Thread
-from typing import TypedDict
+from typing import TypedDict, Dict
 
 import comm
 
@@ -19,7 +19,7 @@ class InfoType(TypedDict):
     poll: bool
 
 
-INFO_TYPE: dict[str, InfoType] = {
+INFO_TYPE: Dict[str, InfoType] = {
     "info": {"name": "tasks_info", "poll": False},
     "status": {"name": "tasks_status", "poll": False},
     "current_graph": {"name": "current_task_graph", "poll": True},

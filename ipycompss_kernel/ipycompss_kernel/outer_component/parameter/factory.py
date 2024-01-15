@@ -3,7 +3,7 @@ import sys
 from enum import Enum
 from tkinter import Frame, Tk
 from types import ModuleType
-from typing import TYPE_CHECKING, Any, TypedDict, Union
+from typing import TYPE_CHECKING, Any, TypedDict, Union, List
 
 from . import bool as boolean_parameter
 from . import enum as enumeration_parameter
@@ -107,13 +107,13 @@ class ParameterInfo(TypedDict):
     path_type: "NotRequired[PathType]"
 
 
-BASIC_PARAMETERS: list[ParameterInfo] = [
+BASIC_PARAMETERS: List[ParameterInfo] = [
     {"name": "graph", "default": False, "type": boolean_parameter},
     {"name": "debug", "default": False, "type": boolean_parameter},
     {"name": "trace", "default": False, "type": boolean_parameter},
     {"name": "monitor", "default": 1000, "type": integer_parameter},
 ]
-ADVANCED_PARAMETERS: list[ParameterInfo] = [
+ADVANCED_PARAMETERS: List[ParameterInfo] = [
     {"name": "log_level", "default": LogLevel.OFF, "type": enumeration_parameter},
     {"name": "o_c", "default": False, "type": boolean_parameter},
     {
