@@ -34,9 +34,13 @@ const onClick =
   ) =>
   (action: Monitor.ActionType) =>
   async (): Promise<void> => {
-    const kernel = Utils.getKernel(trackers);
-    MonitorManager.executeAction(kernel, action);
-    Status.updateState(kernel, setState);
+    if (action == 'open') {
+      window.open('http://localhost:8080/compss-monitor', '_blank')?.focus();
+    }else{
+      const kernel = Utils.getKernel(trackers);
+      MonitorManager.executeAction(kernel, action);
+      Status.updateState(kernel, setState);
+    }
   };
 
 export default Monitor;

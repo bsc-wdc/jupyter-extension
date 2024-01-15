@@ -1,11 +1,11 @@
 """Boolean parameter"""
 from tkinter import BooleanVar, Checkbutton, Frame, Tk
-from typing import Union
+from typing import Union, Tuple
 
 from ... import utils
 
 
-def create(name: str, default: bool, frame: Union[Tk, Frame]) -> tuple[str, BooleanVar]:
+def create(name: str, default: bool, frame: Union[Tk, Frame]) -> Tuple[str, BooleanVar]:
     """Create a boolean parameter"""
     var: BooleanVar = BooleanVar()
     var.set(default)

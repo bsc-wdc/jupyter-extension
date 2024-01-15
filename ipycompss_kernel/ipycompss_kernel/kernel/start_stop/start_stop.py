@@ -1,5 +1,5 @@
 """Kernel start and stop methods"""
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 from ... import utils
 from . import messaging as start_stop_messaging
@@ -9,7 +9,7 @@ SC_VAR = "COMPSS_RUNNING_IN_SC"
 JL_VAR = "COMPSS_IN_JUPYTERLAB"
 
 
-def start(execute: Callable[[str], dict[str, Any]]) -> None:
+def start(execute: Callable[[str], Dict[str, Any]]) -> None:
     """Start the kernel"""
     cluster = utils.read_boolean_env_var(SC_VAR)
     if not utils.read_boolean_env_var(JL_VAR):
@@ -20,14 +20,14 @@ def start(execute: Callable[[str], dict[str, Any]]) -> None:
     start_stop_messaging.on_stop(_handle_stop_request(execute))
 
 
-def do_shutdown(execute: Callable[[str], dict[str, Any]]) -> None:
+def do_shutdown(execute: Callable[[str], Dict[str, Any]]) -> None:
     """Shutdown kernel"""
     _execute(execute, "outer_start_stop.stop()")
     start_stop_messaging.send_stop()
 
 
 def _handle_init_request(
-    execute: Callable[[str], dict[str, Any]], cluster: bool
+    execute: Callable[[str], Dict[str, Any]], cluster: bool
 ) -> Callable[[], SuccessResponseDto]:
     """Open start pop-up"""
 
@@ -39,7 +39,7 @@ def _handle_init_request(
 
 
 def _handle_start_request(
-    execute: Callable[[str], dict[str, Any]], cluster: bool
+    execute: Callable[[str], Dict[str, Any]], cluster: bool
 ) -> Callable[[StartRequestDto], SuccessResponseDto]:
     """Execute code to start PyCOMPSs runtime"""
 
@@ -54,7 +54,7 @@ def _handle_start_request(
 
 
 def _handle_stop_request(
-    execute: Callable[[str], dict[str, Any]]
+    execute: Callable[[str], Dict[str, Any]]
 ) -> Callable[[], SuccessResponseDto]:
     """Execute code to stop PyCOMPSs runtime"""
 
@@ -65,13 +65,13 @@ def _handle_stop_request(
     return callback
 
 
-def _init(execute: Callable[[str], dict[str, Any]], cluster: bool) -> dict[str, Any]:
+def _init(execute: Callable[[str], Dict[str, Any]], cluster: bool) -> Dict[str, Any]:
     return _execute(execute, f"outer_start_stop.start({cluster})")
 
 
 def _execute(
-    execute: Callable[[str], dict[str, Any]], expression: str
-) -> dict[str, Any]:
+    execute: Callable[[str], Dict[str, Any]], expression: str
+) -> Dict[str, Any]:
     return execute(f"""
         from ipycompss_kernel import outer_start_stop
         {expression}

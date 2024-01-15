@@ -1,6 +1,6 @@
 """PyCOMPSs startup pop-up"""
 from tkinter import Button, Canvas, Frame, Label, Scrollbar, Tk
-from typing import Any, Callable, Union
+from typing import Any, Callable, Union, Dict
 
 from ..parameter import parameter_factory
 
@@ -44,7 +44,7 @@ class Popup(Tk):
         button.grid(row=self.row, column=self.column)
         self.column += 1
 
-    def get_arguments(self) -> dict[str, Any]:
+    def get_arguments(self) -> Dict[str, Any]:
         """Get arguments from parameters"""
         return {key: value.get() for (key, value) in self._parameters.items()}
 

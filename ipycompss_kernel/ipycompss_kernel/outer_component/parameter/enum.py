@@ -1,12 +1,12 @@
 """Enumeration parameter"""
 from enum import Enum
 from tkinter import Frame, OptionMenu, StringVar, Tk
-from typing import Union
+from typing import Union, Tuple
 
 from . import label
 
 
-def create(name: str, default: Enum, frame: Union[Tk, Frame]) -> tuple[str, StringVar]:
+def create(name: str, default: Enum, frame: Union[Tk, Frame]) -> Tuple[str, StringVar]:
     """Create an enumeration parameter"""
     row = frame.grid_size()[1]
     label.create_label(name, row, frame)

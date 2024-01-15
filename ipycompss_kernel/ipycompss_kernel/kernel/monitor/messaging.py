@@ -1,5 +1,5 @@
 """Methods for the PyCOMPSs monitor management"""
-from typing import Any, Callable, TypedDict
+from typing import Any, Callable, TypedDict, Dict
 
 import comm
 from ipykernel.comm import Comm
@@ -14,7 +14,7 @@ class MonitorRequestDto(TypedDict):
 def on_monitor(callback: Callable[[MonitorRequestDto], None]) -> None:
     """Register monitor message callback"""
 
-    def on_monitor_comm(monitor_comm: Comm, open_monitor_comm: dict[str, Any]) -> None:
+    def on_monitor_comm(monitor_comm: Comm, open_monitor_comm: Dict[str, Any]) -> None:
         callback(open_monitor_comm["content"]["data"])
         del monitor_comm
 

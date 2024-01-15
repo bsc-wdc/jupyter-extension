@@ -2,7 +2,7 @@
 import os
 import subprocess
 from importlib import resources
-from typing import Any
+from typing import Any, Dict, List
 
 import pycompss.interactive as ipycompss
 
@@ -32,13 +32,13 @@ def stop() -> None:
     stop_pycompss()
 
 
-def start_pycompss(cluster: bool, arguments: dict[str, Any]) -> None:
+def start_pycompss(cluster: bool, arguments: Dict[str, Any]) -> None:
     """Start PyCOMPSs"""
 
-    def to_worker_arguments(arguments: dict[str, Any]) -> list[str]:
+    def to_worker_arguments(arguments: Dict[str, Any]) -> List[str]:
         return [f"--{key}={value}" for [key, value] in arguments.items() if value != ""]
 
-    def run_and_get_env(script_path: str, arguments: list[str]) -> list[list[str]]:
+    def run_and_get_env(script_path: str, arguments: List[str]) -> List[List[str]]:
         result = subprocess.run(
             ["sh", script_path, *arguments], stdout=subprocess.PIPE, check=True
         )
