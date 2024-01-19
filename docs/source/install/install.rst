@@ -76,6 +76,10 @@ Extra dependencies
 ^^^^^^^^^^^^^^^^^^
 
 - JupyterLab python module == 3.6.3
+.. code-block:: bash
+
+    python3 -m pip install jupyterlab==3.6.3
+    
 - NodeJS == 16.x & python3.8-tk
 .. code-block:: bash
 
