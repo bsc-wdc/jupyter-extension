@@ -20,6 +20,10 @@ def start_monitor() -> None:
     """Start the PyCOMPSs monitor"""
     process: CompletedProcess[bytes] = subprocess.run(
         [
+            "service",
+            "dbus",
+            "start",
+            "&&",
             "pkexec",
             "env",
             f'JAVA_HOME={os.environ["JAVA_HOME"]}',
