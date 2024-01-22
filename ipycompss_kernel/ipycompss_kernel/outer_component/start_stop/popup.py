@@ -23,7 +23,7 @@ class Popup(Tk):
         self.wm_title("IPyCOMPSs configuration")
         self._create_label("IPyCOMPSs startup options")
 
-        self._parameters: dict[str, Any] = {}
+        self._parameters: Dict[str, Any] = {}
         self._parameters.update(
             parameter_factory.create_parameters(self, advanced=False)
         )

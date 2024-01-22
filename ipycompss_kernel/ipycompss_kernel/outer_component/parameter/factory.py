@@ -3,7 +3,7 @@ import sys
 from enum import Enum
 from tkinter import Frame, Tk
 from types import ModuleType
-from typing import TYPE_CHECKING, Any, TypedDict, Union, List
+from typing import TYPE_CHECKING, Any, TypedDict, Union, List, Dict
 
 from . import bool as boolean_parameter
 from . import enum as enumeration_parameter
@@ -262,9 +262,9 @@ ADVANCED_PARAMETERS: List[ParameterInfo] = [
 
 def create_parameters(
     frame: Union[Tk, Frame], advanced: bool = False
-) -> dict[str, Any]:
+) -> Dict[str, Any]:
     """Create all basic or advanced parameters that PyCOMPSs allows"""
-    parameters: list[ParameterInfo] = BASIC_PARAMETERS
+    parameters: List[ParameterInfo] = BASIC_PARAMETERS
     if advanced:
         parameters = ADVANCED_PARAMETERS
 
