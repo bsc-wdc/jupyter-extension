@@ -14,7 +14,7 @@ def start(cluster: bool) -> None:
     """Start Popup"""
 
     def get_args_and_start_pycompss() -> None:
-        arguments: dict[str, Any] = view.get_arguments()
+        arguments: Dict[str, Any] = view.get_arguments()
         start_pycompss(cluster, arguments)
         view.destroy()
 
